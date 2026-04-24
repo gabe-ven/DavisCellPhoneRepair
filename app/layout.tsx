@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 
-const geist = Geist({ subsets: ["latin"], variable: "--font-geist" });
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "900"],
+  variable: "--font-inter",
+});
 
 export const metadata: Metadata = {
   title: "Davis Cell Phone Repair — Same-Day Phone Repair in Davis, CA",
@@ -14,7 +18,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${geist.variable} scroll-smooth antialiased`}>
+    <html lang="en" className={`${inter.variable} scroll-smooth antialiased`}>
       <body className="min-h-screen flex flex-col bg-white text-slate-900">
         {children}
       </body>

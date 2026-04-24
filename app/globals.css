@@ -1,9 +1,14 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-sans: var(--font-geist);
+  --font-sans: var(--font-inter);
 }
 
 body {
   font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Smooth anchor scroll offset for sticky nav */
+[id] {
+  scroll-margin-top: 64px;
 }
