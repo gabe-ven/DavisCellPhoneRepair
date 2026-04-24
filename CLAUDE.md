@@ -29,20 +29,67 @@ npm run lint     # eslint
 
 ## Site Structure
 
+Single-page site (`/`). All sections scroll vertically — no sub-pages.
+Each section has an `id` so nav links can anchor-scroll to it.
+
 ```
-/            Home — above-the-fold CTA, pricing preview, reviews, hours + map
-/pricing     Full repair price list by device and repair type
+/   ← single page, all sections below
 ```
 
-That's it. Two pages maximum. Do not add pages without a clear conversion reason.
+### Section Order (top to bottom)
+
+#### 1. NAV
+- Logo (text or SVG) on the left
+- Anchor links: Services · Reviews · Contact
+- `[Call Now]` button — right side, always visible, `tel:` link
+- Sticky on scroll; collapses to hamburger on mobile
+
+#### 2. HERO  `id="hero"`
+- Headline: **"Davis' #1 Rated Phone Repair Shop"**
+- Subhead: "131 Reviews · 4.6 Stars on Google"
+- Two CTAs side by side: `[Get a Quote]` (scrolls to contact form) · `[Call Now]` (`tel:` link)
+- Star rating badge (4.6 ★) visible inline
+
+#### 3. SERVICES + PRICING  `id="services"`
+- Grid of repair types: iPhone screen · Android screen · Battery · Charging port · Water damage · + others
+- Each card shows: repair name, price range (e.g. "$79–$149"), turnaround time (e.g. "~1 hour")
+- Mobile: 1 column. Tablet+: 2–3 columns.
+
+#### 4. WHY CHOOSE US  `id="why"`
+- 4–5 trust pillars as icon + label cards:
+  - Fast Repairs (most done same day)
+  - Affordable Pricing
+  - 1-Year Warranty
+  - Walk-Ins Welcome
+  - UC Davis Students Welcome
+- Keep copy short — one line per pillar
+
+#### 5. REVIEWS  `id="reviews"`
+- 4.6 ★ · 131 Google Reviews badge — large and prominent at top of section
+- 3–4 manually curated review cards (real quotes, first name + initial only)
+- Each card: star rating, quote, reviewer name
+
+#### 6. CONTACT / BOOKING FORM  `id="contact"`
+- Form fields: Name, Phone, Device (select or text), Issue (textarea), Submit
+- Beside or below the form: address, hours, click-to-call phone link
+- Form submits via Formspree (no backend)
+
+#### 7. GOOGLE MAPS EMBED  `id="map"`
+- Full-width iframe embed of 1818 2nd St, Davis, CA 95616
+- Tappable on mobile — opens Google Maps app
+
+#### 8. FOOTER
+- Business name, address, phone (tap-to-call), hours
+- Copyright line
+- No social links unless owner provides them
 
 ## Conversion Priorities (in order)
 
-1. **Tap-to-call button** — must be visible without scrolling on any phone
-2. **Get Directions button** — second most important action
-3. **Today's hours / open status** — shown immediately, no clicking
-4. **Price transparency** — listed openly; hiding prices kills trust
-5. **Social proof** — 4.6 ★ · 131 Google Reviews shown above the fold
+1. **Tap-to-call button** — in NAV and HERO, visible without scrolling on any phone
+2. **Social proof in HERO** — 4.6 ★ · 131 reviews above the fold, not buried
+3. **Price transparency in SERVICES** — ranges shown openly; no "call for pricing"
+4. **Quote form** — low-commitment first step before a call
+5. **Map embed** — removes the "where exactly are they?" friction
 
 ## Code Conventions
 
@@ -63,8 +110,23 @@ That's it. Two pages maximum. Do not add pages without a clear conversion reason
 - **Google Rating:** 4.6 ★ · 131 reviews
 - **Tagline:** "Davis's fastest phone repair — walk-ins welcome"
 
+## Component Map
+
+```
+components/
+  Navbar.tsx          # sticky nav with anchor links + Call Now CTA
+  Hero.tsx            # headline, subhead, star badge, two CTAs
+  Services.tsx        # repair type grid with price ranges + turnaround
+  WhyChooseUs.tsx     # trust pillar icon cards
+  Reviews.tsx         # rating badge + 3–4 curated review cards
+  ContactForm.tsx     # Formspree form + address/hours sidebar
+  MapEmbed.tsx        # full-width Google Maps iframe
+  Footer.tsx          # name, address, hours, phone, copyright
+```
+
 ## What NOT to Build
 
+- No separate pages — this is a single-page site with anchor nav
 - No blog or SEO content pages
 - No multi-step booking flow
 - No user accounts or auth
