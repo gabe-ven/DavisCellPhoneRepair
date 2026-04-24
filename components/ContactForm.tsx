@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, FormEvent } from "react";
-import Image from "next/image";
 import { MapPin, Clock, Phone } from "lucide-react";
 
 export default function ContactForm() {
@@ -31,13 +30,13 @@ export default function ContactForm() {
     <section id="contact" className="py-20 px-4 bg-white">
       <div className="max-w-6xl mx-auto">
         <h2
-          className="text-3xl md:text-4xl text-center mb-14 tracking-tight"
+          className="section-heading text-3xl md:text-4xl text-center mb-14 tracking-tight"
           style={{ fontWeight: 900, color: "#111111", letterSpacing: "-0.02em" }}
         >
-          Get in Touch
+          Walk In or Send a Message
         </h2>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-stretch">
           {/* Form */}
           <div
             className="bg-white rounded-2xl p-8"
@@ -57,7 +56,7 @@ export default function ContactForm() {
                 <p style={{ color: "#6b7280" }}>We&apos;ll call or text you back shortly.</p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+              <form onSubmit={handleSubmit} className="flex flex-col gap-4 h-full">
                 <input name="name" required placeholder="Your Name" className={inputClass} style={inputStyle} />
                 <input name="phone" type="tel" required placeholder="Phone Number" className={inputClass} style={inputStyle} />
                 <input name="device" required placeholder="Device (e.g. iPhone 14, Samsung S23)" className={inputClass} style={inputStyle} />
@@ -65,8 +64,8 @@ export default function ContactForm() {
                   name="issue"
                   required
                   placeholder="What's the issue?"
-                  rows={4}
-                  className={`${inputClass} resize-none`}
+                  rows={5}
+                  className={`${inputClass} resize-none flex-1`}
                   style={inputStyle}
                 />
                 <button
@@ -74,7 +73,6 @@ export default function ContactForm() {
                   disabled={loading}
                   className="btn-crimson text-white font-bold py-4 rounded-lg disabled:opacity-50 text-base"
                   style={{ boxShadow: "0 4px 20px rgba(139,26,26,0.25)" }}
-
                 >
                   {loading ? "Sending…" : "Submit Request"}
                 </button>
@@ -82,37 +80,49 @@ export default function ContactForm() {
             )}
           </div>
 
-          {/* Info + photo */}
-          <div className="flex flex-col gap-6">
-            <div className="relative rounded-2xl overflow-hidden h-48" style={{ border: "1.5px solid #e5e7eb" }}>
-              <Image src="/shop.jpg" alt="Davis Cell Phone Repair shop interior" fill className="object-cover" />
-              <div className="absolute bottom-0 left-0 right-0 h-1" style={{ background: "#8B1A1A" }} />
-            </div>
+          {/* Map + info card overlay */}
+          <div className="relative rounded-2xl overflow-hidden min-h-[480px]" style={{ border: "1.5px solid #e5e7eb", boxShadow: "0 2px 12px rgba(0,0,0,0.06)" }}>
+            {/* Map fills the full column */}
+            <iframe
+              title="Davis Cell Phone Repair location"
+              src="https://maps.google.com/maps?q=140+B+St+Suite+4+Davis+CA+95616&output=embed"
+              width="100%"
+              height="100%"
+              style={{ border: 0, position: "absolute", inset: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
 
+            {/* Info card pinned to bottom, overlaid on the map */}
             <div
-              className="bg-white rounded-2xl p-6 flex flex-col gap-5"
-              style={{ border: "1.5px solid #e5e7eb", boxShadow: "0 2px 12px rgba(0,0,0,0.06)" }}
+              className="absolute bottom-0 left-0 right-0 p-5 flex flex-col gap-3.5"
+              style={{
+                background: "rgba(255,255,255,0.96)",
+                backdropFilter: "blur(8px)",
+                borderTop: "1.5px solid #e5e7eb",
+              }}
             >
               {[
-                { icon: MapPin, label: "Location", value: "140 B St Suite 4, Davis, CA 95616", href: undefined },
-                { icon: Clock, label: "Hours", value: "Mon – Sat: 10am – 6pm\nSunday: 12pm – 4pm", href: undefined },
+                { icon: MapPin, label: "Location", value: "140 B St Suite 4, Davis, CA 95616", href: "https://maps.google.com/?q=140+B+St+Suite+4+Davis+CA+95616" },
+                { icon: Clock, label: "Hours", value: "Mon – Sat: 10am – 6pm  ·  Sun: 12pm – 4pm", href: undefined },
                 { icon: Phone, label: "Phone", value: "(530) 341-3384", href: "tel:+15303413384" },
               ].map(({ icon: Icon, label, value, href }) => (
-                <div key={label} className="flex items-start gap-4">
+                <div key={label} className="flex items-center gap-3">
                   <div
-                    className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+                    className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
                     style={{ background: "rgba(139,26,26,0.07)" }}
                   >
-                    <Icon size={16} style={{ color: "#8B1A1A" }} strokeWidth={2} />
+                    <Icon size={14} style={{ color: "#8B1A1A" }} strokeWidth={2} />
                   </div>
-                  <div>
-                    <div className="font-semibold text-sm mb-0.5" style={{ color: "#111111" }}>{label}</div>
+                  <div className="flex items-baseline gap-2 flex-wrap min-w-0">
+                    <span className="font-semibold text-xs uppercase tracking-wide flex-shrink-0" style={{ color: "#6b7280" }}>{label}</span>
                     {href ? (
-                      <a href={href} className="font-bold text-xl hover:opacity-75 transition-opacity" style={{ color: "#8B1A1A" }}>
+                      <a href={href} className="font-semibold text-sm hover:opacity-75 transition-opacity truncate" style={{ color: "#111111" }}>
                         {value}
                       </a>
                     ) : (
-                      <div className="text-sm whitespace-pre-line" style={{ color: "#6b7280" }}>{value}</div>
+                      <span className="text-sm" style={{ color: "#111111" }}>{value}</span>
                     )}
                   </div>
                 </div>
@@ -120,7 +130,7 @@ export default function ContactForm() {
 
               <a
                 href="tel:+15303413384"
-                className="btn-crimson text-white font-bold py-3.5 rounded-lg text-center text-base mt-1"
+                className="btn-crimson text-white font-bold py-3 rounded-lg text-center text-sm mt-1"
               >
                 Call Now — (530) 341-3384
               </a>
