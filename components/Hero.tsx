@@ -1,13 +1,73 @@
-import Image from "next/image";
-
 export default function Hero() {
   return (
-    <section id="hero" className="bg-white overflow-hidden">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row items-center gap-10 py-20 md:py-28">
-          {/* Text column */}
-          <div className="flex-1 text-center md:text-left">
-            {/* Badge */}
+    <section id="hero" className="relative bg-white overflow-hidden">
+
+      {/* Mobile: image in-flow with bottom fade to white */}
+      <div className="md:hidden relative h-80 w-full">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/o (2).jpg"
+          alt="Davis Cell Phone Repair store front"
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            objectPosition: "50% 20%",
+          }}
+        />
+        <div
+          className="absolute inset-0"
+          style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0) 30%, rgba(255,255,255,0.85) 75%, white 100%)" }}
+        />
+      </div>
+
+      {/* Desktop: image covers left ~65%, fades right into white */}
+      <div
+        className="hidden md:block absolute inset-y-0 left-0 w-[65%]"
+        style={{ minHeight: "100%" }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/o (2).jpg"
+          alt="Davis Cell Phone Repair store front"
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            objectPosition: "40% center",
+          }}
+        />
+        {/* Left edge darkening for depth */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to right, rgba(0,0,0,0.08) 0%, transparent 25%)",
+          }}
+        />
+        {/* Right fade to white */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to right, transparent 40%, rgba(255,255,255,0.15) 55%, rgba(255,255,255,0.5) 68%, rgba(255,255,255,0.85) 80%, white 95%)",
+          }}
+        />
+      </div>
+
+      {/* Content layer */}
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center py-10 md:py-28 min-h-0 md:min-h-[560px]">
+          {/* Spacer pushes text to right half on desktop */}
+          <div className="hidden md:block flex-1" />
+
+          {/* Text — full width on mobile, right ~40% on desktop */}
+          <div className="w-full md:w-[42%] text-center md:text-left">
+            {/* Rating badge */}
             <div
               className="inline-flex items-center gap-2.5 rounded-full px-4 py-2 mb-8"
               style={{
@@ -24,7 +84,7 @@ export default function Hero() {
             </div>
 
             <h1
-              className="text-[38px] sm:text-5xl md:text-[52px] lg:text-[60px] leading-[1.05] mb-5 tracking-tight"
+              className="text-[38px] sm:text-5xl md:text-[52px] lg:text-[60px] leading-[1.05] mb-5"
               style={{ fontWeight: 900, color: "#111111", letterSpacing: "-0.02em" }}
             >
               Davis&apos; #1 Rated
@@ -36,14 +96,14 @@ export default function Hero() {
               className="text-lg md:text-xl mb-10 max-w-lg mx-auto md:mx-0 leading-relaxed"
               style={{ color: "#6b7280" }}
             >
-              Most repairs done same day while you wait. Walk-ins always
-              welcome. Pricing you can count on.
+              Cracked screen? Dead battery? Most repairs take under 60 minutes
+              while you wait — no appointment, no Apple Store markup.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
               <a
                 href="#contact"
-                className="btn-crimson font-bold text-base px-8 py-4 rounded-lg text-white text-center"
+                className="btn-crimson btn-cta-pulse font-bold text-base px-8 py-4 rounded-lg text-white text-center"
                 style={{ boxShadow: "0 4px 20px rgba(139,26,26,0.3)" }}
               >
                 Get a Free Quote
@@ -54,46 +114,6 @@ export default function Hero() {
               >
                 Call (530) 341-3384
               </a>
-            </div>
-
-            {/* Trust chips */}
-            <div className="flex flex-wrap gap-3 mt-8 justify-center md:justify-start">
-              {["Same-Day Repair", "1-Year Warranty", "Walk-Ins Welcome"].map(
-                (chip) => (
-                  <span
-                    key={chip}
-                    className="text-xs font-semibold px-3 py-1.5 rounded-full"
-                    style={{ background: "#f9f9f9", color: "#374151", border: "1px solid #e5e7eb" }}
-                  >
-                    {chip}
-                  </span>
-                )
-              )}
-            </div>
-          </div>
-
-          {/* Image column */}
-          <div className="flex-1 w-full max-w-sm md:max-w-none">
-            <div
-              className="relative rounded-2xl overflow-hidden"
-              style={{
-                boxShadow: "0 20px 60px rgba(0,0,0,0.12)",
-                border: "1.5px solid #e5e7eb",
-              }}
-            >
-              <Image
-                src="/technician.jpg"
-                alt="Davis Cell Phone Repair — technician at work"
-                width={600}
-                height={520}
-                className="w-full h-72 md:h-[460px] object-cover object-top"
-                priority
-              />
-              {/* Crimson accent bar at bottom */}
-              <div
-                className="absolute bottom-0 left-0 right-0 h-1.5"
-                style={{ background: "#8B1A1A" }}
-              />
             </div>
           </div>
         </div>
