@@ -6,12 +6,13 @@ import Reviews from "@/components/Reviews";
 import ContactForm from "@/components/ContactForm";
 import MapEmbed from "@/components/MapEmbed";
 import Footer from "@/components/Footer";
+import MobileCallBar from "@/components/MobileCallBar";
 
 export default function Home() {
   return (
     <>
       <Navbar />
-      <main>
+      <main className="pb-20 md:pb-0">
         <Hero />
         <Services />
         <WhyChooseUs />
@@ -20,6 +21,7 @@ export default function Home() {
         <MapEmbed />
       </main>
       <Footer />
+      <MobileCallBar />
     </>
   );
 }
