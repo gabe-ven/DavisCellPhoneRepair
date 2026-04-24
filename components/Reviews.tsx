@@ -29,7 +29,7 @@ const doubled = [...reviews, ...reviews];
 
 export default function Reviews() {
   return (
-    <section id="reviews" className="py-20 overflow-hidden" style={{ background: "#f9f9f9" }}>
+    <section id="reviews" className="py-20 overflow-x-hidden" style={{ background: "#f9f9f9" }}>
       {/* Rating badge */}
       <div className="flex justify-center mb-10 px-4">
         <div
@@ -45,22 +45,24 @@ export default function Reviews() {
           <div>
             <StarRating />
             <div className="text-sm font-medium mt-1" style={{ color: "#6b7280" }}>
-              131 Google Reviews
+              131 reviews · verified on Google
             </div>
           </div>
         </div>
       </div>
 
-      <h2
-        className="text-3xl md:text-4xl text-center mb-10 tracking-tight px-4"
-        style={{ fontWeight: 900, color: "#111111", letterSpacing: "-0.02em" }}
-      >
-        What Our Customers Say
-      </h2>
+      <div className="text-center px-4 mb-10">
+        <h2
+          className="section-heading text-3xl md:text-4xl tracking-tight"
+          style={{ fontWeight: 900, color: "#111111", letterSpacing: "-0.02em" }}
+        >
+          131 Happy Customers. Here&apos;s What They Said.
+        </h2>
+      </div>
 
       {/* Marquee */}
       <div
-        className="marquee-container relative"
+        className="marquee-container relative py-4"
         style={{
           maskImage: "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
           WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
@@ -77,7 +79,7 @@ export default function Reviews() {
           {doubled.map((r, i) => (
             <div
               key={i}
-              className="flex-shrink-0 w-[220px] bg-white rounded-xl p-5 flex flex-col gap-3"
+              className={`flex-shrink-0 w-[220px] bg-white rounded-xl p-5 flex flex-col gap-3 ${i % 2 === 0 ? "review-tilt-r" : "review-tilt-l"}`}
               style={{
                 border: "1.5px solid #e5e7eb",
                 boxShadow: "0 2px 12px rgba(0,0,0,0.05)",

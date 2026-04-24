@@ -1,11 +1,11 @@
 import {
   Smartphone,
   BatteryCharging,
-  Plug,
+  Zap,
   Droplets,
   Camera,
-  Layers,
-  Volume2,
+  Square,
+  Mic,
   Tablet,
 } from "lucide-react";
 import { LucideIcon } from "lucide-react";
@@ -13,19 +13,68 @@ import { LucideIcon } from "lucide-react";
 type Repair = {
   icon: LucideIcon;
   name: string;
+  models: string;
   price: string;
   time: string;
 };
 
 const repairs: Repair[] = [
-  { icon: Smartphone, name: "iPhone Screen", price: "$79 – $149", time: "~1 hour" },
-  { icon: Tablet, name: "Android Screen", price: "$69 – $129", time: "~1–2 hours" },
-  { icon: BatteryCharging, name: "Battery Replacement", price: "$49 – $79", time: "~30 min" },
-  { icon: Plug, name: "Charging Port", price: "$59 – $89", time: "~1 hour" },
-  { icon: Droplets, name: "Water Damage", price: "$89 – $149", time: "24–48 hours" },
-  { icon: Camera, name: "Camera Repair", price: "$59 – $99", time: "~1–2 hours" },
-  { icon: Layers, name: "Back Glass", price: "$79 – $129", time: "~1–2 hours" },
-  { icon: Volume2, name: "Speaker / Mic", price: "$49 – $79", time: "~1 hour" },
+  {
+    icon: Smartphone,
+    name: "iPhone Screen",
+    models: "12 · 13 · 14 · 15 · 16 series",
+    price: "$79 – $149",
+    time: "~1 hour",
+  },
+  {
+    icon: Tablet,
+    name: "Android Screen",
+    models: "Samsung, Pixel & more",
+    price: "$69 – $129",
+    time: "~1–2 hours",
+  },
+  {
+    icon: BatteryCharging,
+    name: "Battery Replacement",
+    models: "iPhone & most Android",
+    price: "$49 – $79",
+    time: "~30 min",
+  },
+  {
+    icon: Zap,
+    name: "Charging Port",
+    models: "Lightning · USB-C",
+    price: "$59 – $89",
+    time: "~1 hour",
+  },
+  {
+    icon: Droplets,
+    name: "Water Damage",
+    models: "Diagnosis + cleaning",
+    price: "$89 – $149",
+    time: "24–48 hours",
+  },
+  {
+    icon: Camera,
+    name: "Camera Repair",
+    models: "Front & rear modules",
+    price: "$59 – $99",
+    time: "~1–2 hours",
+  },
+  {
+    icon: Square,
+    name: "Back Glass",
+    models: "iPhone 8 and newer",
+    price: "$79 – $129",
+    time: "~1–2 hours",
+  },
+  {
+    icon: Mic,
+    name: "Speaker & Mic",
+    models: "Earpiece · loudspeaker",
+    price: "$49 – $79",
+    time: "~1 hour",
+  },
 ];
 
 export default function Services() {
@@ -34,7 +83,7 @@ export default function Services() {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-14">
           <h2
-            className="text-3xl md:text-4xl mb-3 tracking-tight"
+            className="section-heading text-3xl md:text-4xl mb-3 tracking-tight"
             style={{ fontWeight: 900, color: "#111111", letterSpacing: "-0.02em" }}
           >
             What We Fix
@@ -45,10 +94,10 @@ export default function Services() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {repairs.map(({ icon: Icon, name, price, time }) => (
+          {repairs.map(({ icon: Icon, name, models, price, time }) => (
             <div
               key={name}
-              className="card-lift bg-white rounded-xl p-6"
+              className="card-lift service-card bg-white rounded-xl p-6"
               style={{
                 border: "1.5px solid #e5e7eb",
                 boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
@@ -60,9 +109,12 @@ export default function Services() {
               >
                 <Icon size={20} style={{ color: "#8B1A1A" }} strokeWidth={1.75} />
               </div>
-              <h3 className="font-semibold text-base mb-1" style={{ color: "#111111" }}>
+              <h3 className="font-semibold text-base mb-0.5" style={{ color: "#111111" }}>
                 {name}
               </h3>
+              <p className="text-xs mb-2" style={{ color: "#9ca3af" }}>
+                {models}
+              </p>
               <div className="font-bold text-lg mb-2" style={{ color: "#8B1A1A" }}>
                 {price}
               </div>

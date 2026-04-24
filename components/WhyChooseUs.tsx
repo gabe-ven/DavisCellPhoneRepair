@@ -1,14 +1,34 @@
-import { Zap, DollarSign, ShieldCheck, Users, GraduationCap } from "lucide-react";
+import { Zap, DollarSign, ShieldCheck, CalendarOff, MapPin } from "lucide-react";
 import { LucideIcon } from "lucide-react";
 
 type Pillar = { icon: LucideIcon; title: string; desc: string };
 
 const pillars: Pillar[] = [
-  { icon: Zap, title: "Same-Day Repairs", desc: "Most fixes done in under an hour while you wait." },
-  { icon: DollarSign, title: "Fair Pricing", desc: "No hidden fees. We quote before we fix — always." },
-  { icon: ShieldCheck, title: "1-Year Warranty", desc: "Every repair backed by our 12-month guarantee." },
-  { icon: Users, title: "Walk-Ins Welcome", desc: "No appointment needed. Just come on in." },
-  { icon: GraduationCap, title: "UC Davis Students", desc: "Proudly serving Aggies and the Davis community." },
+  {
+    icon: Zap,
+    title: "Done in Under an Hour",
+    desc: "Screen, battery, port — most repairs finished while you wait. Grab lunch next door and come back.",
+  },
+  {
+    icon: DollarSign,
+    title: "You Hear the Price First",
+    desc: "We quote before we touch anything. No surprise charges when you pick it up.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "12-Month Warranty",
+    desc: "Every repair is covered for a year. If it fails, we fix it free — no questions asked.",
+  },
+  {
+    icon: CalendarOff,
+    title: "No Appointment Needed",
+    desc: "Open Mon–Sat 10–6, Sun 12–4. Walk in any time — there's no schedule to fight.",
+  },
+  {
+    icon: MapPin,
+    title: "Half a Mile from Campus",
+    desc: "On B Street — easy walk or bike ride from the UC Davis main entrance.",
+  },
 ];
 
 export default function WhyChooseUs() {
@@ -16,7 +36,7 @@ export default function WhyChooseUs() {
     <section id="why" className="py-20 px-4 bg-white">
       <div className="max-w-6xl mx-auto">
         <h2
-          className="text-3xl md:text-4xl text-center mb-14 tracking-tight"
+          className="section-heading text-3xl md:text-4xl text-center mb-14 tracking-tight"
           style={{ fontWeight: 900, color: "#111111", letterSpacing: "-0.02em" }}
         >
           Why Davis Chooses Us

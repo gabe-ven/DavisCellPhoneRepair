@@ -47,7 +47,7 @@ export default function Navbar() {
               onClick={() => setOpen(!open)}
               aria-label="Toggle menu"
               className="p-1"
-              style={{ color: "rgba(255,255,255,0.7)" }}
+              style={{ color: "rgba(255,255,255,0.9)" }}
             >
               {open ? <X size={22} /> : <Menu size={22} />}
             </button>
@@ -65,7 +65,7 @@ export default function Navbar() {
                 href={`#${label.toLowerCase()}`}
                 onClick={() => setOpen(false)}
                 className="font-medium"
-                style={{ color: "rgba(255,255,255,0.75)" }}
+                style={{ color: "rgba(255,255,255,0.9)" }}
               >
                 {label}
               </a>

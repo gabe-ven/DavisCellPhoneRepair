@@ -12,9 +12,9 @@ export default function Footer() {
               <Logo variant="dark" />
             </div>
             <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.45)" }}>
-              Davis&apos; #1 rated phone repair shop.
+              Half a mile from UC Davis.
               <br />
-              Walk-ins always welcome.
+              Most repairs done while you wait.
             </p>
           </div>
 
