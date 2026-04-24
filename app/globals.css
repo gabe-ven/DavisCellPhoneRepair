@@ -12,3 +12,13 @@ body {
 [id] {
   scroll-margin-top: 64px;
 }
+
+/* Reviews marquee */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.marquee-container:hover .marquee-track {
+  animation-play-state: paused;
+}
