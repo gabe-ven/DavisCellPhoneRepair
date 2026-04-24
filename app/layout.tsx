@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Dancing_Script } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "900"],
+  weight: ["400", "500", "600", "700", "800", "900"],
   variable: "--font-inter",
+});
+
+const dancing = Dancing_Script({
+  subsets: ["latin"],
+  weight: ["700"],
+  variable: "--font-dancing",
 });
 
 export const metadata: Metadata = {
@@ -18,7 +24,10 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${inter.variable} scroll-smooth antialiased`}>
+    <html
+      lang="en"
+      className={`${inter.variable} ${dancing.variable} scroll-smooth antialiased`}
+    >
       <body className="min-h-screen flex flex-col bg-white text-slate-900">
         {children}
       </body>

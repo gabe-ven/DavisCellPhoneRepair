@@ -98,15 +98,15 @@ Each section has an `id` so nav links can anchor-scroll to it.
 - Pages live in `app/` using the App Router (`page.tsx`, `layout.tsx`)
 - No CSS modules, no styled-components — Tailwind only
 - No `any` types in TypeScript
-- Phone number is always rendered as `<a href="tel:+15307534888">` for tap-to-call
+- Phone number is always rendered as `<a href="tel:+15303413384">` for tap-to-call
 - Directions link always points to Google Maps with the business address pre-filled
 
 ## Content (Real Business Data)
 
 - **Name:** Davis Cell Phone Repair
-- **Phone:** (530) 753-4888
-- **Address:** 1818 2nd St, Davis, CA 95616
-- **Hours:** Mon–Sat 10am–7pm, Sun 11am–6pm
+- **Phone:** (530) 341-3384  ← verified from business card + door sign
+- **Address:** 140 B St Suite 4, Davis, CA 95616  ← verified from business card
+- **Hours:** Mon–Sat 10am–6pm, Sun 12pm–4pm  ← verified from door sign
 - **Google Rating:** 4.6 ★ · 131 reviews
 - **Tagline:** "Davis's fastest phone repair — walk-ins welcome"
 
@@ -140,3 +140,57 @@ components/
 - Commit message format: `type: short description` (e.g., `feat: add tap-to-call hero button`)
 - Types: `feat`, `fix`, `style`, `chore`, `refactor`
 - Push after every meaningful feature or component is complete
+
+## Design
+
+### Layout
+- White background, single scrolling page
+- Nav and footer: near black (#0d0d0d)
+- Alternate section backgrounds between #ffffff and #f9f9f9
+- Nav is sticky on scroll
+
+### Colors
+- Page background:    #ffffff
+- Alt section bg:     #f9f9f9
+- Nav and footer:     #0d0d0d
+- Primary accent:     #8B1A1A  (crimson — matches their logo)
+- Accent hover:       #a81f1f
+- Headlines:          #111111
+- Body text:          #374151
+- Muted text:         #6b7280
+- Borders:            #e5e7eb
+- Stars:              #f59e0b
+
+### Typography
+- Font: Inter (Google Fonts) — weights 400, 600, 700, 800, 900
+- Logo "Davis": Dancing Script Bold (matches their cursive branding)
+- Logo "CELL PHONE REPAIR": Inter 800, letter-spacing 0.15em, all caps
+- Hero headline: Inter 900, 56px desktop / 36px mobile, 
+  letter-spacing -0.02em
+- Section headings: Inter 700, 32px
+- Body: Inter 400, 16px, line-height 1.7
+- Buttons: Inter 700, letter-spacing 0.02em
+
+### Buttons
+- Primary: crimson bg (#8B1A1A), white text, rounded-lg, 
+  subtle box-shadow
+- Secondary: white bg, crimson border, crimson text, rounded-lg
+- Hover: bg shifts to #a81f1f, slight lift with box-shadow
+
+### Cards
+- White bg, border 1.5px solid #e5e7eb, rounded-xl
+- Subtle box-shadow: 0 2px 12px rgba(0,0,0,0.06)
+- Hover: shadow deepens, lifts 2px
+
+### Logo Recreation
+- Cracked phone icon SVG in crimson and white
+- "Davis" in Dancing Script above
+- "CELL PHONE REPAIR" in Inter 800 caps below
+- Do not use any external image — build it in pure SVG/CSS
+
+### Reference
+- Their existing brand: black business card, crimson red, 
+  white text, cursive Davis script
+- This site is that brand inverted — white base, red accents, 
+  black nav/footer bookending the page
+- Feel: local and trusted, not corporate or sterile

@@ -13,6 +13,35 @@ body {
   scroll-margin-top: 64px;
 }
 
+/* Brand button utilities */
+.btn-crimson {
+  background: #8B1A1A;
+  transition: background 0.15s ease;
+}
+.btn-crimson:hover { background: #a81f1f; }
+
+.btn-crimson-outline {
+  color: #8B1A1A;
+  border: 2px solid #8B1A1A;
+  background: white;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.btn-crimson-outline:hover { background: #fdf5f5; }
+
+.nav-link {
+  color: rgba(255,255,255,0.65);
+  transition: color 0.15s ease;
+}
+.nav-link:hover { color: #ffffff; }
+
+.card-lift {
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.card-lift:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1) !important;
+  transform: translateY(-2px);
+}
+
 /* Reviews marquee */
 @keyframes marquee {
   from { transform: translateX(0); }

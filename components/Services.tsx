@@ -30,18 +30,17 @@ const repairs: Repair[] = [
 
 export default function Services() {
   return (
-    <section id="services" className="py-20 px-4 bg-white">
+    <section id="services" className="py-20 px-4" style={{ background: "#f9f9f9" }}>
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-14">
           <h2
-            className="text-3xl md:text-4xl text-slate-900 mb-3 tracking-tight"
-            style={{ fontWeight: 900 }}
+            className="text-3xl md:text-4xl mb-3 tracking-tight"
+            style={{ fontWeight: 900, color: "#111111", letterSpacing: "-0.02em" }}
           >
             What We Fix
           </h2>
-          <p className="text-slate-500 text-lg">
-            Transparent pricing. No hidden fees. Most repairs done while you
-            wait.
+          <p style={{ color: "#6b7280" }} className="text-lg">
+            Transparent pricing. No hidden fees. Most repairs done while you wait.
           </p>
         </div>
 
@@ -49,38 +48,44 @@ export default function Services() {
           {repairs.map(({ icon: Icon, name, price, time }) => (
             <div
               key={name}
-              className="bg-white rounded-2xl p-6 hover:shadow-lg transition-shadow duration-200 group"
-              style={{ border: "1.5px solid #e5e7eb" }}
+              className="card-lift bg-white rounded-xl p-6"
+              style={{
+                border: "1.5px solid #e5e7eb",
+                boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
+              }}
             >
               <div
-                className="w-11 h-11 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-200"
-                style={{ background: "rgba(37,99,235,0.08)" }}
+                className="w-11 h-11 rounded-xl flex items-center justify-center mb-4"
+                style={{ background: "rgba(139,26,26,0.07)" }}
               >
-                <Icon size={20} style={{ color: "#2563eb" }} strokeWidth={1.75} />
+                <Icon size={20} style={{ color: "#8B1A1A" }} strokeWidth={1.75} />
               </div>
-              <h3 className="font-semibold text-slate-900 text-base mb-1">
+              <h3 className="font-semibold text-base mb-1" style={{ color: "#111111" }}>
                 {name}
               </h3>
-              <div
-                className="font-bold text-lg mb-2"
-                style={{ color: "#2563eb" }}
-              >
+              <div className="font-bold text-lg mb-2" style={{ color: "#8B1A1A" }}>
                 {price}
               </div>
-              <div className="text-slate-400 text-sm flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block" />
+              <div
+                className="text-sm flex items-center gap-1.5"
+                style={{ color: "#9ca3af" }}
+              >
+                <span
+                  className="w-1.5 h-1.5 rounded-full inline-block"
+                  style={{ background: "#16a34a" }}
+                />
                 {time}
               </div>
             </div>
           ))}
         </div>
 
-        <p className="text-center text-slate-400 text-sm mt-10">
+        <p className="text-center text-sm mt-10" style={{ color: "#9ca3af" }}>
           Don&apos;t see your device?{" "}
           <a
-            href="tel:+15307534888"
+            href="tel:+15303413384"
             className="font-semibold hover:underline"
-            style={{ color: "#2563eb" }}
+            style={{ color: "#8B1A1A" }}
           >
             Call us
           </a>{" "}
