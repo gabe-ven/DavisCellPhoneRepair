@@ -1,9 +1,9 @@
 'use client'
 
-import { useState } from 'react'
 import { Bell, CheckCircle, Clock } from 'lucide-react'
 import StatusBadge from '../components/StatusBadge'
 import { useTickets } from '../hooks/useTickets'
+import { deviceLabel } from '../utils/deviceLabel'
 
 function timeAgo(dateStr: string): string {
   const diff = Date.now() - new Date(dateStr).getTime()
@@ -32,24 +32,20 @@ const STATUS_MSG: Record<string, string> = {
   completed: 'Repair completed',
 }
 
-export default function NotificationsView() {
+interface NotificationsViewProps {
+  dismissed: string[]
+  onDismiss: (id: string) => void
+  onDismissAll: (ids: string[]) => void
+}
+
+export default function NotificationsView({ dismissed, onDismiss, onDismissAll }: NotificationsViewProps) {
   const { tickets, loading } = useTickets()
-  const [dismissed, setDismissed] = useState<string[]>([])
 
   const notifications = tickets
     .filter(t => !dismissed.includes(t.ticketId))
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 
   const newCount = notifications.filter(t => t.status === 'received').length
-
-  function dismiss(ticketId: string) {
-    setDismissed(prev => [...prev, ticketId])
-  }
-
-  function dismissAll() {
-    // Functional updater so we never lose previously dismissed IDs
-    setDismissed(prev => [...new Set([...prev, ...notifications.map(t => t.ticketId)])])
-  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -66,7 +62,7 @@ export default function NotificationsView() {
         </div>
         {notifications.length > 0 && (
           <button
-            onClick={dismissAll}
+            onClick={() => onDismissAll(notifications.map(t => t.ticketId))}
             className="flex items-center gap-2 px-4 py-2 rounded-xl border border-[#e5e7eb] dark:border-[#2a2a2a] text-[13px] font-medium text-[#374151] dark:text-[#6b7280] hover:bg-[#f9f9f9] dark:hover:bg-[#222] transition-colors bg-white dark:bg-[#1a1a1a]"
           >
             <CheckCircle size={14} />
@@ -120,8 +116,8 @@ export default function NotificationsView() {
                     <p className="text-[13px] text-[#374151] dark:text-[#a3a3a3] font-medium mb-0.5">
                       {STATUS_MSG[t.status]}
                     </p>
-                    <p className="text-[12px] text-[#9ca3af] dark:text-[#6b7280] leading-snug capitalize">
-                      {t.device.type}
+                    <p className="text-[12px] text-[#9ca3af] dark:text-[#6b7280] leading-snug">
+                      {deviceLabel(t.device.type)}
                       {t.device.brand ? ` · ${t.device.brand}` : ''}
                       {(t.device.modelCustom ?? t.device.modelTrim ?? t.device.modelNumber)
                         ? ` ${t.device.modelCustom ?? t.device.modelTrim ?? t.device.modelNumber}` : ''}
@@ -139,7 +135,7 @@ export default function NotificationsView() {
                       {timeAgo(t.createdAt)}
                     </span>
                     <button
-                      onClick={() => dismiss(t.ticketId)}
+                      onClick={() => onDismiss(t.ticketId)}
                       className="text-[12px] text-[#9ca3af] hover:text-[#374151] dark:hover:text-gray-200 transition-colors"
                     >
                       Dismiss

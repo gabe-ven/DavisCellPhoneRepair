@@ -15,6 +15,7 @@ interface SidebarProps {
   onViewChange: (view: ViewType) => void
   collapsed: boolean
   onToggleCollapse: () => void
+  unreadCount: number
 }
 
 const NAV_ITEMS: { id: ViewType; label: string; icon: React.ReactNode; hasNotif?: boolean }[] = [
@@ -25,7 +26,7 @@ const NAV_ITEMS: { id: ViewType; label: string; icon: React.ReactNode; hasNotif?
   { id: 'notifications', label: 'Notifications', icon: <Bell        size={19} strokeWidth={1.8} />, hasNotif: true },
 ]
 
-export default function Sidebar({ activeView, onViewChange, collapsed, onToggleCollapse }: SidebarProps) {
+export default function Sidebar({ activeView, onViewChange, collapsed, onToggleCollapse, unreadCount }: SidebarProps) {
   return (
     <aside
       className={`
@@ -78,7 +79,7 @@ export default function Sidebar({ activeView, onViewChange, collapsed, onToggleC
               {!collapsed && (
                 <span className="text-[13.5px] font-medium whitespace-nowrap">{item.label}</span>
               )}
-              {item.hasNotif && (
+              {item.hasNotif && unreadCount > 0 && (
                 <span
                   className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${isActive ? 'bg-white/80' : 'bg-[#8B1A1A]'} ${
                     collapsed ? 'absolute top-2 right-2.5' : 'ml-auto'

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { createBrowserClient } from '@supabase/ssr'
 import Sidebar from './components/Sidebar'
@@ -18,10 +18,14 @@ const supabase = createBrowserClient(
 )
 
 export default function AdminDashboard() {
-  const [activeView, setActiveView] = useState<ViewType>('home')
+  const [activeView, setActiveView]       = useState<ViewType>('home')
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
-  const [darkMode, setDarkMode] = useState(true)
+  const [darkMode, setDarkMode]           = useState(true)
   const [ticketsSearch, setTicketsSearch] = useState('')
+  // Dismissed notification IDs — lifted here so they survive navigation
+  const [dismissed, setDismissed]         = useState<string[]>([])
+  // Unread count reported back from TopBar (accounts for dismissals)
+  const [unreadCount, setUnreadCount]     = useState(0)
   const router = useRouter()
 
   useEffect(() => {
@@ -46,6 +50,18 @@ export default function AdminDashboard() {
     setTicketsSearch(search ?? '')
   }
 
+  function handleDismiss(id: string) {
+    setDismissed(prev => [...prev, id])
+  }
+
+  function handleDismissAll(ids: string[]) {
+    setDismissed(prev => [...new Set([...prev, ...ids])])
+  }
+
+  const handleUnreadCountChange = useCallback((count: number) => {
+    setUnreadCount(count)
+  }, [])
+
   return (
     <div className="flex flex-col h-screen w-full overflow-hidden bg-[#f5f5f5] dark:bg-[#0d0d0d]">
       <TopBar
@@ -53,24 +69,32 @@ export default function AdminDashboard() {
         onToggleDark={handleToggleDark}
         onLogout={handleLogout}
         onNavigateToTickets={handleNavigateToTickets}
+        dismissed={dismissed}
+        onUnreadCountChange={handleUnreadCountChange}
       />
       <div className="flex flex-1 overflow-hidden">
         <Sidebar
           activeView={activeView}
           onViewChange={(view) => {
             setActiveView(view)
-            // Clear search when navigating away from tickets
             if (view !== 'tickets') setTicketsSearch('')
           }}
           collapsed={sidebarCollapsed}
           onToggleCollapse={() => setSidebarCollapsed(prev => !prev)}
+          unreadCount={unreadCount}
         />
         <main className="flex-1 overflow-y-auto p-8 bg-[#f5f5f5] dark:bg-[#0d0d0d]">
           {activeView === 'home'          && <OverviewView />}
           {activeView === 'tickets'       && <TicketsView key={ticketsSearch} initialSearch={ticketsSearch} />}
           {activeView === 'calendar'      && <CalendarView />}
-          {activeView === 'notifications' && <NotificationsView />}
-          {activeView === 'merch'         && (
+          {activeView === 'notifications' && (
+            <NotificationsView
+              dismissed={dismissed}
+              onDismiss={handleDismiss}
+              onDismissAll={handleDismissAll}
+            />
+          )}
+          {activeView === 'merch' && (
             <div className="flex items-center justify-center h-48 text-[#6b7280] text-base">
               Merch — coming soon
             </div>

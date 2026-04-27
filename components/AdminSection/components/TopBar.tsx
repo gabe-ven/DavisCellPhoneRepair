@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Bell, Settings, LogOut, Search, Sun, Moon, Layers, X, Clock } from 'lucide-react'
 import { getAllTickets } from '../api/adminApi'
 import StatusBadge from './StatusBadge'
+import { deviceLabel } from '../utils/deviceLabel'
 import type { Ticket } from '../../ServicesSection/types/wizard'
 
 interface TopBarProps {
@@ -11,6 +12,8 @@ interface TopBarProps {
   onToggleDark: () => void
   onLogout: () => void
   onNavigateToTickets: (search?: string) => void
+  dismissed: string[]
+  onUnreadCountChange: (count: number) => void
 }
 
 function timeAgo(dateStr: string): string {
@@ -24,7 +27,7 @@ function timeAgo(dateStr: string): string {
   return `${days}d ago`
 }
 
-export default function TopBar({ darkMode, onToggleDark, onLogout, onNavigateToTickets }: TopBarProps) {
+export default function TopBar({ darkMode, onToggleDark, onLogout, onNavigateToTickets, dismissed, onUnreadCountChange }: TopBarProps) {
   const [tickets, setTickets] = useState<Ticket[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [openPanel, setOpenPanel] = useState<'notifications' | 'settings' | null>(null)
@@ -58,9 +61,14 @@ export default function TopBar({ darkMode, onToggleDark, onLogout, onNavigateToT
     : []
 
   const newTickets = tickets
-    .filter(t => t.status === 'received')
+    .filter(t => t.status === 'received' && !dismissed.includes(t.ticketId))
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, 8)
+
+  // Keep parent in sync so sidebar dot reflects dismissals
+  useEffect(() => {
+    onUnreadCountChange(newTickets.length)
+  }, [newTickets.length, onUnreadCountChange])
 
   function handleSearchSelect(ticketId: string) {
     setSearchQuery('')
@@ -131,8 +139,8 @@ export default function TopBar({ darkMode, onToggleDark, onLogout, onNavigateToT
                       <span className="text-[13px] font-semibold text-[#111] dark:text-[#f0f0f0]">{t.customer.name}</span>
                       <span className="font-mono text-[11px] text-[#9ca3af]">#{t.ticketId}</span>
                     </div>
-                    <p className="text-[11px] text-[#6b7280] truncate capitalize mt-0.5">
-                      {t.device.type}{t.device.brand ? ` · ${t.device.brand}` : ''} · {t.issues.slice(0, 2).join(', ')}
+                    <p className="text-[11px] text-[#6b7280] truncate mt-0.5">
+                      {deviceLabel(t.device.type)}{t.device.brand ? ` · ${t.device.brand}` : ''} · {t.issues.slice(0, 2).join(', ')}
                     </p>
                   </div>
                   <StatusBadge status={t.status} />
@@ -212,8 +220,8 @@ export default function TopBar({ darkMode, onToggleDark, onLogout, onNavigateToT
                         <div className="w-2 h-2 rounded-full bg-[#8B1A1A] flex-shrink-0 mt-1.5" />
                         <div className="flex-1 min-w-0">
                           <p className="text-[13px] font-semibold text-[#111] dark:text-[#f0f0f0]">{t.customer.name}</p>
-                          <p className="text-[11px] text-[#6b7280] capitalize truncate mt-0.5">
-                            {t.device.type}{t.device.brand ? ` · ${t.device.brand}` : ''} · {t.issues.slice(0, 2).join(', ')}
+                          <p className="text-[11px] text-[#6b7280] truncate mt-0.5">
+                            {deviceLabel(t.device.type)}{t.device.brand ? ` · ${t.device.brand}` : ''} · {t.issues.slice(0, 2).join(', ')}
                           </p>
                         </div>
                         <span className="text-[11px] text-[#9ca3af] flex-shrink-0 flex items-center gap-1 mt-0.5">
