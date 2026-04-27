@@ -1,0 +1,25 @@
+import type { IssueType } from '../types/wizard'
+
+export const issueTypes: IssueType[] = [
+  { id: 'screen',         label: 'Screen',          icon: 'RectangleVertical' },
+  { id: 'back-glass',     label: 'Back Glass',      icon: 'Layers' },
+  { id: 'battery',        label: 'Battery',         icon: 'Battery' },
+  { id: 'camera-front',   label: 'Front Camera',    icon: 'CameraOff' },
+  { id: 'camera-back',    label: 'Back Camera',     icon: 'Camera' },
+  { id: 'charging-port',  label: 'Charging Port',   icon: 'Plug' },
+  { id: 'earpiece',       label: 'Earpiece',        icon: 'Ear' },
+  { id: 'speaker',        label: 'Speaker',         icon: 'Volume2' },
+  { id: 'microphone',     label: 'Microphone',      icon: 'Mic' },
+  { id: 'water-damage',   label: 'Water Damage',    icon: 'Droplets' },
+  { id: 'face-id',        label: 'Face ID',         icon: 'ScanFace' },
+  { id: 'touch-id',       label: 'Touch ID',        icon: 'Fingerprint' },
+  { id: 'wifi',           label: 'WiFi',            icon: 'Wifi' },
+  { id: 'bluetooth',      label: 'Bluetooth',       icon: 'Bluetooth' },
+  { id: 'signal',         label: 'No Signal',       icon: 'SignalZero' },
+  { id: 'vibration',      label: 'Vibration',       icon: 'Vibrate' },
+  { id: 'wont-turn-on',   label: "Won't Turn On",   icon: 'PowerOff' },
+  { id: 'overheats',      label: 'Overheating',     icon: 'Flame' },
+  { id: 'data-recovery',  label: 'Data Recovery',   icon: 'HardDrive' },
+  { id: 'password-reset', label: 'Password Reset',  icon: 'KeyRound' },
+  { id: 'other',          label: 'Other',           icon: 'Wrench' },
+]
