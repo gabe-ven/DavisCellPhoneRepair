@@ -1,20 +1,25 @@
 import type { WizardState, Ticket } from '../types/wizard'
 
 export async function submitTicket(state: WizardState): Promise<{ ticketId: string }> {
-  await new Promise(r => setTimeout(r, 1000))
-  return { ticketId: `MFC-${Date.now()}` }
+  const res = await fetch('/api/tickets', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(state),
+  })
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}))
+    throw new Error((body as { error?: string }).error ?? 'Failed to submit ticket')
+  }
+  return res.json()
 }
 
 export async function lookupTicket(ticketId: string, email: string): Promise<Ticket | null> {
-  await new Promise(r => setTimeout(r, 800))
-  // Suppress unused var warnings until real backend exists
-  void ticketId
-  void email
-  return null
+  const res = await fetch(`/api/tickets/${ticketId}?email=${encodeURIComponent(email)}`)
+  if (!res.ok) return null
+  return res.json()
 }
 
 export async function requestQuote(state: WizardState): Promise<{ success: boolean }> {
-  await new Promise(r => setTimeout(r, 800))
-  void state
+  await submitTicket(state)
   return { success: true }
 }
