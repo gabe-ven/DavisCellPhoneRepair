@@ -1,8 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { Search, ChevronDown } from 'lucide-react'
+import { Search, ChevronDown, Plus, CheckCircle } from 'lucide-react'
 import StatusBadge from '../components/StatusBadge'
+import CreateTicketModal from '../components/CreateTicketModal'
 import { useTickets } from '../hooks/useTickets'
 import type { TicketStatus } from '../types/admin'
 
@@ -12,10 +13,12 @@ type Filter = typeof STATUS_FILTERS[number]
 const STATUS_OPTIONS: TicketStatus[] = ['received', 'reviewing', 'in_repair', 'ready', 'completed']
 
 export default function TicketsView() {
-  const { tickets, loading, error, updateStatus } = useTickets()
+  const { tickets, loading, error, updateStatus, refetch } = useTickets()
   const [filter, setFilter] = useState<Filter>('all')
   const [search, setSearch] = useState('')
   const [updatingId, setUpdatingId] = useState<string | null>(null)
+  const [showCreateModal, setShowCreateModal] = useState(false)
+  const [createdTicketId, setCreatedTicketId] = useState<string | null>(null)
 
   const filtered = tickets
     .filter(t => filter === 'all' || t.status === filter)
@@ -35,16 +38,52 @@ export default function TicketsView() {
     setUpdatingId(null)
   }
 
+  function handleCreated(ticketId: string) {
+    setShowCreateModal(false)
+    setCreatedTicketId(ticketId)
+    refetch()
+    setTimeout(() => setCreatedTicketId(null), 5000)
+  }
+
   return (
+    <>
+      {showCreateModal && (
+        <CreateTicketModal
+          onClose={() => setShowCreateModal(false)}
+          onCreated={handleCreated}
+        />
+      )}
+
     <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-[32px] font-bold text-gray-900 dark:text-white leading-tight tracking-tight">
-          Tickets
-        </h1>
-        <p className="text-[15px] text-gray-400 dark:text-[#8888aa] mt-1">
-          Manage and update all repair requests.
-        </p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-[32px] font-bold text-gray-900 dark:text-white leading-tight tracking-tight">
+            Tickets
+          </h1>
+          <p className="text-[15px] text-gray-400 dark:text-[#8888aa] mt-1">
+            Manage and update all repair requests.
+          </p>
+        </div>
+        <button
+          onClick={() => setShowCreateModal(true)}
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[14px] font-semibold text-white transition-all hover:opacity-90 active:scale-95 mt-1"
+          style={{ background: '#8B1A1A' }}
+        >
+          <Plus size={16} />
+          New Ticket
+        </button>
       </div>
+
+      {/* Success toast */}
+      {createdTicketId && (
+        <div className="flex items-center gap-3 px-5 py-3.5 rounded-xl border"
+          style={{ background: 'rgba(34,197,94,0.08)', borderColor: 'rgba(34,197,94,0.25)' }}>
+          <CheckCircle size={17} className="text-green-500 flex-shrink-0" />
+          <p className="text-[14px] font-medium text-green-700 dark:text-green-400">
+            Ticket <span className="font-mono">#{createdTicketId}</span> created successfully.
+          </p>
+        </div>
+      )}
 
       {/* Filters + Search */}
       <div className="flex items-center gap-3 flex-wrap">
@@ -174,5 +213,6 @@ export default function TicketsView() {
         )}
       </div>
     </div>
+    </>
   )
 }
