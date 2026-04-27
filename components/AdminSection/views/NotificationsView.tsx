@@ -34,20 +34,21 @@ const STATUS_MSG: Record<string, string> = {
 
 export default function NotificationsView() {
   const { tickets, loading } = useTickets()
-  const [dismissed, setDismissed] = useState<Set<string>>(new Set())
+  const [dismissed, setDismissed] = useState<string[]>([])
 
   const notifications = tickets
-    .filter(t => !dismissed.has(t.ticketId))
+    .filter(t => !dismissed.includes(t.ticketId))
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 
   const newCount = notifications.filter(t => t.status === 'received').length
 
   function dismiss(ticketId: string) {
-    setDismissed(prev => new Set([...prev, ticketId]))
+    setDismissed(prev => [...prev, ticketId])
   }
 
   function dismissAll() {
-    setDismissed(new Set(notifications.map(t => t.ticketId)))
+    // Functional updater so we never lose previously dismissed IDs
+    setDismissed(prev => [...new Set([...prev, ...notifications.map(t => t.ticketId)])])
   }
 
   return (
