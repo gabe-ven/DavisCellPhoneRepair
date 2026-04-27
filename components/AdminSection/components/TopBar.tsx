@@ -88,9 +88,11 @@ export default function TopBar({ darkMode, onToggleDark, onLogout, onNavigateToT
 
   return (
     <>
-      {/* Click-outside overlay for panel */}
+      {/* Click-outside overlay — z-20 keeps it below the header (z-30) so
+          dropdown buttons remain clickable, while still intercepting clicks
+          on the sidebar and main content which have no z-index */}
       {openPanel && (
-        <div className="fixed inset-0 z-40" onClick={() => setOpenPanel(null)} />
+        <div className="fixed inset-0 z-20" onClick={() => setOpenPanel(null)} />
       )}
 
       <header className="h-[60px] flex-shrink-0 flex items-center gap-3 px-5 bg-white dark:bg-[#141414] border-b border-[#e5e7eb] dark:border-[#2a2a2a] z-30 relative">
