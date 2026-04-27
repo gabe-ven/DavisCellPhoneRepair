@@ -11,9 +11,6 @@ export default function TrustBar() {
       className="relative z-10"
       style={{
         background: "#0d0d0d",
-        clipPath: "polygon(0 18px, 100% 0, 100% calc(100% - 18px), 0 100%)",
-        marginTop: "-18px",
-        marginBottom: "-18px",
         paddingTop: "40px",
         paddingBottom: "40px",
       }}
