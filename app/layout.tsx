@@ -26,11 +26,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${inter.variable} ${dancing.variable} scroll-smooth antialiased`}
     >
-      <body className="min-h-screen flex flex-col bg-white text-slate-900">
+      <body className="min-h-screen flex flex-col">
         {children}
       </body>
     </html>
-  );
+  )
 }
