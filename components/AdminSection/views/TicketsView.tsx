@@ -47,7 +47,7 @@ function AssigneeCell({ ticketId, value }: { ticketId: string; value: string | n
         onBlur={save}
         onKeyDown={onKeyDown}
         placeholder="Enter name…"
-        className="w-full px-2 py-1 text-[13px] rounded-md border border-[#8B1A1A]/50 bg-white dark:bg-[#13131f] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-[#8B1A1A]"
+        className="w-full px-2 py-1 text-[13px] rounded-md border border-[#8B1A1A]/50 bg-white dark:bg-[#111] text-[#111111] dark:text-[#f0f0f0] focus:outline-none focus:ring-1 focus:ring-[#8B1A1A]"
       />
     )
   }
@@ -60,11 +60,11 @@ function AssigneeCell({ ticketId, value }: { ticketId: string; value: string | n
         saving ? 'opacity-50' : ''
       } ${
         value
-          ? 'text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#2a2a3e]'
-          : 'text-gray-400 dark:text-gray-500 hover:bg-gray-50 dark:hover:bg-[#2a2a3e]'
+          ? 'text-[#111111] dark:text-[#d4d4d4] hover:bg-[#f5f5f5] dark:hover:bg-[#2a2a3e]'
+          : 'text-[#9ca3af] dark:text-[#6b7280] hover:bg-[#f9f9f9] dark:hover:bg-[#2a2a3e]'
       }`}
     >
-      <UserRound size={13} className={value ? 'text-[#8B1A1A]' : 'text-gray-400 dark:text-gray-500'} />
+      <UserRound size={13} className={value ? 'text-[#8B1A1A]' : 'text-[#9ca3af] dark:text-[#6b7280]'} />
       <span>{saving ? '…' : (value || 'Unassigned')}</span>
     </button>
   )
@@ -120,10 +120,10 @@ export default function TicketsView() {
     <div className="flex flex-col gap-6">
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-[32px] font-bold text-gray-900 dark:text-white leading-tight tracking-tight">
+          <h1 className="text-[32px] font-bold text-[#111111] dark:text-[#f5f5f5] leading-tight tracking-tight">
             Tickets
           </h1>
-          <p className="text-[15px] text-gray-400 dark:text-[#8888aa] mt-1">
+          <p className="text-[15px] text-[#9ca3af] dark:text-[#6b7280] mt-1">
             Manage and update all repair requests.
           </p>
         </div>
@@ -158,34 +158,34 @@ export default function TicketsView() {
               className={`px-3.5 py-1.5 rounded-lg text-[13px] font-medium transition-colors ${
                 filter === s
                   ? 'bg-[#8B1A1A] text-white'
-                  : 'bg-white dark:bg-[#1c1c2e] border border-gray-200 dark:border-[#2a2a3e] text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-[#16162a]'
+                  : 'bg-white dark:bg-[#1a1a1a] border border-[#e5e7eb] dark:border-[#2a2a2a] text-[#374151] dark:text-[#6b7280] hover:bg-[#f9f9f9] dark:hover:bg-[#222]'
               }`}
             >
               {s === 'all' ? 'All' : s === 'in_repair' ? 'In Repair' : s.charAt(0).toUpperCase() + s.slice(1)}
             </button>
           ))}
         </div>
-        <div className="flex items-center gap-2 h-9 px-3 rounded-xl border border-gray-200 dark:border-[#2a2a3e] bg-white dark:bg-[#1c1c2e] max-w-[280px] flex-1">
-          <Search size={14} className="text-gray-400 flex-shrink-0" />
+        <div className="flex items-center gap-2 h-9 px-3 rounded-xl border border-[#e5e7eb] dark:border-[#2a2a2a] bg-white dark:bg-[#1a1a1a] max-w-[280px] flex-1">
+          <Search size={14} className="text-[#9ca3af] flex-shrink-0" />
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search name, email, ticket ID…"
-            className="bg-transparent text-[13px] text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 flex-1 focus:outline-none"
+            className="bg-transparent text-[13px] text-[#111111] dark:text-[#d4d4d4] placeholder-gray-400 dark:placeholder-gray-500 flex-1 focus:outline-none"
           />
         </div>
       </div>
 
       {/* Table */}
-      <div className="bg-white dark:bg-[#1c1c2e] border border-gray-200 dark:border-[#2a2a3e] rounded-2xl overflow-hidden">
+      <div className="bg-white dark:bg-[#1a1a1a] border border-[#e5e7eb] dark:border-[#2a2a2a] rounded-2xl overflow-hidden">
         {loading ? (
-          <div className="flex items-center justify-center h-48 text-gray-400 dark:text-gray-500">
+          <div className="flex items-center justify-center h-48 text-[#9ca3af] dark:text-[#6b7280]">
             Loading tickets…
           </div>
         ) : error ? (
           <div className="p-6 text-red-500 text-sm">{error}</div>
         ) : filtered.length === 0 ? (
-          <div className="flex items-center justify-center h-48 text-gray-400 dark:text-gray-500 text-sm">
+          <div className="flex items-center justify-center h-48 text-[#9ca3af] dark:text-[#6b7280] text-sm">
             No tickets found.
           </div>
         ) : (
@@ -195,7 +195,7 @@ export default function TicketsView() {
                 {['Ticket ID', 'Customer', 'Device', 'Issues', 'Appointment', 'Assigned To', 'Status', 'Update'].map(h => (
                   <th
                     key={h}
-                    className="text-left px-5 py-3 text-[11px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider border-b border-gray-200 dark:border-[#2a2a3e]"
+                    className="text-left px-5 py-3 text-[11px] font-semibold text-[#9ca3af] dark:text-[#6b7280] uppercase tracking-wider border-b border-[#e5e7eb] dark:border-[#2a2a2a]"
                   >
                     {h}
                   </th>
@@ -206,62 +206,62 @@ export default function TicketsView() {
               {filtered.map(ticket => (
                 <tr
                   key={ticket.ticketId}
-                  className="hover:bg-gray-50 dark:hover:bg-[#16162a] transition-colors"
+                  className="hover:bg-[#f9f9f9] dark:hover:bg-[#222] transition-colors"
                 >
-                  <td className="px-5 py-4 border-b border-gray-100 dark:border-[#2a2a3e]/50">
-                    <span className="font-mono text-[12px] text-gray-400 dark:text-gray-500">
+                  <td className="px-5 py-4 border-b border-[#e5e7eb]/60 dark:border-[#2a2a2a]/50">
+                    <span className="font-mono text-[12px] text-[#9ca3af] dark:text-[#6b7280]">
                       #{ticket.ticketId}
                     </span>
                   </td>
-                  <td className="px-5 py-4 border-b border-gray-100 dark:border-[#2a2a3e]/50">
-                    <p className="text-[14px] font-semibold text-gray-900 dark:text-gray-100">
+                  <td className="px-5 py-4 border-b border-[#e5e7eb]/60 dark:border-[#2a2a2a]/50">
+                    <p className="text-[14px] font-semibold text-[#111111] dark:text-[#f0f0f0]">
                       {ticket.customer.name}
                     </p>
-                    <p className="text-[12px] text-gray-400 dark:text-gray-500">
+                    <p className="text-[12px] text-[#9ca3af] dark:text-[#6b7280]">
                       {ticket.customer.phone}
                     </p>
                   </td>
-                  <td className="px-5 py-4 border-b border-gray-100 dark:border-[#2a2a3e]/50">
-                    <p className="text-[14px] text-gray-700 dark:text-gray-300 capitalize">
+                  <td className="px-5 py-4 border-b border-[#e5e7eb]/60 dark:border-[#2a2a2a]/50">
+                    <p className="text-[14px] text-[#374151] dark:text-[#a3a3a3] capitalize">
                       {ticket.device.type}
                     </p>
-                    <p className="text-[12px] text-gray-400 dark:text-gray-500">
+                    <p className="text-[12px] text-[#9ca3af] dark:text-[#6b7280]">
                       {[ticket.device.brand, ticket.device.modelCustom ?? ticket.device.modelTrim ?? ticket.device.modelNumber]
                         .filter(Boolean).join(' ')}
                     </p>
                   </td>
-                  <td className="px-5 py-4 border-b border-gray-100 dark:border-[#2a2a3e]/50 max-w-[160px]">
-                    <p className="text-[13px] text-gray-600 dark:text-gray-300 truncate">
+                  <td className="px-5 py-4 border-b border-[#e5e7eb]/60 dark:border-[#2a2a2a]/50 max-w-[160px]">
+                    <p className="text-[13px] text-[#374151] dark:text-[#a3a3a3] truncate">
                       {ticket.issues.join(', ')}
                     </p>
                   </td>
-                  <td className="px-5 py-4 border-b border-gray-100 dark:border-[#2a2a3e]/50">
+                  <td className="px-5 py-4 border-b border-[#e5e7eb]/60 dark:border-[#2a2a2a]/50">
                     {ticket.appointment.date ? (
                       <>
-                        <p className="text-[13px] text-gray-700 dark:text-gray-300">
+                        <p className="text-[13px] text-[#374151] dark:text-[#a3a3a3]">
                           {new Date(ticket.appointment.date + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                         </p>
-                        <p className="text-[12px] text-gray-400 dark:text-gray-500">
+                        <p className="text-[12px] text-[#9ca3af] dark:text-[#6b7280]">
                           {ticket.appointment.timeSlot}
                         </p>
                       </>
                     ) : (
-                      <span className="text-[12px] text-gray-400 dark:text-gray-500">—</span>
+                      <span className="text-[12px] text-[#9ca3af] dark:text-[#6b7280]">—</span>
                     )}
                   </td>
-                  <td className="px-5 py-4 border-b border-gray-100 dark:border-[#2a2a3e]/50 min-w-[130px]">
+                  <td className="px-5 py-4 border-b border-[#e5e7eb]/60 dark:border-[#2a2a2a]/50 min-w-[130px]">
                     <AssigneeCell ticketId={ticket.ticketId} value={ticket.assignedTo} />
                   </td>
-                  <td className="px-5 py-4 border-b border-gray-100 dark:border-[#2a2a3e]/50">
+                  <td className="px-5 py-4 border-b border-[#e5e7eb]/60 dark:border-[#2a2a2a]/50">
                     <StatusBadge status={ticket.status} />
                   </td>
-                  <td className="px-5 py-4 border-b border-gray-100 dark:border-[#2a2a3e]/50">
+                  <td className="px-5 py-4 border-b border-[#e5e7eb]/60 dark:border-[#2a2a2a]/50">
                     <div className="relative inline-block">
                       <select
                         value={ticket.status}
                         disabled={updatingId === ticket.ticketId}
                         onChange={e => handleStatusChange(ticket.ticketId, e.target.value as TicketStatus)}
-                        className="appearance-none text-[12px] font-medium pl-3 pr-7 py-1.5 rounded-lg border border-gray-200 dark:border-[#2a2a3e] bg-white dark:bg-[#13131f] text-gray-700 dark:text-gray-300 cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#8B1A1A] disabled:opacity-50"
+                        className="appearance-none text-[12px] font-medium pl-3 pr-7 py-1.5 rounded-lg border border-[#e5e7eb] dark:border-[#2a2a2a] bg-white dark:bg-[#111] text-[#374151] dark:text-[#a3a3a3] cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#8B1A1A] disabled:opacity-50"
                       >
                         {STATUS_OPTIONS.map(s => (
                           <option key={s} value={s}>
@@ -269,7 +269,7 @@ export default function TicketsView() {
                           </option>
                         ))}
                       </select>
-                      <ChevronDown size={12} className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                      <ChevronDown size={12} className="absolute right-2 top-1/2 -translate-y-1/2 text-[#9ca3af] pointer-events-none" />
                     </div>
                   </td>
                 </tr>

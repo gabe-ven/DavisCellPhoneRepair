@@ -33,7 +33,7 @@ export default function OverviewView() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-48 text-gray-400 dark:text-gray-500 text-base">
+      <div className="flex items-center justify-center h-48 text-[#9ca3af] dark:text-[#6b7280] text-base">
         Loading…
       </div>
     )
@@ -52,13 +52,13 @@ export default function OverviewView() {
 
       {/* Welcome header */}
       <div className="mb-2">
-        <p className="text-[15px] text-gray-400 dark:text-[#8888aa] font-normal mb-1">
+        <p className="text-[15px] text-[#9ca3af] dark:text-[#6b7280] font-normal mb-1">
           {getGreeting()}, welcome back 👋
         </p>
-        <h1 className="text-[32px] font-bold text-gray-900 dark:text-white leading-tight tracking-tight">
+        <h1 className="text-[32px] font-bold text-[#111111] dark:text-[#f5f5f5] leading-tight tracking-tight">
           Cesar 
         </h1>
-        <p className="text-[15px] text-gray-400 dark:text-[#8888aa] mt-1">
+        <p className="text-[15px] text-[#9ca3af] dark:text-[#6b7280] mt-1">
           Here's what's happening at Davis Cell Phone Repair today.
         </p>
       </div>
@@ -96,16 +96,16 @@ export default function OverviewView() {
       </div>
 
       {/* Recent Tickets Table */}
-      <div className="bg-white dark:bg-[#1c1c2e] border border-gray-200 dark:border-[#2a2a3e] rounded-2xl overflow-hidden">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-[#2a2a3e]">
-          <span className="text-[16px] font-semibold text-gray-900 dark:text-gray-100">Recent Tickets</span>
+      <div className="bg-white dark:bg-[#1a1a1a] border border-[#e5e7eb] dark:border-[#2a2a2a] rounded-2xl overflow-hidden">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#e5e7eb] dark:border-[#2a2a2a]">
+          <span className="text-[16px] font-semibold text-[#111111] dark:text-[#f0f0f0]">Recent Tickets</span>
           <button className="text-[13px] text-[#8B1A1A] font-medium hover:underline">View all →</button>
         </div>
         <table className="w-full border-collapse">
           <thead>
             <tr>
               {['Ticket ID', 'Customer', 'Device', 'Issue', 'Status', 'Date'].map(h => (
-                <th key={h} className="text-left px-6 py-3 text-[11px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider border-b border-gray-200 dark:border-[#2a2a3e]">
+                <th key={h} className="text-left px-6 py-3 text-[11px] font-semibold text-[#9ca3af] dark:text-[#6b7280] uppercase tracking-wider border-b border-[#e5e7eb] dark:border-[#2a2a2a]">
                   {h}
                 </th>
               ))}
@@ -113,23 +113,23 @@ export default function OverviewView() {
           </thead>
           <tbody>
             {recentTickets.map(ticket => (
-              <tr key={ticket.ticketId} className="hover:bg-gray-50 dark:hover:bg-[#16162a] transition-colors">
-                <td className="px-6 py-4 text-[13px] font-mono text-gray-400 dark:text-gray-500 border-b border-gray-100 dark:border-[#2a2a3e]/50">
+              <tr key={ticket.ticketId} className="hover:bg-[#f9f9f9] dark:hover:bg-[#222] transition-colors">
+                <td className="px-6 py-4 text-[13px] font-mono text-[#9ca3af] dark:text-[#6b7280] border-b border-[#e5e7eb]/60 dark:border-[#2a2a2a]/50">
                   #{ticket.ticketId}
                 </td>
-                <td className="px-6 py-4 text-[15px] font-semibold text-gray-900 dark:text-gray-100 border-b border-gray-100 dark:border-[#2a2a3e]/50">
+                <td className="px-6 py-4 text-[15px] font-semibold text-[#111111] dark:text-[#f0f0f0] border-b border-[#e5e7eb]/60 dark:border-[#2a2a2a]/50">
                   {ticket.customer.name}
                 </td>
-                <td className="px-6 py-4 text-[14px] text-gray-600 dark:text-gray-300 border-b border-gray-100 dark:border-[#2a2a3e]/50">
+                <td className="px-6 py-4 text-[14px] text-[#374151] dark:text-[#a3a3a3] border-b border-[#e5e7eb]/60 dark:border-[#2a2a2a]/50">
                   {ticket.device.brand} {ticket.device.modelCustom ?? ticket.device.modelTrim ?? ''}
                 </td>
-                <td className="px-6 py-4 text-[14px] text-gray-600 dark:text-gray-300 border-b border-gray-100 dark:border-[#2a2a3e]/50">
+                <td className="px-6 py-4 text-[14px] text-[#374151] dark:text-[#a3a3a3] border-b border-[#e5e7eb]/60 dark:border-[#2a2a2a]/50">
                   {ticket.issues[0]}
                 </td>
-                <td className="px-6 py-4 border-b border-gray-100 dark:border-[#2a2a3e]/50">
+                <td className="px-6 py-4 border-b border-[#e5e7eb]/60 dark:border-[#2a2a2a]/50">
                   <StatusBadge status={ticket.status} />
                 </td>
-                <td className="px-6 py-4 text-[14px] text-gray-400 dark:text-gray-500 border-b border-gray-100 dark:border-[#2a2a3e]/50">
+                <td className="px-6 py-4 text-[14px] text-[#9ca3af] dark:text-[#6b7280] border-b border-[#e5e7eb]/60 dark:border-[#2a2a2a]/50">
                   {new Date(ticket.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                 </td>
               </tr>
@@ -142,9 +142,9 @@ export default function OverviewView() {
       <div className="grid grid-cols-2 gap-4">
 
         {/* Status Breakdown */}
-        <div className="bg-white dark:bg-[#1c1c2e] border border-gray-200 dark:border-[#2a2a3e] rounded-2xl overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-200 dark:border-[#2a2a3e]">
-            <span className="text-[16px] font-semibold text-gray-900 dark:text-gray-100">Status Breakdown</span>
+        <div className="bg-white dark:bg-[#1a1a1a] border border-[#e5e7eb] dark:border-[#2a2a2a] rounded-2xl overflow-hidden">
+          <div className="px-6 py-4 border-b border-[#e5e7eb] dark:border-[#2a2a2a]">
+            <span className="text-[16px] font-semibold text-[#111111] dark:text-[#f0f0f0]">Status Breakdown</span>
           </div>
           <div className="flex flex-col gap-3 px-6 py-4">
             {(['received', 'reviewing', 'in_repair', 'ready', 'completed'] as const).map(s => {
@@ -155,13 +155,13 @@ export default function OverviewView() {
                   <div className="w-[90px] flex-shrink-0">
                     <StatusBadge status={s} />
                   </div>
-                  <div className="flex-1 h-2 rounded-full bg-gray-100 dark:bg-[#2a2a3e] overflow-hidden">
+                  <div className="flex-1 h-2 rounded-full bg-[#f5f5f5] dark:bg-[#2a2a3e] overflow-hidden">
                     <div
                       className={`h-full rounded-full ${STATUS_BAR_COLORS[s]} transition-all duration-500`}
                       style={{ width: `${pct}%` }}
                     />
                   </div>
-                  <span className="text-[13px] text-gray-400 dark:text-gray-500 min-w-[20px] text-right font-medium">{count}</span>
+                  <span className="text-[13px] text-[#9ca3af] dark:text-[#6b7280] min-w-[20px] text-right font-medium">{count}</span>
                 </div>
               )
             })}
@@ -169,11 +169,11 @@ export default function OverviewView() {
         </div>
 
         {/* Recent Activity — derived from real ticket data */}
-        <div className="bg-white dark:bg-[#1c1c2e] border border-gray-200 dark:border-[#2a2a3e] rounded-2xl overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-200 dark:border-[#2a2a3e]">
-            <span className="text-[16px] font-semibold text-gray-900 dark:text-gray-100">Recent Activity</span>
+        <div className="bg-white dark:bg-[#1a1a1a] border border-[#e5e7eb] dark:border-[#2a2a2a] rounded-2xl overflow-hidden">
+          <div className="px-6 py-4 border-b border-[#e5e7eb] dark:border-[#2a2a2a]">
+            <span className="text-[16px] font-semibold text-[#111111] dark:text-[#f0f0f0]">Recent Activity</span>
           </div>
-          <div className="divide-y divide-gray-100 dark:divide-[#2a2a3e]/70">
+          <div className="divide-y divide-[#e5e7eb] dark:divide-[#2a2a2a]/70">
             {[...tickets]
               .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
               .slice(0, 4)
@@ -197,8 +197,8 @@ export default function OverviewView() {
                 return (
                   <div key={t.ticketId} className="flex items-start gap-4 px-6 py-4">
                     <div className="w-2.5 h-2.5 rounded-full flex-shrink-0 mt-1" style={{ background: dotColors[t.status] ?? '#9ca3af' }} />
-                    <span className="text-[14px] text-gray-700 dark:text-gray-300 flex-1 leading-snug">{msgs[t.status]}</span>
-                    <span className="text-[12px] text-gray-400 dark:text-gray-500 flex-shrink-0 mt-0.5">{timeAgo}</span>
+                    <span className="text-[14px] text-[#374151] dark:text-[#a3a3a3] flex-1 leading-snug">{msgs[t.status]}</span>
+                    <span className="text-[12px] text-[#9ca3af] dark:text-[#6b7280] flex-shrink-0 mt-0.5">{timeAgo}</span>
                   </div>
                 )
               })}

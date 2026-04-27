@@ -28,16 +28,24 @@ export default function AdminDashboard() {
     darkMode ? root.classList.add('dark') : root.classList.remove('dark')
   }, [darkMode])
 
+  function handleToggleDark() {
+    // Suppress all CSS transitions for one frame so the switch is instant
+    const root = document.documentElement
+    root.classList.add('no-transitions')
+    setDarkMode(prev => !prev)
+    requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove('no-transitions')))
+  }
+
   async function handleLogout() {
     await supabase.auth.signOut()
     router.push('/login')
   }
 
   return (
-    <div className="flex flex-col h-screen w-full overflow-hidden bg-gray-100 dark:bg-[#13131f] transition-colors duration-200">
+    <div className="flex flex-col h-screen w-full overflow-hidden bg-[#f5f5f5] dark:bg-[#0d0d0d]">
       <TopBar
         darkMode={darkMode}
-        onToggleDark={() => setDarkMode(prev => !prev)}
+        onToggleDark={handleToggleDark}
         onLogout={handleLogout}
       />
       <div className="flex flex-1 overflow-hidden">
@@ -47,13 +55,13 @@ export default function AdminDashboard() {
           collapsed={sidebarCollapsed}
           onToggleCollapse={() => setSidebarCollapsed(prev => !prev)}
         />
-        <main className="flex-1 overflow-y-auto p-8">
+        <main className="flex-1 overflow-y-auto p-8 bg-[#f5f5f5] dark:bg-[#0d0d0d]">
           {activeView === 'home'          && <OverviewView />}
           {activeView === 'tickets'       && <TicketsView />}
           {activeView === 'calendar'      && <CalendarView />}
           {activeView === 'notifications' && <NotificationsView />}
           {activeView === 'merch'         && (
-            <div className="flex items-center justify-center h-48 text-gray-400 dark:text-gray-500 text-base">
+            <div className="flex items-center justify-center h-48 text-[#6b7280] text-base">
               Merch — coming soon
             </div>
           )}

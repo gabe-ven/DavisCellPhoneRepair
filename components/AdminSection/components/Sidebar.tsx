@@ -1,114 +1,119 @@
-// Sidebar color tokens:
-// bg: bg-slate-100 dark:bg-[#1a1a2e]
-// nav item active: bg-[#8B1A1A] text-white (both modes)
-// nav item hover: bg-slate-200 dark:bg-white/5
-// nav item text: text-slate-500 dark:text-[#8888aa]
-// logo text: text-slate-800 dark:text-white
-// logo subtext: text-slate-400 dark:text-[#a0a0b8]
-// collapse button: text-slate-400 dark:text-[#8888aa]
-
 import {
-    Home,
-    Ticket,
-    Calendar,
-    ShoppingBag,
-    Bell,
-    ChevronLeft,
-    ChevronRight,
-    Layers,
-  } from 'lucide-react'
-  import type { ViewType } from '../AdminDashboard'
-  
-  interface SidebarProps {
-    activeView: ViewType
-    onViewChange: (view: ViewType) => void
-    collapsed: boolean
-    onToggleCollapse: () => void
-  }
-  
-  const NAV_ITEMS: { id: ViewType; label: string; icon: React.ReactNode; hasNotif?: boolean }[] = [
-    { id: 'home', label: 'Home', icon: <Home size={22} strokeWidth={1.8} /> },
-    { id: 'tickets', label: 'Tickets', icon: <Ticket size={22} strokeWidth={1.8} /> },
-    { id: 'calendar', label: 'Calendar', icon: <Calendar size={22} strokeWidth={1.8} /> },
-    { id: 'merch', label: 'Merch', icon: <ShoppingBag size={22} strokeWidth={1.8} /> },
-    { id: 'notifications', label: 'Notifications', icon: <Bell size={22} strokeWidth={1.8} />, hasNotif: true },
-  ]
-  
-  export default function Sidebar({ activeView, onViewChange, collapsed, onToggleCollapse }: SidebarProps) {
-    return (
-      <aside
-        className={`
-          flex flex-col bg-slate-100 dark:bg-[#1a1a2e] transition-all duration-300 overflow-hidden flex-shrink-0 border-r border-slate-200 dark:border-transparent
-          ${collapsed ? 'w-[72px]' : 'w-[260px]'}
-        `}
-      >
-        {/* Logo */}
-        <div className="flex items-center gap-3 px-5 pt-6 pb-8 overflow-hidden">
-          <div className="w-10 h-10 rounded-xl bg-[#8B1A1A] flex items-center justify-center flex-shrink-0">
-            <Layers size={20} color="white" strokeWidth={2} />
-          </div>
-          {!collapsed && (
-            <div className="text-slate-800 dark:text-white text-[15px] font-semibold leading-snug whitespace-nowrap">
-              Davis Cell<br />
-              <span className="text-slate-400 dark:text-[#a0a0b8] font-normal text-[13px]">Repair Admin</span>
-            </div>
-          )}
+  Home,
+  Ticket,
+  Calendar,
+  ShoppingBag,
+  Bell,
+  ChevronLeft,
+  ChevronRight,
+  Layers,
+} from 'lucide-react'
+import type { ViewType } from '../AdminDashboard'
+
+interface SidebarProps {
+  activeView: ViewType
+  onViewChange: (view: ViewType) => void
+  collapsed: boolean
+  onToggleCollapse: () => void
+}
+
+const NAV_ITEMS: { id: ViewType; label: string; icon: React.ReactNode; hasNotif?: boolean }[] = [
+  { id: 'home',          label: 'Home',          icon: <Home      size={20} strokeWidth={1.8} /> },
+  { id: 'tickets',       label: 'Tickets',        icon: <Ticket    size={20} strokeWidth={1.8} /> },
+  { id: 'calendar',      label: 'Calendar',       icon: <Calendar  size={20} strokeWidth={1.8} /> },
+  { id: 'merch',         label: 'Merch',          icon: <ShoppingBag size={20} strokeWidth={1.8} /> },
+  { id: 'notifications', label: 'Notifications',  icon: <Bell      size={20} strokeWidth={1.8} />, hasNotif: true },
+]
+
+export default function Sidebar({ activeView, onViewChange, collapsed, onToggleCollapse }: SidebarProps) {
+  return (
+    <aside
+      className={`
+        flex flex-col flex-shrink-0 overflow-hidden
+        bg-[#0d0d0d] border-r border-[#1f1f1f]
+        ${collapsed ? 'w-[68px]' : 'w-[240px]'}
+      `}
+      style={{ transition: 'width 0.2s ease' }}
+    >
+      {/* Logo */}
+      <div className="flex items-center gap-3 px-4 pt-6 pb-7 overflow-hidden">
+        <div className="w-9 h-9 rounded-xl bg-[#8B1A1A] flex items-center justify-center flex-shrink-0 shadow-lg">
+          <Layers size={18} color="white" strokeWidth={2} />
         </div>
-  
-        {/* Nav */}
-        <nav className="flex flex-col gap-1.5 px-3">
-          {NAV_ITEMS.map(item => {
-            const isActive = activeView === item.id
-            return (
-              <button
-                key={item.id}
-                onClick={() => onViewChange(item.id)}
-                title={collapsed ? item.label : undefined}
-                className={`
-                  relative flex items-center rounded-xl transition-all duration-150 text-left w-full
-                  ${collapsed ? 'px-0 py-3.5 justify-center' : 'px-4 py-3.5 gap-4'}
-                  ${isActive
-                    ? 'bg-[#8B1A1A] text-white'
-                    : 'text-slate-500 dark:text-[#8888aa] hover:bg-slate-200 dark:hover:bg-white/5 hover:text-slate-800 dark:hover:text-gray-200'
-                  }
-                `}
-              >
-                <span className="flex-shrink-0">{item.icon}</span>
-                {!collapsed && (
-                  <span className="text-[15px] font-medium whitespace-nowrap">{item.label}</span>
-                )}
-                {item.hasNotif && (
-                  <span
-                    className={`w-2 h-2 rounded-full bg-[#e05555] flex-shrink-0 ${
-                      collapsed ? 'absolute top-2 right-2' : 'ml-auto'
-                    }`}
-                  />
-                )}
-              </button>
+        {!collapsed && (
+          <div className="overflow-hidden">
+            <p className="text-white text-[14px] font-bold leading-tight whitespace-nowrap tracking-tight">
+              Davis Cell
+            </p>
+            <p className="text-[#6b7280] text-[11px] font-medium whitespace-nowrap uppercase tracking-widest">
+              Repair Admin
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* Divider */}
+      <div className="h-px bg-[#1f1f1f] mx-3 mb-3" />
+
+      {/* Nav */}
+      <nav className="flex flex-col gap-0.5 px-2 flex-1">
+        {NAV_ITEMS.map(item => {
+          const isActive = activeView === item.id
+          return (
+            <button
+              key={item.id}
+              onClick={() => onViewChange(item.id)}
+              title={collapsed ? item.label : undefined}
+              className={`
+                relative flex items-center rounded-lg transition-colors text-left w-full
+                ${collapsed ? 'px-0 py-3 justify-center' : 'px-3 py-2.5 gap-3'}
+                ${isActive
+                  ? 'bg-[#8B1A1A] text-white'
+                  : 'text-[#9ca3af] hover:bg-white/5 hover:text-white'
+                }
+              `}
+            >
+              <span className="flex-shrink-0">{item.icon}</span>
+              {!collapsed && (
+                <span className="text-[14px] font-medium whitespace-nowrap">{item.label}</span>
+              )}
+              {item.hasNotif && (
+                <span
+                  className={`w-1.5 h-1.5 rounded-full bg-[#8B1A1A] flex-shrink-0 ${
+                    collapsed ? 'absolute top-2 right-2.5' : 'ml-auto'
+                  } ${isActive ? 'bg-white/80' : ''}`}
+                />
+              )}
+            </button>
+          )
+        })}
+      </nav>
+
+      {/* Divider */}
+      <div className="h-px bg-[#1f1f1f] mx-3 mt-2 mb-2" />
+
+      {/* Collapse toggle */}
+      <div className="px-2 pb-5">
+        <button
+          onClick={onToggleCollapse}
+          title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          className={`
+            flex items-center rounded-lg transition-colors w-full
+            text-[#6b7280] hover:bg-white/5 hover:text-white
+            ${collapsed ? 'px-0 py-3 justify-center' : 'px-3 py-2.5 gap-3'}
+          `}
+        >
+          {collapsed
+            ? <ChevronRight size={18} strokeWidth={1.8} />
+            : (
+              <>
+                <ChevronLeft size={18} strokeWidth={1.8} />
+                <span className="text-[13px] font-medium whitespace-nowrap">Collapse</span>
+              </>
             )
-          })}
-  
-          {/* Collapse toggle — sits right below nav items */}
-          <button
-            onClick={onToggleCollapse}
-            title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-            className={`
-              relative flex items-center rounded-xl transition-all duration-150 text-left w-full mt-2
-              text-slate-400 dark:text-[#8888aa] hover:bg-slate-200 dark:hover:bg-white/5 hover:text-slate-700 dark:hover:text-gray-200
-              ${collapsed ? 'px-0 py-3.5 justify-center' : 'px-4 py-3.5 gap-4'}
-            `}
-          >
-            {collapsed
-              ? <ChevronRight size={22} strokeWidth={1.8} />
-              : (
-                <>
-                  <ChevronLeft size={22} strokeWidth={1.8} />
-                  <span className="text-[15px] font-medium whitespace-nowrap">Collapse</span>
-                </>
-              )
-            }
-          </button>
-        </nav>
-      </aside>
-    )
-  }
+          }
+        </button>
+      </div>
+    </aside>
+  )
+}

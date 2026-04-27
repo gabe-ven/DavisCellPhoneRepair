@@ -1,9 +1,3 @@
-// TopBar color tokens:
-// bg: bg-white dark:bg-[#1c1c2e]
-// border: border-gray-200 dark:border-[#2a2a3e]
-// brand logo icon: bg-[#8B1A1A]
-// notification dot: bg-[#8B1A1A]
-
 import { Bell, Settings, LogOut, Search, Sun, Moon, Layers } from 'lucide-react'
 
 interface TopBarProps {
@@ -12,70 +6,78 @@ interface TopBarProps {
   onLogout: () => void
 }
 
+const ICN_BTN = `
+  w-9 h-9 rounded-lg flex items-center justify-center
+  border border-[#e5e7eb] dark:border-[#2a2a2a]
+  bg-white dark:bg-[#1a1a1a]
+  text-[#6b7280] dark:text-[#9ca3af]
+  hover:bg-[#f5f5f5] dark:hover:bg-[#222]
+  hover:text-[#111] dark:hover:text-white
+`
+
 export default function TopBar({ darkMode, onToggleDark, onLogout }: TopBarProps) {
   return (
-    <header className="h-[68px] flex-shrink-0 flex items-center gap-4 px-6 bg-white dark:bg-[#1c1c2e] border-b border-gray-200 dark:border-[#2a2a3e] transition-colors duration-200">
+    <header className="h-[60px] flex-shrink-0 flex items-center gap-4 px-5 bg-white dark:bg-[#141414] border-b border-[#e5e7eb] dark:border-[#2a2a2a]">
 
-      {/* Brand — leftmost, before search */}
-      <div className="flex items-center gap-2.5 flex-shrink-0 mr-2">
-        <div className="w-9 h-9 rounded-xl bg-[#8B1A1A] flex items-center justify-center flex-shrink-0">
-          <Layers size={18} color="white" strokeWidth={2} />
+      {/* Brand */}
+      <div className="flex items-center gap-2.5 flex-shrink-0 mr-1">
+        <div className="w-8 h-8 rounded-lg bg-[#8B1A1A] flex items-center justify-center flex-shrink-0">
+          <Layers size={15} color="white" strokeWidth={2} />
         </div>
         <div className="leading-tight">
-          <div className="text-[14px] font-semibold text-gray-900 dark:text-white whitespace-nowrap">Davis Cell</div>
-          <div className="text-[11px] text-gray-400 dark:text-[#8888aa] whitespace-nowrap">Repair Admin</div>
+          <p className="text-[13px] font-bold text-[#111] dark:text-white whitespace-nowrap tracking-tight">
+            Davis Cell
+          </p>
+          <p className="text-[10px] text-[#6b7280] whitespace-nowrap uppercase tracking-widest font-medium">
+            Admin
+          </p>
         </div>
       </div>
 
       {/* Divider */}
-      <div className="w-px h-8 bg-gray-200 dark:bg-[#2a2a3e] flex-shrink-0" />
+      <div className="w-px h-7 bg-[#e5e7eb] dark:bg-[#2a2a2a] flex-shrink-0" />
 
       {/* Search */}
-      <div className="flex items-center gap-2.5 h-10 px-4 rounded-xl border border-gray-200 dark:border-[#2a2a3e] bg-gray-50 dark:bg-[#13131f] max-w-[320px] flex-1">
-        <Search size={16} strokeWidth={2} className="text-gray-400 dark:text-gray-500 flex-shrink-0" />
-        <span className="text-[14px] text-gray-400 dark:text-gray-500">Search tickets…</span>
+      <div className="flex items-center gap-2 h-9 px-3 rounded-lg border border-[#e5e7eb] dark:border-[#2a2a2a] bg-[#f9f9f9] dark:bg-[#111] max-w-[300px] flex-1">
+        <Search size={14} strokeWidth={2} className="text-[#9ca3af] flex-shrink-0" />
+        <span className="text-[13px] text-[#9ca3af]">Search tickets…</span>
       </div>
 
       <div className="flex-1" />
 
       {/* Actions */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5">
 
-        {/* Dark / Light mode toggle */}
+        {/* Dark / Light toggle */}
         <button
           onClick={onToggleDark}
-          className="flex items-center gap-2.5 h-10 px-3 rounded-xl border border-gray-200 dark:border-[#2a2a3e] bg-white dark:bg-[#1c1c2e] hover:bg-gray-50 dark:hover:bg-[#16162a] transition-colors"
-          title={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+          title={darkMode ? 'Light mode' : 'Dark mode'}
+          className={`${ICN_BTN}`}
         >
           {darkMode
-            ? <Sun size={17} strokeWidth={1.8} className="text-amber-400" />
-            : <Moon size={17} strokeWidth={1.8} className="text-slate-500" />
+            ? <Sun  size={15} strokeWidth={2} className="text-amber-400" />
+            : <Moon size={15} strokeWidth={2} className="text-[#6b7280]" />
           }
-          <div className={`w-9 h-5 rounded-full relative transition-colors duration-200 ${darkMode ? 'bg-[#8B1A1A]' : 'bg-gray-200'}`}>
-            <div
-              className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-all duration-200 ${darkMode ? 'left-[18px]' : 'left-0.5'}`}
-            />
-          </div>
         </button>
 
-        {/* Notification */}
-        <button className="relative w-10 h-10 rounded-xl flex items-center justify-center border border-gray-200 dark:border-[#2a2a3e] bg-white dark:bg-[#1c1c2e] text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-[#16162a] transition-colors">
-          <Bell size={19} strokeWidth={1.8} />
-          <span className="absolute top-[6px] right-[6px] w-2 h-2 rounded-full bg-[#8B1A1A] border-2 border-white dark:border-[#1c1c2e]" />
+        {/* Notifications */}
+        <button className={`${ICN_BTN} relative`} title="Notifications">
+          <Bell size={15} strokeWidth={2} />
+          <span className="absolute top-[7px] right-[7px] w-1.5 h-1.5 rounded-full bg-[#8B1A1A] border border-white dark:border-[#141414]" />
         </button>
 
         {/* Settings */}
-        <button className="w-10 h-10 rounded-xl flex items-center justify-center border border-gray-200 dark:border-[#2a2a3e] bg-white dark:bg-[#1c1c2e] text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-[#16162a] transition-colors">
-          <Settings size={19} strokeWidth={1.8} />
+        <button className={ICN_BTN} title="Settings">
+          <Settings size={15} strokeWidth={2} />
         </button>
 
         {/* Logout */}
         <button
           onClick={onLogout}
           title="Sign out"
-          className="w-10 h-10 rounded-xl flex items-center justify-center border border-gray-200 dark:border-[#2a2a3e] bg-white dark:bg-[#1c1c2e] text-gray-500 dark:text-gray-400 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-[#8B1A1A] hover:border-[#8B1A1A]/30 transition-colors"
+          className={`${ICN_BTN} hover:!bg-red-50 dark:hover:!bg-red-950/30 hover:!text-[#8B1A1A] hover:!border-[#8B1A1A]/30`}
         >
-          <LogOut size={19} strokeWidth={1.8} />
+          <LogOut size={15} strokeWidth={2} />
         </button>
       </div>
     </header>

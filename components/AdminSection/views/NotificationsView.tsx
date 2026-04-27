@@ -54,10 +54,10 @@ export default function NotificationsView() {
     <div className="flex flex-col gap-6">
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-[32px] font-bold text-gray-900 dark:text-white leading-tight tracking-tight">
+          <h1 className="text-[32px] font-bold text-[#111111] dark:text-[#f5f5f5] leading-tight tracking-tight">
             Notifications
           </h1>
-          <p className="text-[15px] text-gray-400 dark:text-[#8888aa] mt-1">
+          <p className="text-[15px] text-[#9ca3af] dark:text-[#6b7280] mt-1">
             {newCount > 0
               ? `${newCount} new request${newCount > 1 ? 's' : ''} waiting for review.`
               : 'All requests are being handled.'}
@@ -66,7 +66,7 @@ export default function NotificationsView() {
         {notifications.length > 0 && (
           <button
             onClick={dismissAll}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 dark:border-[#2a2a3e] text-[13px] font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-[#16162a] transition-colors bg-white dark:bg-[#1c1c2e]"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl border border-[#e5e7eb] dark:border-[#2a2a2a] text-[13px] font-medium text-[#374151] dark:text-[#6b7280] hover:bg-[#f9f9f9] dark:hover:bg-[#222] transition-colors bg-white dark:bg-[#1a1a1a]"
           >
             <CheckCircle size={14} />
             Dismiss all
@@ -74,25 +74,25 @@ export default function NotificationsView() {
         )}
       </div>
 
-      <div className="bg-white dark:bg-[#1c1c2e] border border-gray-200 dark:border-[#2a2a3e] rounded-2xl overflow-hidden">
+      <div className="bg-white dark:bg-[#1a1a1a] border border-[#e5e7eb] dark:border-[#2a2a2a] rounded-2xl overflow-hidden">
         {loading ? (
-          <div className="flex items-center justify-center h-48 text-gray-400 dark:text-gray-500">
+          <div className="flex items-center justify-center h-48 text-[#9ca3af] dark:text-[#6b7280]">
             Loading…
           </div>
         ) : notifications.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-48 gap-3 text-gray-400 dark:text-gray-500">
+          <div className="flex flex-col items-center justify-center h-48 gap-3 text-[#9ca3af] dark:text-[#6b7280]">
             <Bell size={32} strokeWidth={1.5} />
             <p className="text-sm">All caught up — no notifications.</p>
           </div>
         ) : (
-          <div className="divide-y divide-gray-100 dark:divide-[#2a2a3e]/70">
+          <div className="divide-y divide-[#e5e7eb] dark:divide-[#2a2a2a]/70">
             {notifications.map(t => {
               const isNew = t.status === 'received'
               return (
                 <div
                   key={t.ticketId}
-                  className={`flex items-start gap-4 px-6 py-4 hover:bg-gray-50 dark:hover:bg-[#16162a] transition-colors ${
-                    isNew ? 'bg-red-50/40 dark:bg-[#1e1515]' : ''
+                  className={`flex items-start gap-4 px-6 py-4 hover:bg-[#f9f9f9] dark:hover:bg-[#222] transition-colors ${
+                    isNew ? 'bg-red-50/40 dark:bg-[#1a1010]' : ''
                   }`}
                 >
                   {/* Status dot */}
@@ -103,10 +103,10 @@ export default function NotificationsView() {
                   {/* Content */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1 flex-wrap">
-                      <span className="text-[14px] font-semibold text-gray-900 dark:text-gray-100">
+                      <span className="text-[14px] font-semibold text-[#111111] dark:text-[#f0f0f0]">
                         {t.customer.name}
                       </span>
-                      <span className="font-mono text-[11px] text-gray-400 dark:text-gray-500">
+                      <span className="font-mono text-[11px] text-[#9ca3af] dark:text-[#6b7280]">
                         #{t.ticketId}
                       </span>
                       <StatusBadge status={t.status} />
@@ -116,10 +116,10 @@ export default function NotificationsView() {
                         </span>
                       )}
                     </div>
-                    <p className="text-[13px] text-gray-600 dark:text-gray-300 font-medium mb-0.5">
+                    <p className="text-[13px] text-[#374151] dark:text-[#a3a3a3] font-medium mb-0.5">
                       {STATUS_MSG[t.status]}
                     </p>
-                    <p className="text-[12px] text-gray-400 dark:text-gray-500 leading-snug capitalize">
+                    <p className="text-[12px] text-[#9ca3af] dark:text-[#6b7280] leading-snug capitalize">
                       {t.device.type}
                       {t.device.brand ? ` · ${t.device.brand}` : ''}
                       {(t.device.modelCustom ?? t.device.modelTrim ?? t.device.modelNumber)
@@ -133,13 +133,13 @@ export default function NotificationsView() {
 
                   {/* Time + dismiss */}
                   <div className="flex flex-col items-end gap-2 flex-shrink-0">
-                    <span className="flex items-center gap-1 text-[12px] text-gray-400 dark:text-gray-500">
+                    <span className="flex items-center gap-1 text-[12px] text-[#9ca3af] dark:text-[#6b7280]">
                       <Clock size={11} />
                       {timeAgo(t.createdAt)}
                     </span>
                     <button
                       onClick={() => dismiss(t.ticketId)}
-                      className="text-[12px] text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+                      className="text-[12px] text-[#9ca3af] hover:text-[#374151] dark:hover:text-gray-200 transition-colors"
                     >
                       Dismiss
                     </button>

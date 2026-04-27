@@ -15,6 +15,11 @@ button, [role="button"], select, label[for] {
   cursor: pointer;
 }
 
+/* Used by AdminDashboard to suppress all transitions during dark/light switch */
+.no-transitions * {
+  transition: none !important;
+}
+
 /* Smooth anchor scroll offset for sticky nav */
 [id] {
   scroll-margin-top: 64px;

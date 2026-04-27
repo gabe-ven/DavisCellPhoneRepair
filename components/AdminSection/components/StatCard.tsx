@@ -1,9 +1,3 @@
-// StatCard color tokens:
-// surface: bg-white dark:bg-[#1c1c2e]
-// border: border-gray-200 dark:border-[#2a2a3e]
-// label: text-gray-500 dark:text-gray-400
-// value: text-gray-900 dark:text-gray-100
-
 import type { ReactNode } from 'react'
 
 interface StatCardProps {
@@ -16,18 +10,18 @@ interface StatCardProps {
 
 export default function StatCard({ label, value, subtext, icon, iconBg }: StatCardProps) {
   return (
-    <div className="bg-white dark:bg-[#1c1c2e] border border-gray-200 dark:border-[#2a2a3e] rounded-xl p-4 flex flex-col gap-2 transition-colors duration-200">
+    <div className="bg-white dark:bg-[#1a1a1a] border border-[#e5e7eb] dark:border-[#2a2a2a] rounded-xl p-5 flex flex-col gap-3">
       <div className="flex items-center justify-between">
-        <span className="text-xs font-medium text-gray-500 dark:text-gray-400">{label}</span>
+        <span className="text-[11px] font-semibold text-[#6b7280] uppercase tracking-wider">{label}</span>
         <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${iconBg}`}>
           {icon}
         </div>
       </div>
-      <div className="text-[26px] font-medium text-gray-900 dark:text-gray-100 leading-none">
+      <div className="text-[28px] font-bold text-[#111] dark:text-white leading-none tracking-tight">
         {value}
       </div>
       {subtext && (
-        <div className="text-xs text-gray-500 dark:text-gray-400">{subtext}</div>
+        <div className="text-[12px] text-[#6b7280]">{subtext}</div>
       )}
     </div>
   )

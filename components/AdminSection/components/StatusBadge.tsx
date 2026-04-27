@@ -3,7 +3,7 @@
 // reviewing:  bg-yellow-100 text-yellow-700 dark:bg-yellow-950 dark:text-yellow-300
 // in_repair:  bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300
 // ready:      bg-green-100 text-green-700  dark:bg-green-950 dark:text-green-300
-// completed:  bg-gray-100 text-gray-500   dark:bg-gray-800 dark:text-gray-400
+// completed:  bg-[#f5f5f5] text-[#6b7280]   dark:bg-gray-800 dark:text-[#9ca3af]
 
 import type { TicketStatus } from '../../ServicesSection/types/wizard'
 
@@ -12,7 +12,7 @@ const STATUS_STYLES: Record<TicketStatus, string> = {
   reviewing: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-950 dark:text-yellow-300',
   in_repair: 'bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300',
   ready:     'bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-300',
-  completed: 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400',
+  completed: 'bg-[#f5f5f5] text-[#6b7280] dark:bg-gray-800 dark:text-[#9ca3af]',
 }
 
 const STATUS_LABELS: Record<TicketStatus, string> = {

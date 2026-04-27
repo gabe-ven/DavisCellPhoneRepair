@@ -50,14 +50,14 @@ interface CreateTicketModalProps {
 }
 
 const INPUT_CLS = `
-  w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-[#2a2a3e]
-  bg-white dark:bg-[#13131f] text-[14px] text-gray-900 dark:text-gray-100
+  w-full px-3 py-2 rounded-lg border border-[#e5e7eb] dark:border-[#2a2a2a]
+  bg-white dark:bg-[#111] text-[14px] text-[#111111] dark:text-[#f0f0f0]
   placeholder-gray-400 dark:placeholder-gray-500
   focus:outline-none focus:ring-2 focus:ring-[#8B1A1A]/30 focus:border-[#8B1A1A]
   transition-colors
 `
 
-const LABEL_CLS = 'block text-[12px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1'
+const LABEL_CLS = 'block text-[12px] font-semibold text-[#6b7280] dark:text-[#6b7280] uppercase tracking-wide mb-1'
 
 export default function CreateTicketModal({ onClose, onCreated }: CreateTicketModalProps) {
   const [form, setForm] = useState({
@@ -136,19 +136,19 @@ export default function CreateTicketModal({ onClose, onCreated }: CreateTicketMo
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
       onClick={e => { if (e.target === e.currentTarget) onClose() }}
     >
-      <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white dark:bg-[#1c1c2e] rounded-2xl border border-gray-200 dark:border-[#2a2a3e] shadow-2xl">
+      <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white dark:bg-[#1a1a1a] rounded-2xl border border-[#e5e7eb] dark:border-[#2a2a2a] shadow-2xl">
 
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-200 dark:border-[#2a2a3e] sticky top-0 bg-white dark:bg-[#1c1c2e] z-10">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-[#e5e7eb] dark:border-[#2a2a2a] sticky top-0 bg-white dark:bg-[#1a1a1a] z-10">
           <div>
-            <h2 className="text-[18px] font-bold text-gray-900 dark:text-white">New Walk-In Ticket</h2>
-            <p className="text-[13px] text-gray-400 dark:text-gray-500 mt-0.5">
+            <h2 className="text-[18px] font-bold text-[#111111] dark:text-[#f5f5f5]">New Walk-In Ticket</h2>
+            <p className="text-[13px] text-[#9ca3af] dark:text-[#6b7280] mt-0.5">
               Create a ticket for a customer at the counter.
             </p>
           </div>
           <button
             onClick={onClose}
-            className="w-9 h-9 flex items-center justify-center rounded-xl border border-gray-200 dark:border-[#2a2a3e] text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-[#16162a] transition-colors"
+            className="w-9 h-9 flex items-center justify-center rounded-xl border border-[#e5e7eb] dark:border-[#2a2a2a] text-[#9ca3af] hover:text-[#374151] dark:hover:text-gray-200 hover:bg-[#f9f9f9] dark:hover:bg-[#222] transition-colors"
           >
             <X size={17} />
           </button>
@@ -158,7 +158,7 @@ export default function CreateTicketModal({ onClose, onCreated }: CreateTicketMo
 
           {/* Customer Info */}
           <section>
-            <h3 className="text-[13px] font-bold text-gray-900 dark:text-gray-100 uppercase tracking-widest mb-3">
+            <h3 className="text-[13px] font-bold text-[#111111] dark:text-[#f0f0f0] uppercase tracking-widest mb-3">
               Customer
             </h3>
             <div className="grid grid-cols-2 gap-3">
@@ -183,7 +183,7 @@ export default function CreateTicketModal({ onClose, onCreated }: CreateTicketMo
                 />
               </div>
               <div className="col-span-2">
-                <label className={LABEL_CLS}>Email <span className="text-gray-400 font-normal normal-case tracking-normal">(optional — sends confirmation if provided)</span></label>
+                <label className={LABEL_CLS}>Email <span className="text-[#9ca3af] font-normal normal-case tracking-normal">(optional — sends confirmation if provided)</span></label>
                 <input
                   value={form.customerEmail}
                   onChange={e => set('customerEmail', e.target.value)}
@@ -195,11 +195,11 @@ export default function CreateTicketModal({ onClose, onCreated }: CreateTicketMo
             </div>
           </section>
 
-          <div className="h-px bg-gray-100 dark:bg-[#2a2a3e]" />
+          <div className="h-px bg-[#f5f5f5] dark:bg-[#2a2a3e]" />
 
           {/* Device Info */}
           <section>
-            <h3 className="text-[13px] font-bold text-gray-900 dark:text-gray-100 uppercase tracking-widest mb-3">
+            <h3 className="text-[13px] font-bold text-[#111111] dark:text-[#f0f0f0] uppercase tracking-widest mb-3">
               Device
             </h3>
             <div className="grid grid-cols-2 gap-3">
@@ -236,11 +236,11 @@ export default function CreateTicketModal({ onClose, onCreated }: CreateTicketMo
             </div>
           </section>
 
-          <div className="h-px bg-gray-100 dark:bg-[#2a2a3e]" />
+          <div className="h-px bg-[#f5f5f5] dark:bg-[#2a2a3e]" />
 
           {/* Issues */}
           <section>
-            <h3 className="text-[13px] font-bold text-gray-900 dark:text-gray-100 uppercase tracking-widest mb-3">
+            <h3 className="text-[13px] font-bold text-[#111111] dark:text-[#f0f0f0] uppercase tracking-widest mb-3">
               Issues <span className="text-[#8B1A1A]">*</span>
             </h3>
             <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
@@ -254,7 +254,7 @@ export default function CreateTicketModal({ onClose, onCreated }: CreateTicketMo
                     className={`px-3 py-2 rounded-lg border text-[13px] font-medium text-left transition-colors ${
                       selected
                         ? 'border-[#8B1A1A] bg-[#8B1A1A]/10 text-[#8B1A1A] dark:text-red-300'
-                        : 'border-gray-200 dark:border-[#2a2a3e] text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-[#16162a]'
+                        : 'border-[#e5e7eb] dark:border-[#2a2a2a] text-[#374151] dark:text-[#6b7280] hover:bg-[#f9f9f9] dark:hover:bg-[#222]'
                     }`}
                   >
                     {issue.label}
@@ -264,11 +264,11 @@ export default function CreateTicketModal({ onClose, onCreated }: CreateTicketMo
             </div>
           </section>
 
-          <div className="h-px bg-gray-100 dark:bg-[#2a2a3e]" />
+          <div className="h-px bg-[#f5f5f5] dark:bg-[#2a2a3e]" />
 
           {/* Appointment + Status */}
           <section>
-            <h3 className="text-[13px] font-bold text-gray-900 dark:text-gray-100 uppercase tracking-widest mb-3">
+            <h3 className="text-[13px] font-bold text-[#111111] dark:text-[#f0f0f0] uppercase tracking-widest mb-3">
               Appointment &amp; Status
             </h3>
             <div className="grid grid-cols-3 gap-3">
@@ -303,7 +303,7 @@ export default function CreateTicketModal({ onClose, onCreated }: CreateTicketMo
                 </select>
               </div>
               <div className="col-span-3">
-                <label className={LABEL_CLS}>Assign to Technician <span className="text-gray-400 font-normal normal-case tracking-normal">(optional)</span></label>
+                <label className={LABEL_CLS}>Assign to Technician <span className="text-[#9ca3af] font-normal normal-case tracking-normal">(optional)</span></label>
                 <input
                   value={form.assignedTo}
                   onChange={e => set('assignedTo', e.target.value)}
@@ -314,7 +314,7 @@ export default function CreateTicketModal({ onClose, onCreated }: CreateTicketMo
             </div>
           </section>
 
-          <div className="h-px bg-gray-100 dark:bg-[#2a2a3e]" />
+          <div className="h-px bg-[#f5f5f5] dark:bg-[#2a2a3e]" />
 
           {/* Notes */}
           <section>
@@ -343,7 +343,7 @@ export default function CreateTicketModal({ onClose, onCreated }: CreateTicketMo
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2.5 rounded-xl border border-gray-200 dark:border-[#2a2a3e] text-[14px] font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-[#16162a] transition-colors"
+              className="flex-1 py-2.5 rounded-xl border border-[#e5e7eb] dark:border-[#2a2a2a] text-[14px] font-medium text-[#374151] dark:text-[#6b7280] hover:bg-[#f9f9f9] dark:hover:bg-[#222] transition-colors"
             >
               Cancel
             </button>
