@@ -75,10 +75,14 @@ type Filter = typeof STATUS_FILTERS[number]
 
 const STATUS_OPTIONS: TicketStatus[] = ['received', 'reviewing', 'in_repair', 'ready', 'completed']
 
-export default function TicketsView() {
+interface TicketsViewProps {
+  initialSearch?: string
+}
+
+export default function TicketsView({ initialSearch = '' }: TicketsViewProps) {
   const { tickets, loading, error, updateStatus, refetch } = useTickets()
   const [filter, setFilter] = useState<Filter>('all')
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState(initialSearch)
   const [updatingId, setUpdatingId] = useState<string | null>(null)
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [createdTicketId, setCreatedTicketId] = useState<string | null>(null)

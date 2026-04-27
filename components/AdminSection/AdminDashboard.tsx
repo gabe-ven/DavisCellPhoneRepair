@@ -21,6 +21,7 @@ export default function AdminDashboard() {
   const [activeView, setActiveView] = useState<ViewType>('home')
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [darkMode, setDarkMode] = useState(true)
+  const [ticketsSearch, setTicketsSearch] = useState('')
   const router = useRouter()
 
   useEffect(() => {
@@ -29,7 +30,6 @@ export default function AdminDashboard() {
   }, [darkMode])
 
   function handleToggleDark() {
-    // Suppress all CSS transitions for one frame so the switch is instant
     const root = document.documentElement
     root.classList.add('no-transitions')
     setDarkMode(prev => !prev)
@@ -41,23 +41,33 @@ export default function AdminDashboard() {
     router.push('/login')
   }
 
+  function handleNavigateToTickets(search?: string) {
+    setActiveView('tickets')
+    setTicketsSearch(search ?? '')
+  }
+
   return (
     <div className="flex flex-col h-screen w-full overflow-hidden bg-[#f5f5f5] dark:bg-[#0d0d0d]">
       <TopBar
         darkMode={darkMode}
         onToggleDark={handleToggleDark}
         onLogout={handleLogout}
+        onNavigateToTickets={handleNavigateToTickets}
       />
       <div className="flex flex-1 overflow-hidden">
         <Sidebar
           activeView={activeView}
-          onViewChange={setActiveView}
+          onViewChange={(view) => {
+            setActiveView(view)
+            // Clear search when navigating away from tickets
+            if (view !== 'tickets') setTicketsSearch('')
+          }}
           collapsed={sidebarCollapsed}
           onToggleCollapse={() => setSidebarCollapsed(prev => !prev)}
         />
         <main className="flex-1 overflow-y-auto p-8 bg-[#f5f5f5] dark:bg-[#0d0d0d]">
           {activeView === 'home'          && <OverviewView />}
-          {activeView === 'tickets'       && <TicketsView />}
+          {activeView === 'tickets'       && <TicketsView key={ticketsSearch} initialSearch={ticketsSearch} />}
           {activeView === 'calendar'      && <CalendarView />}
           {activeView === 'notifications' && <NotificationsView />}
           {activeView === 'merch'         && (
