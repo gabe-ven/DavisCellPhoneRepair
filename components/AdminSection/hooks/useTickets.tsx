@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { getAllTickets, updateTicketStatus } from '../api/adminApi'
+import { getAllTickets, updateTicketStatus, supabase } from '../api/adminApi'
 import type { Ticket, TicketStatus } from '../types/admin'
 
 interface UseTicketsReturn {
@@ -21,28 +21,44 @@ export function useTickets(): UseTicketsReturn {
     try {
       const data = await getAllTickets()
       setTickets(data)
-    } catch (e) {
+    } catch {
       setError('Failed to load tickets.')
     } finally {
       setLoading(false)
     }
   }, [])
 
+  // Initial fetch
   useEffect(() => {
     fetchTickets()
   }, [fetchTickets])
 
+  // Real-time: refetch whenever any row in tickets changes
+  useEffect(() => {
+    const channel = supabase
+      .channel('tickets-realtime')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'tickets' },
+        () => fetchTickets()
+      )
+      .subscribe()
+
+    return () => { supabase.removeChannel(channel) }
+  }, [fetchTickets])
+
   const updateStatus = useCallback(async (ticketId: string, status: TicketStatus) => {
-    // Optimistic update — roll back on error when real backend is wired
+    // Optimistic update
     setTickets(prev =>
       prev.map(t => t.ticketId === ticketId ? { ...t, status } : t)
     )
     try {
       await updateTicketStatus(ticketId, status)
     } catch {
-      // TODO: rollback on real backend error
+      // Roll back on failure
+      fetchTickets()
     }
-  }, [])
+  }, [fetchTickets])
 
   return { tickets, loading, error, updateStatus, refetch: fetchTickets }
 }

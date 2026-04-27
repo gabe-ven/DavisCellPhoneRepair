@@ -1,105 +1,74 @@
-// adminApi.ts — Swap function bodies only when real backend is ready.
+// adminApi.ts — Real Supabase implementation.
 // Never change function signatures — components depend on them.
 
+import { createClient } from '@supabase/supabase-js'
 import type { Ticket, TicketStatus } from '../../ServicesSection/types/wizard'
 
-const MOCK_TICKETS: Ticket[] = [
-  {
-    ticketId: 'DCR-1042',
-    createdAt: '2025-04-27T09:14:00Z',
-    status: 'in_repair',
-    device: { type: 'iphone', brand: 'Apple', modelNumber: 'A3293', modelTrim: 'Pro', modelCustom: null },
-    issues: ['Screen Replacement'],
-    appointment: { date: '2025-04-27', timeSlot: '10:00 AM' },
-    customer: { name: 'Marcus T.', email: 'marcus.t@gmail.com', phone: '(530) 555-0101' },
-    source: 'web',
-  },
-  {
-    ticketId: 'DCR-1041',
-    createdAt: '2025-04-26T14:30:00Z',
-    status: 'ready',
-    device: { type: 'android', brand: 'Samsung', modelNumber: 'S928U', modelTrim: 'Ultra', modelCustom: null },
-    issues: ['Battery Replacement'],
-    appointment: { date: '2025-04-26', timeSlot: '2:00 PM' },
-    customer: { name: 'Sarah M.', email: 'sarah.m@email.com', phone: '(530) 555-0182' },
-    source: 'web',
-  },
-  {
-    ticketId: 'DCR-1040',
-    createdAt: '2025-04-26T11:00:00Z',
-    status: 'reviewing',
-    device: { type: 'ipad', brand: 'Apple', modelNumber: 'A2588', modelTrim: null, modelCustom: 'iPad Air 5th Gen' },
-    issues: ['Charging Port'],
-    appointment: { date: '2025-04-26', timeSlot: '11:00 AM' },
-    customer: { name: 'James K.', email: 'jamesk@ucdavis.edu', phone: '(530) 555-0245' },
-    source: 'web',
-  },
-  {
-    ticketId: 'DCR-1039',
-    createdAt: '2025-04-25T16:45:00Z',
-    status: 'received',
-    device: { type: 'iphone', brand: 'Apple', modelNumber: 'A2633', modelTrim: null, modelCustom: null },
-    issues: ['Camera Fix', 'Software Issue'],
-    appointment: { date: null, timeSlot: null },
-    customer: { name: 'Priya N.', email: 'priya.n@gmail.com', phone: '(530) 555-0317' },
-    source: 'mobile',
-  },
-  {
-    ticketId: 'DCR-1038',
-    createdAt: '2025-04-24T10:00:00Z',
-    status: 'completed',
-    device: { type: 'android', brand: 'Google', modelNumber: 'G9BQD', modelTrim: null, modelCustom: 'Pixel 8' },
-    issues: ['Screen Replacement'],
-    appointment: { date: '2025-04-24', timeSlot: '10:00 AM' },
-    customer: { name: 'Derek W.', email: 'd.ward@outlook.com', phone: '(530) 555-0428' },
-    source: 'web',
-  },
-  {
-    ticketId: 'DCR-1037',
-    createdAt: '2025-04-23T13:20:00Z',
-    status: 'in_repair',
-    device: { type: 'android', brand: 'Samsung', modelNumber: 'A546B', modelTrim: null, modelCustom: 'Galaxy A54' },
-    issues: ['Battery Replacement', 'Charging Port'],
-    appointment: { date: '2025-04-23', timeSlot: '1:00 PM' },
-    customer: { name: 'Lena H.', email: 'lena.h@yahoo.com', phone: '(530) 555-0539' },
-    source: 'web',
-  },
-  {
-    ticketId: 'DCR-1036',
-    createdAt: '2025-04-22T09:30:00Z',
-    status: 'ready',
-    device: { type: 'iphone', brand: 'Apple', modelNumber: 'A2896', modelTrim: 'Plus', modelCustom: null },
-    issues: ['Back Glass Replacement'],
-    appointment: { date: '2025-04-22', timeSlot: '9:30 AM' },
-    customer: { name: 'Tomás R.', email: 'tomas.r@gmail.com', phone: '(530) 555-0651' },
-    source: 'mobile',
-  },
-  {
-    ticketId: 'DCR-1035',
-    createdAt: '2025-04-21T15:00:00Z',
-    status: 'completed',
-    device: { type: 'tablet', brand: 'Samsung', modelNumber: 'X916B', modelTrim: null, modelCustom: 'Galaxy Tab S9 Ultra' },
-    issues: ['Screen Replacement'],
-    appointment: { date: '2025-04-21', timeSlot: '3:00 PM' },
-    customer: { name: 'Aisha B.', email: 'aisha.b@email.com', phone: '(530) 555-0762' },
-    source: 'web',
-  },
-]
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+)
+
+function rowToTicket(row: Record<string, unknown>): Ticket {
+  return {
+    ticketId:  row.id as string,
+    createdAt: row.created_at as string,
+    status:    row.status as TicketStatus,
+    device: {
+      type:        row.device_type as Ticket['device']['type'],
+      brand:       row.brand as string | null,
+      modelNumber: row.model_number as string | null,
+      modelTrim:   row.model_trim as string | null,
+      modelCustom: row.model_custom as string | null,
+    },
+    issues:   (row.issues as string[]) ?? [],
+    images:   (row.images as Ticket['images']) ?? [],
+    appointment: {
+      date:     row.appointment_date as string | null,
+      timeSlot: row.appointment_time as string | null,
+    },
+    customer: {
+      name:  row.customer_name as string,
+      email: row.customer_email as string,
+      phone: row.customer_phone as string,
+    },
+    source: (row.source as 'web' | 'mobile') ?? 'web',
+  }
+}
 
 export async function getAllTickets(): Promise<Ticket[]> {
-  await new Promise(r => setTimeout(r, 800))
-  return MOCK_TICKETS
+  const { data, error } = await supabase
+    .from('tickets')
+    .select('*')
+    .order('created_at', { ascending: false })
+
+  if (error) throw new Error(error.message)
+  return (data ?? []).map(rowToTicket)
 }
 
 export async function getTicketById(ticketId: string): Promise<Ticket | null> {
-  await new Promise(r => setTimeout(r, 400))
-  return MOCK_TICKETS.find(t => t.ticketId === ticketId) ?? null
+  const { data, error } = await supabase
+    .from('tickets')
+    .select('*')
+    .eq('id', ticketId)
+    .single()
+
+  if (error || !data) return null
+  return rowToTicket(data)
 }
 
 export async function updateTicketStatus(
   ticketId: string,
   status: TicketStatus
 ): Promise<{ success: boolean }> {
-  await new Promise(r => setTimeout(r, 400))
+  const { error } = await supabase
+    .from('tickets')
+    .update({ status })
+    .eq('id', ticketId)
+
+  if (error) throw new Error(error.message)
   return { success: true }
 }
+
+// Expose the supabase client so useTickets can subscribe to real-time changes
+export { supabase }
