@@ -71,6 +71,7 @@ export default function CreateTicketModal({ onClose, onCreated }: CreateTicketMo
     appointmentDate: TODAY,
     appointmentTime: '',
     status:          'received',
+    assignedTo:      '',
     notes:           '',
   })
   const [loading, setLoading] = useState(false)
@@ -108,6 +109,7 @@ export default function CreateTicketModal({ onClose, onCreated }: CreateTicketMo
         appointmentDate: form.appointmentDate,
         appointmentTime: form.appointmentTime,
         status:          form.status,
+        assignedTo:      form.assignedTo.trim(),
         notes:           form.notes.trim(),
       }
       const res = await fetch('/api/admin/tickets', {
@@ -299,6 +301,15 @@ export default function CreateTicketModal({ onClose, onCreated }: CreateTicketMo
                     <option key={s.value} value={s.value}>{s.label}</option>
                   ))}
                 </select>
+              </div>
+              <div className="col-span-3">
+                <label className={LABEL_CLS}>Assign to Technician <span className="text-gray-400 font-normal normal-case tracking-normal">(optional)</span></label>
+                <input
+                  value={form.assignedTo}
+                  onChange={e => set('assignedTo', e.target.value)}
+                  placeholder="e.g. Cesar, Marcus"
+                  className={INPUT_CLS}
+                />
               </div>
             </div>
           </section>

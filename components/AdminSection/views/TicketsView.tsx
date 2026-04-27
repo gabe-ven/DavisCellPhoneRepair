@@ -1,11 +1,74 @@
 'use client'
 
-import { useState } from 'react'
-import { Search, ChevronDown, Plus, CheckCircle } from 'lucide-react'
+import { useState, useRef } from 'react'
+import { Search, ChevronDown, Plus, CheckCircle, UserRound } from 'lucide-react'
 import StatusBadge from '../components/StatusBadge'
 import CreateTicketModal from '../components/CreateTicketModal'
 import { useTickets } from '../hooks/useTickets'
+import { updateAssignedTo } from '../api/adminApi'
 import type { TicketStatus } from '../types/admin'
+
+// Inline assignee cell — click to edit, blur/Enter to save
+function AssigneeCell({ ticketId, value }: { ticketId: string; value: string | null | undefined }) {
+  const [editing, setEditing] = useState(false)
+  const [draft, setDraft] = useState(value ?? '')
+  const [saving, setSaving] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  function startEdit() {
+    setDraft(value ?? '')
+    setEditing(true)
+    setTimeout(() => inputRef.current?.select(), 0)
+  }
+
+  async function save() {
+    setEditing(false)
+    setSaving(true)
+    try {
+      await updateAssignedTo(ticketId, draft.trim() || null)
+    } catch {
+      // silently revert on error — real-time subscription will resync
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  function onKeyDown(e: React.KeyboardEvent) {
+    if (e.key === 'Enter') save()
+    if (e.key === 'Escape') setEditing(false)
+  }
+
+  if (editing) {
+    return (
+      <input
+        ref={inputRef}
+        value={draft}
+        onChange={e => setDraft(e.target.value)}
+        onBlur={save}
+        onKeyDown={onKeyDown}
+        placeholder="Enter name…"
+        className="w-full px-2 py-1 text-[13px] rounded-md border border-[#8B1A1A]/50 bg-white dark:bg-[#13131f] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-[#8B1A1A]"
+      />
+    )
+  }
+
+  return (
+    <button
+      onClick={startEdit}
+      title="Click to assign"
+      className={`flex items-center gap-1.5 text-[13px] rounded-md px-2 py-1 transition-colors w-full text-left group ${
+        saving ? 'opacity-50' : ''
+      } ${
+        value
+          ? 'text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#2a2a3e]'
+          : 'text-gray-400 dark:text-gray-500 hover:bg-gray-50 dark:hover:bg-[#2a2a3e]'
+      }`}
+    >
+      <UserRound size={13} className={value ? 'text-[#8B1A1A]' : 'text-gray-400 dark:text-gray-500'} />
+      <span>{saving ? '…' : (value || 'Unassigned')}</span>
+    </button>
+  )
+}
 
 const STATUS_FILTERS = ['all', 'received', 'reviewing', 'in_repair', 'ready', 'completed'] as const
 type Filter = typeof STATUS_FILTERS[number]
@@ -129,7 +192,7 @@ export default function TicketsView() {
           <table className="w-full border-collapse">
             <thead>
               <tr>
-                {['Ticket ID', 'Customer', 'Device', 'Issues', 'Appointment', 'Status', 'Update'].map(h => (
+                {['Ticket ID', 'Customer', 'Device', 'Issues', 'Appointment', 'Assigned To', 'Status', 'Update'].map(h => (
                   <th
                     key={h}
                     className="text-left px-5 py-3 text-[11px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider border-b border-gray-200 dark:border-[#2a2a3e]"
@@ -185,6 +248,9 @@ export default function TicketsView() {
                     ) : (
                       <span className="text-[12px] text-gray-400 dark:text-gray-500">—</span>
                     )}
+                  </td>
+                  <td className="px-5 py-4 border-b border-gray-100 dark:border-[#2a2a3e]/50 min-w-[130px]">
+                    <AssigneeCell ticketId={ticket.ticketId} value={ticket.assignedTo} />
                   </td>
                   <td className="px-5 py-4 border-b border-gray-100 dark:border-[#2a2a3e]/50">
                     <StatusBadge status={ticket.status} />

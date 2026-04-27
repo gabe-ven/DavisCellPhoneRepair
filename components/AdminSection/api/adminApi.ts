@@ -32,7 +32,8 @@ function rowToTicket(row: Record<string, unknown>): Ticket {
       email: row.customer_email as string,
       phone: row.customer_phone as string,
     },
-    source: (row.source as 'web' | 'mobile') ?? 'web',
+    source:     (row.source as 'web' | 'mobile') ?? 'web',
+    assignedTo: (row.assigned_to as string | null) ?? null,
   }
 }
 
@@ -68,6 +69,18 @@ export async function updateTicketStatus(
 
   if (error) throw new Error(error.message)
   return { success: true }
+}
+
+export async function updateAssignedTo(
+  ticketId: string,
+  assignedTo: string | null
+): Promise<void> {
+  const { error } = await supabase
+    .from('tickets')
+    .update({ assigned_to: assignedTo || null })
+    .eq('id', ticketId)
+
+  if (error) throw new Error(error.message)
 }
 
 // Expose the supabase client so useTickets can subscribe to real-time changes

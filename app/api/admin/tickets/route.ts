@@ -22,6 +22,7 @@ export interface AdminCreateTicketPayload {
   appointmentTime: string
   status:        string
   notes:         string
+  assignedTo:    string
 }
 
 export async function POST(req: NextRequest) {
@@ -60,6 +61,7 @@ export async function POST(req: NextRequest) {
     customer_phone:   body.customerPhone,
     images:           [],
     source:           'walkin',
+    assigned_to:      body.assignedTo || null,
   })
 
   if (error) {

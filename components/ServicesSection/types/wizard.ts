@@ -79,6 +79,7 @@ export interface Ticket {
   appointment: { date: string | null; timeSlot: string | null }
   customer: { name: string; email: string; phone: string }
   source: 'web' | 'mobile'
+  assignedTo?: string | null
 }
 
 export const initialWizardState: WizardState = {
