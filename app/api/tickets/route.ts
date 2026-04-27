@@ -12,6 +12,22 @@ const resend = new Resend(process.env.RESEND_API_KEY)
 export async function POST(req: NextRequest) {
   const state: WizardState = await req.json()
 
+  // Rate limit: one submission per email per 2 hours
+  const windowStart = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
+  const { data: recent } = await supabase
+    .from('tickets')
+    .select('id')
+    .eq('customer_email', state.customer.email.toLowerCase().trim())
+    .gte('created_at', windowStart)
+    .limit(1)
+
+  if (recent && recent.length > 0) {
+    return NextResponse.json(
+      { error: 'You already submitted a request in the last 2 hours. Check your email for your existing ticket, or call us at (530) 341-3384.' },
+      { status: 429 }
+    )
+  }
+
   const ticketId = `MFC-${Date.now()}`
 
   const { error } = await supabase.from('tickets').insert({

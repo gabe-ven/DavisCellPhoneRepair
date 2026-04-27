@@ -5,8 +5,7 @@ import {
   Phone, Ticket, FileText, CheckCircle, Loader2,
   ImagePlus, X, Upload,
 } from 'lucide-react'
-import { WizardState } from '../types/wizard'
-import { WizardImage } from '../hooks/useWizardState'
+import { WizardState, WizardImage } from '../types/wizard'
 import { submitTicket } from '../api/tickets'
 import { issueTypes } from '../data/issueTypes'
 import TicketConfirmModal from '../modals/TicketConfirmModal'
@@ -101,6 +100,7 @@ export default function QuoteStep({
   const [email, setEmail] = useState(state.customer.email)
   const [phone, setPhone] = useState(state.customer.phone)
   const [loading, setLoading] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
   const [showModal, setShowModal] = useState(false)
   const [resolvedTicketId, setResolvedTicketId] = useState<string>('')
 
@@ -194,6 +194,7 @@ export default function QuoteStep({
   async function handleSubmit() {
     if (!isFormValid || loading) return
     setLoading(true)
+    setSubmitError(null)
     try {
       const mergedState: WizardState = {
         ...state,
@@ -208,6 +209,8 @@ export default function QuoteStep({
       // Sequence: API resolves → nextStep() → 800ms → modal opens.
       nextStep()
       modalTimerRef.current = setTimeout(() => setShowModal(true), 800)
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : 'Something went wrong. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -412,6 +415,13 @@ export default function QuoteStep({
               </div>
             )}
           </div>
+
+          {/* Rate-limit / server error message */}
+          {submitError && (
+            <p className="text-sm text-center rounded-lg px-4 py-3" style={{ background: 'rgba(139,26,26,0.06)', border: '1px solid rgba(139,26,26,0.18)', color: '#8B1A1A' }}>
+              {submitError}
+            </p>
+          )}
 
           {/* Submit button */}
           <button
