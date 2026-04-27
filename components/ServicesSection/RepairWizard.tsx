@@ -88,9 +88,7 @@ function SubmittedConfirmation({ ticketId }: { ticketId: string }) {
           <li className="flex items-start gap-2">
             <span className="text-brand font-bold mt-0.5 shrink-0">3.</span>
             <span>
-              Visit <strong style={{ color: '#374151' }}>My Repair</strong> and enter ticket number{' '}
-              <span className="font-mono font-semibold" style={{ color: '#374151' }}>{ticketId}</span>{' '}
-              to track your repair status at any time.
+              We&apos;ll call or text you when your device is ready for pickup.
             </span>
           </li>
         </ul>

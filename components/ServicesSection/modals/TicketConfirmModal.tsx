@@ -165,16 +165,6 @@ export default function TicketConfirmModal({
           {copy.confirmationLine(email)}
         </p>
 
-        {/* Placeholder media block — swap with real embed in a future phase */}
-        <div
-          className="w-full h-40 rounded-xl flex items-center justify-center"
-          style={{ background: '#f9f9f9', border: '1px solid #e5e7eb' }}
-        >
-          <span className="text-sm" style={{ color: '#9ca3af' }}>
-            How to track your repair status — coming soon
-          </span>
-        </div>
-
         {/* Done button */}
         <button
           onClick={onClose}

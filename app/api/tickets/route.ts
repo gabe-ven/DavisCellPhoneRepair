@@ -34,6 +34,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
+  // Customer confirmation
   await resend.emails.send({
     from:    'Davis Cell Phone Repair <onboarding@resend.dev>',
     to:      state.customer.email,
@@ -47,6 +48,22 @@ export async function POST(req: NextRequest) {
       <p>— Davis Cell Phone Repair</p>
     `,
   })
+
+  // Owner notification — swap to owner's real email before going live
+  if (process.env.OWNER_EMAIL) {
+    await resend.emails.send({
+      from:    'Davis Cell Phone Repair <onboarding@resend.dev>',
+      to:      process.env.OWNER_EMAIL,
+      subject: `New repair request ${ticketId} — ${state.customer.name}`,
+      html: `
+        <h2>New ticket: ${ticketId}</h2>
+        <p><strong>Customer:</strong> ${state.customer.name} · ${state.customer.phone} · ${state.customer.email}</p>
+        <p><strong>Device:</strong> ${state.device} ${state.brand ?? ''} ${state.modelNumber ?? ''} ${state.modelTrim ?? ''} ${state.modelCustom ?? ''}</p>
+        <p><strong>Issues:</strong> ${state.issues.join(', ')}</p>
+        <p><strong>Appointment:</strong> ${state.appointment.date} at ${state.appointment.timeSlot}</p>
+      `,
+    })
+  }
 
   return NextResponse.json({ ticketId })
 }
