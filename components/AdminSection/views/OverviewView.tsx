@@ -168,24 +168,40 @@ export default function OverviewView() {
           </div>
         </div>
 
-        {/* Recent Activity */}
+        {/* Recent Activity — derived from real ticket data */}
         <div className="bg-white dark:bg-[#1c1c2e] border border-gray-200 dark:border-[#2a2a3e] rounded-2xl overflow-hidden">
           <div className="px-6 py-4 border-b border-gray-200 dark:border-[#2a2a3e]">
             <span className="text-[16px] font-semibold text-gray-900 dark:text-gray-100">Recent Activity</span>
           </div>
           <div className="divide-y divide-gray-100 dark:divide-[#2a2a3e]/70">
-            {[
-              { dot: '#22c55e', text: 'Ticket #DCR-1041 marked Ready for pickup', time: '2m ago' },
-              { dot: '#f97316', text: 'Repair started on #DCR-1042 — iPhone 15 Pro', time: '1h ago' },
-              { dot: '#3b82f6', text: 'New ticket #DCR-1039 submitted by Priya N.', time: '3h ago' },
-              { dot: '#8B1A1A', text: 'Appointment booked for Apr 28 at 10:00 AM', time: '5h ago' },
-            ].map((item, i) => (
-              <div key={i} className="flex items-start gap-4 px-6 py-4">
-                <div className="w-2.5 h-2.5 rounded-full flex-shrink-0 mt-1" style={{ background: item.dot }} />
-                <span className="text-[14px] text-gray-700 dark:text-gray-300 flex-1 leading-snug">{item.text}</span>
-                <span className="text-[12px] text-gray-400 dark:text-gray-500 flex-shrink-0 mt-0.5">{item.time}</span>
-              </div>
-            ))}
+            {[...tickets]
+              .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+              .slice(0, 4)
+              .map(t => {
+                const dotColors: Record<string, string> = {
+                  received: '#8B1A1A', reviewing: '#f59e0b',
+                  in_repair: '#f97316', ready: '#22c55e', completed: '#9ca3af',
+                }
+                const msgs: Record<string, string> = {
+                  received:  `New ticket #${t.ticketId} submitted by ${t.customer.name}`,
+                  reviewing: `#${t.ticketId} is under review — ${t.customer.name}`,
+                  in_repair: `Repair started on #${t.ticketId} — ${t.device.brand ?? ''} ${t.device.modelCustom ?? t.device.modelTrim ?? ''}`.trim(),
+                  ready:     `#${t.ticketId} marked ready for pickup — ${t.customer.name}`,
+                  completed: `#${t.ticketId} completed for ${t.customer.name}`,
+                }
+                const diff = Date.now() - new Date(t.createdAt).getTime()
+                const mins = Math.floor(diff / 60000)
+                const hrs  = Math.floor(diff / 3600000)
+                const days = Math.floor(diff / 86400000)
+                const timeAgo = mins < 1 ? 'just now' : mins < 60 ? `${mins}m ago` : hrs < 24 ? `${hrs}h ago` : `${days}d ago`
+                return (
+                  <div key={t.ticketId} className="flex items-start gap-4 px-6 py-4">
+                    <div className="w-2.5 h-2.5 rounded-full flex-shrink-0 mt-1" style={{ background: dotColors[t.status] ?? '#9ca3af' }} />
+                    <span className="text-[14px] text-gray-700 dark:text-gray-300 flex-1 leading-snug">{msgs[t.status]}</span>
+                    <span className="text-[12px] text-gray-400 dark:text-gray-500 flex-shrink-0 mt-0.5">{timeAgo}</span>
+                  </div>
+                )
+              })}
           </div>
         </div>
 

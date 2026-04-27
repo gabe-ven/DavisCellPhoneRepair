@@ -9,9 +9,10 @@ import { Bell, Settings, LogOut, Search, Sun, Moon, Layers } from 'lucide-react'
 interface TopBarProps {
   darkMode: boolean
   onToggleDark: () => void
+  onLogout: () => void
 }
 
-export default function TopBar({ darkMode, onToggleDark }: TopBarProps) {
+export default function TopBar({ darkMode, onToggleDark, onLogout }: TopBarProps) {
   return (
     <header className="h-[68px] flex-shrink-0 flex items-center gap-4 px-6 bg-white dark:bg-[#1c1c2e] border-b border-gray-200 dark:border-[#2a2a3e] transition-colors duration-200">
 
@@ -69,7 +70,11 @@ export default function TopBar({ darkMode, onToggleDark }: TopBarProps) {
         </button>
 
         {/* Logout */}
-        <button className="w-10 h-10 rounded-xl flex items-center justify-center border border-gray-200 dark:border-[#2a2a3e] bg-white dark:bg-[#1c1c2e] text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-[#16162a] transition-colors">
+        <button
+          onClick={onLogout}
+          title="Sign out"
+          className="w-10 h-10 rounded-xl flex items-center justify-center border border-gray-200 dark:border-[#2a2a3e] bg-white dark:bg-[#1c1c2e] text-gray-500 dark:text-gray-400 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-[#8B1A1A] hover:border-[#8B1A1A]/30 transition-colors"
+        >
           <LogOut size={19} strokeWidth={1.8} />
         </button>
       </div>
