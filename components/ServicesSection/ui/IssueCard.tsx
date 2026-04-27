@@ -23,7 +23,7 @@ import {
     type LucideIcon,
   } from 'lucide-react'
   import type { IssueType } from '../types/wizard'
-  
+
   const ICON_MAP: Record<string, LucideIcon> = {
     RectangleVertical,
     Layers,
@@ -47,16 +47,16 @@ import {
     KeyRound,
     Wrench,
   }
-  
+
   interface IssueCardProps {
     issue: IssueType
     selected: boolean
     onClick: () => void
   }
-  
+
   export default function IssueCard({ issue, selected, onClick }: IssueCardProps) {
     const Icon = ICON_MAP[issue.icon]
-  
+
     return (
       <button
         type="button"
@@ -67,20 +67,20 @@ import {
           shadow-sm hover:shadow-md transition-shadow
           w-full aspect-square
           ${selected
-            ? 'ring-2 ring-red-500 bg-red-50'
-            : 'bg-white border border-gray-100'
+            ? 'ring-2 ring-brand bg-brand/8'
+            : 'bg-white border border-[#e5e7eb]'
           }
         `}
       >
         {Icon ? (
           <>
-            <Icon size={18} className={`lg:hidden ${selected ? 'text-red-600' : 'text-slate-500'}`} />
-            <Icon size={26} className={`hidden lg:block ${selected ? 'text-red-600' : 'text-slate-500'}`} />
+            <Icon size={18} className={`lg:hidden ${selected ? 'text-brand' : 'text-[#6b7280]'}`} />
+            <Icon size={26} className={`hidden lg:block ${selected ? 'text-brand' : 'text-[#6b7280]'}`} />
           </>
         ) : (
-          <span className="w-4 h-4 bg-gray-200 rounded" />
+          <span className="w-4 h-4 bg-[#e5e7eb] rounded" />
         )}
-        <span className={`text-xs font-medium text-center leading-tight ${selected ? 'text-red-600' : 'text-slate-700'}`}>
+        <span className={`text-xs font-medium text-center leading-tight ${selected ? 'text-brand' : 'text-[#374151]'}`}>
           {issue.label}
         </span>
       </button>

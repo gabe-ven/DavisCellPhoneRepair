@@ -67,19 +67,20 @@ export default function OtherModelModal({ isOpen, onClose, onConfirm, brand }: O
     >
       {/* Modal panel */}
       <div
-        className="relative bg-white rounded-2xl shadow-xl p-8 w-full max-w-sm mx-4"
+        className="relative bg-white rounded-xl shadow-xl p-8 w-full max-w-sm mx-4"
+        style={{ border: '1.5px solid #e5e7eb' }}
         onClick={e => e.stopPropagation()}
       >
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 transition-colors"
+          className="absolute top-4 right-4 text-[#9ca3af] hover:text-brand transition-colors"
           aria-label="Close"
         >
           <X size={20} />
         </button>
 
-        <h3 className="text-lg font-semibold text-slate-900 mb-5">
+        <h3 className="text-lg font-bold mb-5 tracking-tight" style={{ color: '#111111', letterSpacing: '-0.01em' }}>
           {title}
         </h3>
 
@@ -93,8 +94,8 @@ export default function OtherModelModal({ isOpen, onClose, onConfirm, brand }: O
               onChange={e => setMake(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter') handleConfirm() }}
               placeholder='e.g. Sony, Nokia, Asus'
-              className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-slate-900 placeholder:text-slate-400
-                         focus:outline-none focus:border-red-400 transition-colors duration-200 text-sm"
+              className="w-full border-2 border-[#e5e7eb] rounded-xl px-4 py-3 text-[#111111] placeholder:text-[#9ca3af]
+                         focus:outline-none focus:border-brand transition-colors duration-200 text-sm"
             />
           )}
 
@@ -106,17 +107,18 @@ export default function OtherModelModal({ isOpen, onClose, onConfirm, brand }: O
             onChange={e => setModel(e.target.value)}
             onKeyDown={e => { if (e.key === 'Enter') handleConfirm() }}
             placeholder={isKnownBrand ? brand!.placeholder! : 'e.g. Xperia 1 VI, G50'}
-            className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-slate-900 placeholder:text-slate-400
-                       focus:outline-none focus:border-red-400 transition-colors duration-200 text-sm"
+            className="w-full border-2 border-[#e5e7eb] rounded-xl px-4 py-3 text-[#111111] placeholder:text-[#9ca3af]
+                       focus:outline-none focus:border-brand transition-colors duration-200 text-sm"
           />
         </div>
 
         <button
           onClick={handleConfirm}
           disabled={!canSubmit}
-          className="mt-4 w-full bg-red-600 hover:bg-red-700 disabled:bg-gray-200 disabled:text-gray-400
-                     text-white font-semibold rounded-xl py-3 text-sm
+          className="mt-4 w-full bg-brand hover:bg-brand-hover disabled:bg-[#e5e7eb] disabled:text-[#9ca3af]
+                     text-white font-bold tracking-[0.02em] rounded-lg py-3 text-sm
                      transition-all duration-200 active:scale-95"
+          style={canSubmit ? { boxShadow: '0 4px 20px rgba(139,26,26,0.25)' } : undefined}
         >
           Continue
         </button>

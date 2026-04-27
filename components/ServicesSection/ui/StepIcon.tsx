@@ -38,8 +38,8 @@ import {
         strokeWidth={1.75}
         className={
           isComplete
-            ? 'text-red-600 transition-colors duration-300'
-            : 'text-slate-700 transition-colors duration-300'
+            ? 'text-brand transition-colors duration-300'
+            : 'text-[#374151] transition-colors duration-300'
         }
       />
     )

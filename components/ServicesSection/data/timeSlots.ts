@@ -27,9 +27,8 @@ const SATURDAY_SLOTS: TimeSlot[] = [
   { label: '6:00 PM',  available: true },
 ]
 
+// Sun: 12pm–4pm per verified door sign
 const SUNDAY_SLOTS: TimeSlot[] = [
-  { label: '10:00 AM', available: true },
-  { label: '11:00 AM', available: true },
   { label: '12:00 PM', available: true },
   { label: '1:00 PM',  available: true },
   { label: '2:00 PM',  available: true },

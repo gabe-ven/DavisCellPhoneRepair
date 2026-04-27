@@ -71,7 +71,7 @@ export default function ContactForm() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="btn-crimson text-white font-bold py-4 rounded-lg disabled:opacity-50 text-base"
+                  className="btn-crimson cursor-pointer text-white font-bold py-4 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed text-base"
                   style={{ boxShadow: "0 4px 20px rgba(139,26,26,0.25)" }}
                 >
                   {loading ? "Sending…" : "Submit Request"}

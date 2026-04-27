@@ -2,26 +2,11 @@
 // Desktop-only (md: and above) horizontal progress bar.
 // Hidden on mobile — ProgressRing takes over below md breakpoint.
 //
-// DESIGN TOKENS (change here, change everywhere):
-//   Completed node bg:   bg-red-600
-//   Completed node icon: text-white (renders Check, not original icon)
-//   Current node bg:     bg-red-600
-//   Current node icon:   text-white (original step icon)
-//   Future node bg:      bg-gray-200
-//   Future node icon:    text-gray-400 (original step icon)
-//   Completed label:     text-red-600
-//   Current label:       text-red-600
-//   Future label:        text-slate-500
-//   Connector track:     bg-gray-200
-//   Connector fill:      bg-red-600
-//   Connector transition: duration-700 ease-in-out
+// Layout: `justify-between` nodes on a relative container; a single
+// absolutely-positioned track line sits behind them, spanning center-to-center.
+// This guarantees perfectly equal segment lengths regardless of label width.
 
 import { Smartphone, Cpu, Wrench, CalendarDays, ClipboardList, Check, LucideIcon } from 'lucide-react'
-
-// NOTE FOR PHASE 6 (QuoteStep / Chat 5):
-// When submitTicket() resolves, call nextStep() to set step → 5 (all nodes red + check),
-// then use setTimeout(openModal, 800) AFTER that so the user sees the bar fully complete
-// before TicketConfirmModal appears. The 800ms delay lives in QuoteStep.tsx, not here.
 
 interface StepConfig {
   label: string
@@ -29,10 +14,10 @@ interface StepConfig {
 }
 
 const STEPS: StepConfig[] = [
-  { label: 'Device',      Icon: Smartphone   },
-  { label: 'Model',       Icon: Cpu          },
-  { label: 'Issue',       Icon: Wrench       },
-  { label: 'Appointment', Icon: CalendarDays },
+  { label: 'Device',      Icon: Smartphone    },
+  { label: 'Model',       Icon: Cpu           },
+  { label: 'Issue',       Icon: Wrench        },
+  { label: 'Appointment', Icon: CalendarDays  },
   { label: 'Quote',       Icon: ClipboardList },
 ]
 
@@ -41,42 +26,45 @@ interface ProgressBarProps {
 }
 
 export default function ProgressBar({ step }: ProgressBarProps) {
+  const isAllDone = step === 5
+  // Each of the 4 connectors fills in sequence; clamp at 4 segments max
+  const fillPct = Math.min(step, STEPS.length - 1) / (STEPS.length - 1) * 100
+
   return (
-    <div className="hidden md:flex items-start justify-center w-full max-w-2xl mx-auto px-4">
-      {STEPS.map((s, index) => {
-        const isCompleted = index < step
-        const isCurrent   = index === step && step < 5
-        const isAllDone   = step === 5 // post-submit: every node is completed
+    <div className="hidden md:block w-full max-w-2xl mx-auto px-4">
+      {/* Outer wrapper — nodes justify-between, track line absolute behind them */}
+      <div className="relative flex items-start justify-between">
 
-        const nodeCompleted = isCompleted || isAllDone
-        const nodeCurrent   = isCurrent
+        {/* ── Track line ── spans from center of first node to center of last
+            top-6 = half of h-12 (48px circle), left/right-6 = half of w-12 */}
+        <div className="absolute top-6 left-6 right-6 h-[2px] bg-[#e5e7eb] rounded-full overflow-hidden">
+          <div
+            className="h-full bg-brand rounded-full transition-all duration-700 ease-in-out"
+            style={{ width: `${fillPct}%` }}
+          />
+        </div>
 
-        // Connector to the right — exists between every pair of steps
-        const showConnector = index < STEPS.length - 1
-        const connectorFilled = step > index || isAllDone
+        {/* ── Step nodes ── */}
+        {STEPS.map((s, index) => {
+          const nodeCompleted = index < step || isAllDone
+          const nodeCurrent   = index === step && !isAllDone
 
-        return (
-          <div key={s.label} className="flex items-start flex-1 last:flex-none">
-
-            {/* Step node + label */}
-            <div className="flex flex-col items-center gap-2">
-
+          return (
+            <div key={s.label} className="relative z-10 flex flex-col items-center gap-2">
               {/* Circle */}
               <div
                 className={[
                   'w-12 h-12 rounded-full flex items-center justify-center transition-colors duration-700',
-                  nodeCompleted || nodeCurrent ? 'bg-red-600' : 'bg-gray-200',
+                  nodeCompleted || nodeCurrent ? 'bg-brand' : 'bg-[#e5e7eb]',
                 ].join(' ')}
               >
                 {nodeCompleted ? (
-                  // Completed: always show white Check
                   <Check size={20} strokeWidth={2.5} className="text-white" />
                 ) : (
-                  // Current or future: show original step icon
                   <s.Icon
                     size={20}
                     strokeWidth={1.75}
-                    className={nodeCurrent ? 'text-white' : 'text-gray-400'}
+                    className={nodeCurrent ? 'text-white' : 'text-[#9ca3af]'}
                   />
                 )}
               </div>
@@ -84,29 +72,17 @@ export default function ProgressBar({ step }: ProgressBarProps) {
               {/* Label */}
               <span
                 className={[
-                  'text-xs font-medium text-center',
-                  nodeCompleted || nodeCurrent ? 'text-red-600' : 'text-slate-500',
+                  'text-xs font-medium text-center whitespace-nowrap',
+                  nodeCompleted || nodeCurrent ? 'text-brand' : 'text-[#6b7280]',
                 ].join(' ')}
               >
                 {s.label}
               </span>
             </div>
+          )
+        })}
 
-            {/* Connector line */}
-            {showConnector && (
-              <div className="relative flex-1 h-[2px] mt-6 mx-1 bg-gray-200 overflow-hidden rounded-full">
-                <div
-                  className={[
-                    'absolute inset-y-0 left-0 bg-red-600 rounded-full transition-all duration-700 ease-in-out',
-                    connectorFilled ? 'w-full' : 'w-0',
-                  ].join(' ')}
-                />
-              </div>
-            )}
-
-          </div>
-        )
-      })}
+      </div>
     </div>
   )
 }

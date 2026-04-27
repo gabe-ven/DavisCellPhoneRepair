@@ -2,6 +2,8 @@
 
 @theme inline {
   --font-sans: var(--font-inter);
+  --color-brand: #8B1A1A;
+  --color-brand-hover: #a81f1f;
 }
 
 body {

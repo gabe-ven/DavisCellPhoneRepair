@@ -4,8 +4,10 @@
 // At step 5 (submitted), the entire wizard is replaced by a confirmation screen.
 'use client'
 
+import { useEffect, useRef } from 'react'
 import { useWizardState } from './hooks/useWizardState'
 import ProgressRing from './ui/ProgressRing'
+import ProgressBar from './ui/ProgressBar'
 import StepIcon from './ui/StepIcon'
 import BackButton from './ui/BackButton'
 import DeviceStep from './steps/DeviceStep'
@@ -31,62 +33,77 @@ function SubmittedConfirmation({ ticketId }: { ticketId: string }) {
   return (
     <div className="flex flex-col items-center w-full max-w-md mx-auto gap-8 py-8 text-center">
 
-      {/* Large check icon */}
-      <div className="flex items-center justify-center w-20 h-20 rounded-full bg-red-50">
-        <CheckCircle size={40} className="text-red-600" />
+      <div
+        className="flex items-center justify-center w-20 h-20 rounded-full"
+        style={{ background: 'rgba(139,26,26,0.07)' }}
+      >
+        <CheckCircle size={40} className="text-brand" />
       </div>
 
-      {/* Heading + copy */}
       <div className="space-y-3">
-        <h2 className="text-2xl font-bold text-slate-900">
-          We'll do whatever we can to get you up and running. 💪
+        <h2
+          className="text-2xl tracking-tight"
+          style={{ fontWeight: 800, color: '#111111', letterSpacing: '-0.02em' }}
+        >
+          We&apos;ll do whatever we can to get you up and running.
         </h2>
-        <p className="text-slate-500 text-sm leading-relaxed">
-          Your ticket has been submitted and our team is already on it. You'll hear
+        <p className="text-sm leading-relaxed" style={{ color: '#6b7280' }}>
+          Your ticket has been submitted and our team is already on it. You&apos;ll hear
           from us soon with a diagnosis and next steps.
         </p>
       </div>
 
-      {/* Ticket number pill */}
       <div className="flex flex-col items-center gap-2">
-        <div className="flex items-center gap-2 text-slate-500 text-xs uppercase tracking-wide">
+        <div
+          className="flex items-center gap-2 text-xs uppercase tracking-wide"
+          style={{ color: '#9ca3af' }}
+        >
           <Ticket size={13} />
           Your ticket number
         </div>
-        <div className="bg-red-600 text-white rounded-full px-8 py-3 font-mono font-bold text-xl tracking-widest select-all">
+        <div
+          className="bg-brand text-white rounded-full px-8 py-3 font-mono font-bold text-xl tracking-widest select-all"
+          style={{ boxShadow: '0 4px 20px rgba(139,26,26,0.25)' }}
+        >
           {ticketId}
         </div>
       </div>
 
-      {/* Instructions */}
-      <div className="bg-gray-50 border border-gray-100 rounded-2xl px-6 py-5 text-left space-y-3 w-full">
-        <p className="text-slate-700 font-semibold text-sm">What happens next?</p>
-        <ul className="space-y-2 text-slate-500 text-sm">
+      <div
+        className="rounded-xl px-6 py-5 text-left space-y-3 w-full"
+        style={{ background: '#f9f9f9', border: '1.5px solid #e5e7eb' }}
+      >
+        <p className="font-semibold text-sm" style={{ color: '#111111' }}>
+          What happens next?
+        </p>
+        <ul className="space-y-2 text-sm" style={{ color: '#6b7280' }}>
           <li className="flex items-start gap-2">
-            <span className="text-red-500 font-bold mt-0.5">1.</span>
+            <span className="text-brand font-bold mt-0.5">1.</span>
             Our technician reviews your ticket and device description.
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-red-500 font-bold mt-0.5">2.</span>
-            We'll contact you with a quote and estimated repair time.
+            <span className="text-brand font-bold mt-0.5">2.</span>
+            We&apos;ll contact you with a quote and estimated repair time.
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-red-500 font-bold mt-0.5">3.</span>
-            Visit <strong>My Repair</strong> and enter ticket number{' '}
-            <span className="font-mono text-slate-700 font-semibold">{ticketId}</span>{' '}
-            to track your repair status at any time.
+            <span className="text-brand font-bold mt-0.5 shrink-0">3.</span>
+            <span>
+              Visit <strong style={{ color: '#374151' }}>My Repair</strong> and enter ticket number{' '}
+              <span className="font-mono font-semibold" style={{ color: '#374151' }}>{ticketId}</span>{' '}
+              to track your repair status at any time.
+            </span>
           </li>
         </ul>
       </div>
 
-      {/* Store address */}
       <a
         href="https://maps.google.com/?q=140+B+St+%234,+Davis,+CA+95616"
         target="_blank"
         rel="noopener noreferrer"
-        className="flex items-center gap-2 text-slate-500 hover:text-red-600 transition-colors text-sm"
+        className="flex items-center gap-2 hover:text-brand transition-colors text-sm"
+        style={{ color: '#6b7280' }}
       >
-        <MapPin size={14} className="text-red-400 shrink-0" />
+        <MapPin size={14} className="text-brand shrink-0" />
         140 B St #4, Davis, CA 95616
       </a>
     </div>
@@ -95,6 +112,8 @@ function SubmittedConfirmation({ ticketId }: { ticketId: string }) {
 
 // ─── RepairWizard ─────────────────────────────────────────────────────────────
 export default function RepairWizard() {
+  const wizardRef = useRef<HTMLDivElement>(null)
+
   const {
     state,
     prevStep,
@@ -113,10 +132,16 @@ export default function RepairWizard() {
 
   const { step } = state
 
+  // Scroll the wizard back into view on every step change so the user
+  // never drifts down the page while navigating.
+  useEffect(() => {
+    wizardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [step])
+
   // Step 5: wizard submitted — replace entire UI with confirmation screen
   if (step === 5 && state.submittedTicketId) {
     return (
-      <div className="relative flex flex-col items-center w-full max-w-2xl mx-auto">
+      <div ref={wizardRef} className="relative flex flex-col items-center w-full max-w-2xl mx-auto">
         <SubmittedConfirmation ticketId={state.submittedTicketId} />
       </div>
     )
@@ -171,17 +196,23 @@ export default function RepairWizard() {
   }
 
   return (
-    <div className="relative flex flex-col items-center w-full max-w-2xl mx-auto gap-10">
+    <div ref={wizardRef} className="relative flex flex-col items-center w-full max-w-2xl mx-auto gap-10">
       {/* Back button — hidden on step 0 */}
       <BackButton step={step} onBack={prevStep} />
 
-      {/* Step header */}
-      <h2 className="text-2xl font-semibold text-slate-900 text-center pt-4">
+      {/* Step header — matches site headline tokens */}
+      <h2
+        className="text-2xl md:text-3xl text-center pt-4 tracking-tight"
+        style={{ fontWeight: 800, color: '#111111', letterSpacing: '-0.02em' }}
+      >
         {STEP_HEADERS[step]}
       </h2>
 
-      {/* Ring housing */}
-      <div className="relative flex items-center justify-center">
+      {/* Desktop: horizontal step bar */}
+      <ProgressBar step={step} />
+
+      {/* Mobile: circular ring with icon (hidden on md+) */}
+      <div className="relative flex items-center justify-center md:hidden">
         <ProgressRing step={step} />
         <div className="absolute inset-0 flex items-center justify-center">
           <StepIcon step={step} size={28} />

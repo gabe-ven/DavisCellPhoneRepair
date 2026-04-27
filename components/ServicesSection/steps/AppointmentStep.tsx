@@ -129,32 +129,36 @@ export default function AppointmentStep({
         href={STORE_MAPS_URL}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-red-600 transition-colors mb-6 group"
+        className="inline-flex items-center gap-2 text-sm hover:text-brand transition-colors mb-6 group"
+        style={{ color: '#6b7280' }}
       >
-        <MapPin className="w-4 h-4 text-red-500 group-hover:text-red-600 flex-shrink-0" />
+        <MapPin className="w-4 h-4 text-brand flex-shrink-0" />
         <span>140 B St #4, Davis, CA 95616</span>
       </a>
 
       {/* Main layout: calendar + slots */}
       <div className="flex flex-col sm:flex-row gap-6">
         {/* ── Calendar ── */}
-        <div className="flex-1 bg-white border border-gray-100 rounded-2xl shadow-sm p-4">
+        <div
+          className="flex-1 bg-white rounded-xl p-4"
+          style={{ border: '1.5px solid #e5e7eb', boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}
+        >
           {/* Month nav */}
           <div className="flex items-center justify-between mb-4">
             <button
               onClick={prevMonth}
               disabled={isCurrentMonth}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              className="p-1.5 rounded-lg text-[#9ca3af] hover:text-brand hover:bg-[#f9f9f9] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
               aria-label="Previous month"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
-            <span className="text-sm font-semibold text-slate-800">
+            <span className="text-sm font-semibold" style={{ color: '#111111' }}>
               {MONTH_NAMES[viewMonth]} {viewYear}
             </span>
             <button
               onClick={nextMonth}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-gray-50 transition-colors"
+              className="p-1.5 rounded-lg text-[#9ca3af] hover:text-brand hover:bg-[#f9f9f9] transition-colors"
               aria-label="Next month"
             >
               <ChevronRight className="w-4 h-4" />
@@ -164,7 +168,7 @@ export default function AppointmentStep({
           {/* Day labels */}
           <div className="grid grid-cols-7 mb-1">
             {DAY_LABELS.map(d => (
-              <div key={d} className="text-center text-[11px] font-medium text-slate-400 py-1">
+              <div key={d} className="text-center text-[11px] font-medium py-1" style={{ color: '#9ca3af' }}>
                 {d}
               </div>
             ))}
@@ -189,12 +193,12 @@ export default function AppointmentStep({
                   className={[
                     'mx-auto w-8 h-8 rounded-full text-sm flex items-center justify-center transition-all',
                     isPast
-                      ? 'text-slate-200 cursor-not-allowed'
+                      ? 'text-[#e5e7eb] cursor-not-allowed'
                       : isSelected
-                      ? 'bg-red-600 text-white font-semibold shadow-sm'
+                      ? 'bg-brand text-white font-semibold shadow-sm'
                       : isToday
-                      ? 'bg-red-50 text-red-600 font-semibold ring-1 ring-red-200 hover:bg-red-100'
-                      : 'text-slate-700 hover:bg-gray-100',
+                      ? 'bg-brand/8 text-brand font-semibold ring-1 ring-brand/30 hover:bg-brand/12'
+                      : 'text-[#374151] hover:bg-[#f9f9f9]',
                   ].join(' ')}
                   aria-label={iso}
                   aria-pressed={isSelected}
@@ -210,7 +214,7 @@ export default function AppointmentStep({
         <div className="sm:w-44 flex flex-col">
           {selectedDate ? (
             <>
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3">
+              <p className="text-xs font-semibold uppercase tracking-wide mb-3" style={{ color: '#9ca3af' }}>
                 Available Times
               </p>
               <div className="flex flex-col gap-2">
@@ -221,10 +225,10 @@ export default function AppointmentStep({
                       key={slot.label}
                       onClick={() => handleSlotClick(slot.label)}
                       className={[
-                        'w-full text-sm font-medium py-2 px-3 rounded-xl border transition-all',
+                        'w-full text-sm font-medium py-2 px-3 rounded-lg border transition-all',
                         isChosen
-                          ? 'bg-red-600 border-red-600 text-white shadow-sm'
-                          : 'bg-white border-gray-200 text-slate-700 hover:border-red-300 hover:bg-red-50',
+                          ? 'bg-brand border-brand text-white shadow-sm'
+                          : 'bg-white border-[#e5e7eb] text-[#374151] hover:border-brand hover:bg-brand/5',
                       ].join(' ')}
                     >
                       {slot.label}
@@ -235,7 +239,7 @@ export default function AppointmentStep({
             </>
           ) : (
             <div className="flex-1 flex items-center justify-center">
-              <p className="text-sm text-slate-400 text-center">
+              <p className="text-sm text-center" style={{ color: '#9ca3af' }}>
                 Select a date to see available times
               </p>
             </div>
@@ -247,7 +251,7 @@ export default function AppointmentStep({
       <div className="flex gap-3 mt-8">
         <button
           onClick={handleSkip}
-          className="flex-1 py-3 rounded-xl border-2 border-gray-200 text-slate-600 font-semibold text-sm hover:border-gray-300 hover:bg-gray-50 transition-all"
+          className="btn-crimson-outline flex-1 py-3 rounded-lg font-bold tracking-[0.02em] text-sm transition-all"
         >
           Skip
         </button>
@@ -255,11 +259,12 @@ export default function AppointmentStep({
           onClick={handleContinue}
           disabled={!canContinue}
           className={[
-            'flex-1 py-3 rounded-xl font-semibold text-sm transition-all',
+            'flex-1 py-3 rounded-lg font-bold tracking-[0.02em] text-sm transition-all',
             canContinue
-              ? 'bg-red-600 text-white hover:bg-red-700 shadow-sm'
-              : 'bg-gray-100 text-gray-400 cursor-not-allowed',
+              ? 'bg-brand text-white hover:bg-brand-hover'
+              : 'bg-[#e5e7eb] text-[#9ca3af] cursor-not-allowed',
           ].join(' ')}
+          style={canContinue ? { boxShadow: '0 4px 20px rgba(139,26,26,0.25)' } : undefined}
         >
           Continue
         </button>

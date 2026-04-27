@@ -7,7 +7,7 @@ interface DeviceCardProps {
     onClick: () => void
     size?: 'default' | 'large'
   }
-  
+
   export default function DeviceCard({
     label,
     imagePath,
@@ -16,7 +16,7 @@ interface DeviceCardProps {
     size = 'default',
   }: DeviceCardProps) {
     const isLarge = size === 'large'
-  
+
     return (
       <button
         onClick={onClick}
@@ -26,8 +26,8 @@ interface DeviceCardProps {
           shadow-sm hover:shadow-md active:scale-95
           ${isLarge ? 'gap-4 p-6 min-h-[200px]' : 'gap-3 p-4'}
           ${selected
-            ? 'border-red-500 bg-red-50 ring-2 ring-red-500 ring-offset-1'
-            : 'border-gray-200 bg-white hover:border-red-300 hover:bg-red-50/30'
+            ? 'border-brand bg-brand/8 ring-2 ring-brand ring-offset-1'
+            : 'border-[#e5e7eb] bg-white hover:border-brand/40 hover:bg-brand/5'
           }
         `}
       >
@@ -40,12 +40,12 @@ interface DeviceCardProps {
               className="w-full h-full object-contain"
             />
           ) : (
-            <div className="w-full h-full bg-gray-100 rounded-xl" />
+            <div className="w-full h-full bg-[#f9f9f9] rounded-xl" />
           )}
         </div>
-  
+
         {/* Label */}
-        <span className={`font-semibold text-center leading-tight ${isLarge ? 'text-base' : 'text-sm'} ${selected ? 'text-red-600' : 'text-slate-700'}`}>
+        <span className={`font-semibold text-center leading-tight ${isLarge ? 'text-base' : 'text-sm'} ${selected ? 'text-brand' : 'text-[#374151]'}`}>
           {label}
         </span>
       </button>

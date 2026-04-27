@@ -4,8 +4,8 @@
 // Step 5 = post-submit fully filled ring. Clamp handles this correctly.
 //
 // DESIGN TOKENS (change here, change everywhere):
-//   Progress color (filled arc): text-red-600
-//   Track color (unfilled arc):  text-gray-200
+//   Progress color (filled arc): text-brand (#8B1A1A)
+//   Track color (unfilled arc):  text-[#e5e7eb]
 //   Transition:                  duration-700 ease-in-out
 
 interface ProgressRingProps {
@@ -41,7 +41,7 @@ export default function ProgressRing({ step }: ProgressRingProps) {
         fill="none"
         stroke="currentColor"
         strokeWidth={STROKE_WIDTH}
-        className="text-gray-200"
+        className="text-[#e5e7eb]"
       />
 
       {/* Progress ring — animates dashoffset */}
@@ -54,7 +54,7 @@ export default function ProgressRing({ step }: ProgressRingProps) {
         strokeWidth={STROKE_WIDTH}
         strokeDasharray={CIRCUMFERENCE}
         strokeDashoffset={dashOffset}
-        className="text-red-600 transition-[stroke-dashoffset] duration-700 ease-in-out"
+        className="text-brand transition-[stroke-dashoffset] duration-700 ease-in-out"
       />
     </svg>
   )

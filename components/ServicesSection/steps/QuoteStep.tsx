@@ -8,6 +8,7 @@ import {
 import { WizardState } from '../types/wizard'
 import { WizardImage } from '../hooks/useWizardState'
 import { submitTicket } from '../api/tickets'
+import { issueTypes } from '../data/issueTypes'
 import TicketConfirmModal from '../modals/TicketConfirmModal'
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -27,16 +28,46 @@ interface QuoteStepProps {
 type ActiveAction = 'ticket' | 'quote' | null
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
+// Map raw device type → display label
+const DEVICE_LABEL: Record<string, string> = {
+  iphone:  'iPhone',
+  android: 'Android Phone',
+  tablet:  'Tablet',
+  ipad:    'iPad',
+}
+
+// Map issue id → human label (built once from the data source)
+const ISSUE_LABEL: Record<string, string> = Object.fromEntries(
+  issueTypes.map(i => [i.id, i.label])
+)
+
+function buildDeviceLabel(state: WizardState): string {
+  return state.device ? (DEVICE_LABEL[state.device] ?? state.device) : '—'
+}
+
 function buildModelLabel(state: WizardState): string {
   if (state.modelCustom) return state.modelCustom
   const parts = [state.brand, state.modelNumber, state.modelTrim].filter(Boolean)
   return parts.join(' ') || '—'
 }
 
+function buildIssuesLabel(state: WizardState): string {
+  if (state.issues.length === 0) return '—'
+  return state.issues.map(id => ISSUE_LABEL[id] ?? id).join(', ')
+}
+
 function buildAppointmentLabel(state: WizardState): string {
   const { date, timeSlot } = state.appointment
   if (!date && !timeSlot) return 'Walk-in / No appointment'
-  return [date, timeSlot].filter(Boolean).join(' at ')
+  // Format ISO date (YYYY-MM-DD) → "Apr 28, 2026"
+  let formattedDate = date ?? ''
+  if (date) {
+    const [y, m, d] = date.split('-').map(Number)
+    formattedDate = new Date(y, m - 1, d).toLocaleDateString('en-US', {
+      month: 'short', day: 'numeric', year: 'numeric',
+    })
+  }
+  return [formattedDate, timeSlot].filter(Boolean).join(' at ')
 }
 
 // Convert File → WizardImage (base64).
@@ -193,32 +224,31 @@ export default function QuoteStep({
     <div className="w-full max-w-xl mx-auto space-y-6">
 
       {/* ── Incentive Banner ──────────────────────────────────────────────────── */}
-      <div className="flex items-start gap-3 bg-red-50 border border-red-100 rounded-2xl px-5 py-4">
-        <Ticket size={20} className="text-red-500 mt-0.5 shrink-0" />
+      <div
+        className="flex items-start gap-3 rounded-xl px-5 py-4"
+        style={{ background: 'rgba(139,26,26,0.06)', border: '1px solid rgba(139,26,26,0.18)' }}
+      >
+        <Ticket size={20} className="text-brand mt-0.5 shrink-0" />
         <div>
-          <p className="text-slate-800 font-semibold text-sm">
-            Get a ticket — it's fast and free
+          <p className="font-semibold text-sm" style={{ color: '#111111' }}>
+            Get a ticket — it&apos;s fast and free
           </p>
-          <p className="text-slate-500 text-sm mt-0.5">
-            We'll review your device, give you an honest quote, and keep you
+          <p className="text-sm mt-0.5" style={{ color: '#6b7280' }}>
+            We&apos;ll review your device, give you an honest quote, and keep you
             updated every step of the way.
           </p>
         </div>
       </div>
 
       {/* ── Summary Card ──────────────────────────────────────────────────────── */}
-      <div className="bg-white border border-gray-100 rounded-2xl shadow-sm p-6 space-y-3">
-        <h2 className="text-slate-900 font-semibold text-lg mb-4">Repair Summary</h2>
-        <SummaryRow label="Device" value={
-          state.device
-            ? state.device.charAt(0).toUpperCase() + state.device.slice(1)
-            : '—'
-        } />
-        <SummaryRow label="Model"       value={buildModelLabel(state)} />
-        <SummaryRow
-          label="Issues"
-          value={state.issues.length > 0 ? state.issues.join(', ') : '—'}
-        />
+      <div
+        className="bg-white rounded-xl p-6 space-y-3"
+        style={{ border: '1.5px solid #e5e7eb', boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}
+      >
+        <h2 className="font-bold text-lg mb-4 tracking-tight" style={{ color: '#111111', letterSpacing: '-0.01em' }}>Repair Summary</h2>
+        <SummaryRow label="Device"  value={buildDeviceLabel(state)} />
+        <SummaryRow label="Model"   value={buildModelLabel(state)} />
+        <SummaryRow label="Issues"  value={buildIssuesLabel(state)} />
         <SummaryRow label="Timeframe"   value="24 Hours" />
         <SummaryRow label="Warranty"    value="Up to 6 Months" />
         <SummaryRow label="Appointment" value={buildAppointmentLabel(state)} />
@@ -240,7 +270,8 @@ export default function QuoteStep({
         />
         <a
           href="tel:+15303413384"
-          className="flex flex-col items-center justify-center gap-1.5 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-2xl px-3 py-4 transition-colors text-center leading-tight"
+          className="flex flex-col items-center justify-center gap-1.5 bg-brand hover:bg-brand-hover text-white text-sm font-bold tracking-[0.02em] rounded-xl px-3 py-4 transition-colors text-center leading-tight"
+          style={{ boxShadow: '0 4px 20px rgba(139,26,26,0.25)' }}
         >
           <Phone size={16} />
           Call Now
@@ -249,8 +280,11 @@ export default function QuoteStep({
 
       {/* ── Inline Form ───────────────────────────────────────────────────────── */}
       {activeAction !== null && (
-        <div className="bg-gray-50 border border-gray-100 rounded-2xl p-6 space-y-5">
-          <h3 className="text-slate-800 font-semibold text-sm uppercase tracking-wide">
+        <div
+          className="rounded-xl p-6 space-y-5"
+          style={{ background: '#f9f9f9', border: '1.5px solid #e5e7eb' }}
+        >
+          <h3 className="font-semibold text-sm uppercase tracking-wide" style={{ color: '#111111' }}>
             {activeAction === 'ticket' ? 'Create a Ticket' : 'Request a Quote'}
           </h3>
 
@@ -274,13 +308,13 @@ export default function QuoteStep({
           {/* ── Image Upload ───────────────────────────────────────────────── */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <label className="text-xs font-medium text-slate-500 uppercase tracking-wide">
+              <label className="text-xs font-medium uppercase tracking-wide" style={{ color: '#6b7280' }}>
                 Photos{' '}
-                <span className="normal-case font-normal text-slate-400">
+                <span className="normal-case font-normal" style={{ color: '#9ca3af' }}>
                   (optional, up to {MAX_IMAGES})
                 </span>
               </label>
-              <span className="text-xs text-slate-400">
+              <span className="text-xs" style={{ color: '#9ca3af' }}>
                 {state.images.length}/{MAX_IMAGES}
               </span>
             </div>
@@ -296,17 +330,17 @@ export default function QuoteStep({
                   flex flex-col items-center justify-center gap-2 w-full
                   border-2 border-dashed rounded-xl py-6 cursor-pointer transition-colors
                   ${dragOver
-                    ? 'border-red-400 bg-red-50'
-                    : 'border-gray-200 bg-white hover:border-red-300 hover:bg-gray-50'
+                    ? 'border-brand bg-brand/8'
+                    : 'border-[#e5e7eb] bg-white hover:border-brand hover:bg-brand/5'
                   }
                 `}
               >
-                <Upload size={20} className="text-slate-400" />
-                <p className="text-sm text-slate-500">
-                  <span className="font-medium text-red-600">Click to upload</span>
+                <Upload size={20} style={{ color: '#9ca3af' }} />
+                <p className="text-sm" style={{ color: '#6b7280' }}>
+                  <span className="font-medium text-brand">Click to upload</span>
                   {' '}or drag &amp; drop
                 </p>
-                <p className="text-xs text-slate-400">JPG, PNG, WEBP, GIF, HEIC</p>
+                <p className="text-xs" style={{ color: '#9ca3af' }}>JPG, PNG, WEBP, GIF, HEIC</p>
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -320,7 +354,7 @@ export default function QuoteStep({
 
             {/* Upload error */}
             {uploadError && (
-              <p className="text-xs text-red-500">{uploadError}</p>
+              <p className="text-xs text-brand">{uploadError}</p>
             )}
 
             {/* Thumbnail grid */}
@@ -329,7 +363,8 @@ export default function QuoteStep({
                 {state.images.map(img => (
                   <div key={img.id} className="relative group">
                     {/* Thumbnail */}
-                    <div className="w-full aspect-square rounded-lg overflow-hidden bg-gray-100">
+                    <div className="w-full aspect-square rounded-lg overflow-hidden" style={{ background: '#f3f4f6' }}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={img.base64}
                         alt={img.name}
@@ -339,9 +374,9 @@ export default function QuoteStep({
 
                     {/* Fake progress bar */}
                     {uploadProgress[img.id] !== undefined && (
-                      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-200 rounded-b-lg overflow-hidden">
+                      <div className="absolute bottom-0 left-0 right-0 h-1 rounded-b-lg overflow-hidden" style={{ background: '#e5e7eb' }}>
                         <div
-                          className="h-full bg-red-500 transition-all duration-150"
+                          className="h-full bg-brand transition-all duration-150"
                           style={{ width: `${uploadProgress[img.id]}%` }}
                         />
                       </div>
@@ -350,14 +385,15 @@ export default function QuoteStep({
                     {/* Remove button */}
                     <button
                       onClick={() => { removeImage(img.id); setUploadError(null) }}
-                      className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-slate-700 hover:bg-red-600 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all"
+                      className="absolute -top-1.5 -right-1.5 w-5 h-5 hover:bg-brand text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all"
+                      style={{ background: '#0d0d0d' }}
                       aria-label={`Remove ${img.name}`}
                     >
                       <X size={10} />
                     </button>
 
                     {/* Filename on hover */}
-                    <p className="text-xs text-slate-400 truncate mt-1 hidden group-hover:block">
+                    <p className="text-xs truncate mt-1 hidden group-hover:block" style={{ color: '#9ca3af' }}>
                       {img.name}
                     </p>
                   </div>
@@ -367,7 +403,7 @@ export default function QuoteStep({
                 {!atImageLimit && (
                   <button
                     onClick={() => fileInputRef.current?.click()}
-                    className="w-full aspect-square rounded-lg border-2 border-dashed border-gray-200 hover:border-red-300 flex items-center justify-center text-slate-400 hover:text-red-400 transition-colors"
+                    className="w-full aspect-square rounded-lg border-2 border-dashed border-[#e5e7eb] hover:border-brand text-[#9ca3af] hover:text-brand flex items-center justify-center transition-colors"
                     aria-label="Add another image"
                   >
                     <ImagePlus size={18} />
@@ -382,13 +418,14 @@ export default function QuoteStep({
             onClick={handleSubmit}
             disabled={!isFormValid || loading}
             className={`
-              w-full flex items-center justify-center gap-2 py-3 rounded-xl
-              font-semibold text-sm transition-all
+              w-full flex items-center justify-center gap-2 py-3 rounded-lg
+              font-bold tracking-[0.02em] text-sm transition-all
               ${isFormValid && !loading
-                ? 'bg-red-600 hover:bg-red-700 text-white cursor-pointer'
-                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                ? 'bg-brand hover:bg-brand-hover text-white cursor-pointer'
+                : 'bg-[#e5e7eb] text-[#9ca3af] cursor-not-allowed'
               }
             `}
+            style={isFormValid && !loading ? { boxShadow: '0 4px 20px rgba(139,26,26,0.25)' } : undefined}
           >
             {loading ? (
               <><Loader2 size={16} className="animate-spin" /> Submitting…</>
@@ -417,8 +454,8 @@ export default function QuoteStep({
 function SummaryRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-start gap-3 text-sm">
-      <span className="text-slate-400 w-28 shrink-0">{label}</span>
-      <span className="text-slate-900 font-medium">{value}</span>
+      <span className="w-28 shrink-0" style={{ color: '#9ca3af' }}>{label}</span>
+      <span className="font-medium" style={{ color: '#111111' }}>{value}</span>
     </div>
   )
 }
@@ -435,11 +472,11 @@ function ActionButton({
     <button
       onClick={onClick}
       className={`
-        flex flex-col items-center justify-center gap-1.5 text-sm font-semibold
-        rounded-2xl px-3 py-4 transition-all leading-tight text-center border-2
+        flex flex-col items-center justify-center gap-1.5 text-sm font-bold tracking-[0.02em]
+        rounded-xl px-3 py-4 transition-all leading-tight text-center border-2
         ${active
-          ? 'bg-red-600 text-white border-red-600'
-          : 'bg-white text-red-600 border-red-200 hover:border-red-600 hover:bg-red-50'
+          ? 'bg-brand text-white border-brand'
+          : 'bg-white text-brand border-brand hover:bg-brand/8'
         }
       `}
     >
@@ -461,7 +498,7 @@ function FormField({
 }) {
   return (
     <div className="space-y-1">
-      <label className="block text-xs font-medium text-slate-500 uppercase tracking-wide">
+      <label className="block text-xs font-medium uppercase tracking-wide" style={{ color: '#6b7280' }}>
         {label}
       </label>
       <input
@@ -470,16 +507,17 @@ function FormField({
         onChange={e => onChange(e.target.value)}
         placeholder={placeholder}
         className={`
-          w-full px-4 py-2.5 rounded-xl border text-sm text-slate-900 bg-white
+          w-full px-4 py-2.5 rounded-xl border text-sm bg-white
           outline-none transition-colors
           ${invalid
-            ? 'border-red-400 focus:border-red-500 ring-1 ring-red-300'
-            : 'border-gray-200 focus:border-red-400 focus:ring-1 focus:ring-red-200'
+            ? 'border-brand focus:border-brand ring-1 ring-brand/30'
+            : 'border-[#e5e7eb] focus:border-brand focus:ring-1 focus:ring-brand/20'
           }
         `}
+        style={{ color: '#111111' }}
       />
       {invalid && (
-        <p className="text-xs text-red-500">Please enter a valid email address.</p>
+        <p className="text-xs text-brand">Please enter a valid email address.</p>
       )}
     </div>
   )

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { X } from 'lucide-react'
 
 // ─── Color tokens ──────────────────────────────────────────────────────────────
-// Checkmark circle stroke: #dc2626 (red-600) — change here to retheme
+// Checkmark circle stroke: #8B1A1A (brand crimson) — change here to retheme
 // Modal overlay: bg-black/50 — change here to adjust backdrop darkness
 
 interface TicketConfirmModalProps {
@@ -21,12 +21,12 @@ const COPY = {
   ticket: {
     heading: "You're in good hands 🙌",
     sub: "Your ticket is in — we're on it. Our team will reach out with an update as soon as we've reviewed your device.",
-    confirmationLine: (email: string) => <>A confirmation has been sent to <span className="text-slate-800 font-medium break-all">{email}</span></>,
+    confirmationLine: (email: string) => <>A confirmation has been sent to <span className="font-medium break-all" style={{ color: '#111111' }}>{email}</span></>,
   },
   quote: {
     heading: 'Quote request received',
     sub: "We'll take a look and get back to you with a fair, transparent estimate.",
-    confirmationLine: (email: string) => <>We'll be in touch at <span className="text-slate-800 font-medium break-all">{email}</span></>,
+    confirmationLine: (email: string) => <>We&apos;ll be in touch at <span className="font-medium break-all" style={{ color: '#111111' }}>{email}</span></>,
   },
 }
 
@@ -71,11 +71,11 @@ function AnimatedCheck() {
       <svg viewBox="0 0 64 64" width="72" height="72" aria-hidden="true">
         {/* Static gray track */}
         <circle cx="32" cy="32" r="28" fill="none" stroke="#e5e7eb" strokeWidth="4" />
-        {/* Animated red circle — rotated so stroke starts from top */}
+        {/* Animated brand circle — rotated so stroke starts from top */}
         <circle
           cx="32" cy="32" r="28"
           fill="none"
-          stroke="#dc2626"
+          stroke="#8B1A1A"
           strokeWidth="4"
           strokeLinecap="round"
           transform="rotate(-90 32 32)"
@@ -85,7 +85,7 @@ function AnimatedCheck() {
         <path
           d="M16 34 L28 46 L48 22"
           fill="none"
-          stroke="#dc2626"
+          stroke="#8B1A1A"
           strokeWidth="4"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -127,12 +127,15 @@ export default function TicketConfirmModal({
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4"
       onClick={e => { if (e.target === e.currentTarget) onClose() }}
     >
-      <div className="relative w-full max-w-sm bg-white rounded-3xl shadow-2xl p-8 flex flex-col items-center gap-5 text-center">
+      <div
+        className="relative w-full max-w-sm bg-white rounded-xl shadow-2xl p-8 flex flex-col items-center gap-5 text-center"
+        style={{ border: '1.5px solid #e5e7eb' }}
+      >
 
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 transition-colors"
+          className="absolute top-4 right-4 text-[#9ca3af] hover:text-brand transition-colors"
           aria-label="Close"
         >
           <X size={20} />
@@ -143,31 +146,40 @@ export default function TicketConfirmModal({
 
         {/* Heading + sub copy — varies by variant */}
         <div className="space-y-2">
-          <h2 className="text-slate-900 font-bold text-xl">{copy.heading}</h2>
-          <p className="text-slate-500 text-sm leading-relaxed">{copy.sub}</p>
+          <h2 className="text-xl tracking-tight" style={{ fontWeight: 800, color: '#111111', letterSpacing: '-0.02em' }}>
+            {copy.heading}
+          </h2>
+          <p className="text-sm leading-relaxed" style={{ color: '#6b7280' }}>{copy.sub}</p>
         </div>
 
         {/* Ticket ID pill — large, monospaced, selectable */}
-        <div className="bg-red-600 text-white rounded-full px-6 py-3 font-mono font-bold text-lg tracking-widest select-all">
+        <div
+          className="bg-brand text-white rounded-full px-6 py-3 font-mono font-bold text-lg tracking-widest select-all"
+          style={{ boxShadow: '0 4px 20px rgba(139,26,26,0.25)' }}
+        >
           {ticketId}
         </div>
 
         {/* Confirmation email line — varies by variant */}
-        <p className="text-slate-500 text-sm">
+        <p className="text-sm" style={{ color: '#6b7280' }}>
           {copy.confirmationLine(email)}
         </p>
 
         {/* Placeholder media block — swap with real embed in a future phase */}
-        <div className="w-full h-40 bg-gray-100 rounded-xl flex items-center justify-center">
-          <span className="text-gray-400 text-sm">
-            📹 How to track your repair status — coming soon
+        <div
+          className="w-full h-40 rounded-xl flex items-center justify-center"
+          style={{ background: '#f9f9f9', border: '1px solid #e5e7eb' }}
+        >
+          <span className="text-sm" style={{ color: '#9ca3af' }}>
+            How to track your repair status — coming soon
           </span>
         </div>
 
         {/* Done button */}
         <button
           onClick={onClose}
-          className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 rounded-xl transition-colors text-sm"
+          className="w-full bg-brand hover:bg-brand-hover text-white font-bold tracking-[0.02em] py-3 rounded-lg transition-colors text-sm"
+          style={{ boxShadow: '0 4px 20px rgba(139,26,26,0.25)' }}
         >
           Done
         </button>

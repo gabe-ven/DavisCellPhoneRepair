@@ -1,5 +1,8 @@
 // components/ServicesSection/steps/DeviceStep.tsx
 
+'use client'
+
+import { useState } from 'react'
 import type { DeviceType } from '../types/wizard'
 import DeviceCard from '../ui/DeviceCard'
 
@@ -16,9 +19,13 @@ const devices: { type: DeviceType; label: string }[] = [
 ]
 
 export default function DeviceStep({ setDevice, nextStep }: DeviceStepProps) {
+  const [advancing, setAdvancing] = useState(false)
+
   function handleSelect(device: DeviceType) {
+    if (advancing) return  // ignore any extra clicks while the step is transitioning
+    setAdvancing(true)
     setDevice(device)
-    setTimeout(() => nextStep(), 800)
+    setTimeout(() => nextStep(), 600)
   }
 
   return (

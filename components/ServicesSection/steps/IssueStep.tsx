@@ -1,6 +1,5 @@
 import { issueTypes } from '../data/issueTypes'
 import IssueCard from '../ui/IssueCard'
-import FloatingPill from '../ui/FloatingPill'
 import type { DeviceType } from '../types/wizard'
 
 interface IssueStepProps {
@@ -23,26 +22,34 @@ export default function IssueStep({ device, issues, toggleIssue, nextStep }: Iss
     <div className="w-full flex flex-col gap-4">
 
       {/* Sub-header */}
-      <p className="text-slate-500 text-sm text-center">
-        What's wrong with your {deviceLabel}?
+      <p className="text-sm text-center" style={{ color: '#6b7280' }}>
+        What&apos;s wrong with your {deviceLabel}?
       </p>
 
-      {/* Break out of the wizard's horizontal padding on desktop */}
-      <div className="lg:-mx-[20vw]">
-        <div className="grid grid-cols-4 lg:grid-cols-7 gap-3 lg:gap-4 pb-28">
-          {issueTypes.map((issue) => (
-            <IssueCard
-              key={issue.id}
-              issue={issue}
-              selected={issues.includes(issue.id)}
-              onClick={() => toggleIssue(issue.id)}
-            />
-          ))}
-        </div>
+      {/* Issue grid — contained within the card, no bleed */}
+      <div className="grid grid-cols-4 sm:grid-cols-5 gap-2 sm:gap-3">
+        {issueTypes.map((issue) => (
+          <IssueCard
+            key={issue.id}
+            issue={issue}
+            selected={issues.includes(issue.id)}
+            onClick={() => toggleIssue(issue.id)}
+          />
+        ))}
       </div>
 
+      {/* Inline continue — appears at the bottom once at least one issue is selected */}
       {issues.length > 0 && (
-        <FloatingPill count={issues.length} onClick={nextStep} />
+        <div className="flex justify-center mt-2">
+          <button
+            type="button"
+            onClick={nextStep}
+            className="bg-brand hover:bg-brand-hover text-white font-bold tracking-[0.02em] rounded-lg px-8 py-3 text-sm transition-all duration-200 active:scale-95"
+            style={{ boxShadow: '0 4px 20px rgba(139,26,26,0.25)' }}
+          >
+            Continue ({issues.length} issue{issues.length > 1 ? 's' : ''}) →
+          </button>
+        </div>
       )}
 
     </div>

@@ -20,7 +20,7 @@ export default function BackButton({ step, onBack }: BackButtonProps) {
       aria-label="Go back"
       className="
         flex items-center gap-1
-        text-slate-400 hover:text-slate-900
+        text-[#9ca3af] hover:text-brand
         transition-colors duration-200
         self-start
         md:absolute md:top-4 md:left-4

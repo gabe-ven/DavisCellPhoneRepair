@@ -55,9 +55,9 @@ export default function ModelStep({
   const tabletReady = tabletMake.trim().length > 0 && tabletModel.trim().length > 0
 
   const inputClass = `
-    w-full border-2 border-gray-200 rounded-xl px-4 py-3
-    text-slate-900 placeholder:text-slate-400
-    focus:outline-none focus:border-red-400
+    w-full border-2 border-[#e5e7eb] rounded-xl px-4 py-3
+    text-[#111111] placeholder:text-[#9ca3af]
+    focus:outline-none focus:border-brand
     transition-colors duration-200 text-sm
   `
 
@@ -82,9 +82,11 @@ export default function ModelStep({
 
       {device === 'tablet' && (
         <div className="flex flex-col gap-4 w-full">
-          <p className="text-base font-semibold text-slate-700">What's your tablet?</p>
+          <p className="text-base font-semibold" style={{ color: '#374151' }}>
+            What&apos;s your tablet?
+          </p>
           <div className="flex flex-col gap-1">
-            <label className="text-xs font-medium text-slate-400 uppercase tracking-wide px-1">Make</label>
+            <label className="text-xs font-medium uppercase tracking-wide px-1" style={{ color: '#9ca3af' }}>Make</label>
             <input
               type="text"
               value={tabletMake}
@@ -94,7 +96,7 @@ export default function ModelStep({
             />
           </div>
           <div className="flex flex-col gap-1">
-            <label className="text-xs font-medium text-slate-400 uppercase tracking-wide px-1">Model</label>
+            <label className="text-xs font-medium uppercase tracking-wide px-1" style={{ color: '#9ca3af' }}>Model</label>
             <input
               type="text"
               value={tabletModel}
@@ -106,9 +108,10 @@ export default function ModelStep({
           <button
             onClick={handleTabletContinue}
             disabled={!tabletReady}
-            className="w-full bg-red-600 hover:bg-red-700 disabled:bg-gray-200 disabled:text-gray-400
-                       text-white font-semibold rounded-xl py-3 text-sm
+            className="w-full bg-brand hover:bg-brand-hover disabled:bg-[#e5e7eb] disabled:text-[#9ca3af]
+                       text-white font-bold tracking-[0.02em] rounded-lg py-3 text-sm
                        transition-all duration-200 active:scale-95"
+            style={!tabletReady ? undefined : { boxShadow: '0 4px 20px rgba(139,26,26,0.25)' }}
           >
             Continue
           </button>
