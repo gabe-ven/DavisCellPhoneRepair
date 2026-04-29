@@ -1,10 +1,12 @@
 // adminApi.ts — Real Supabase implementation.
 // Never change function signatures — components depend on them.
 
-import { createClient } from '@supabase/supabase-js'
+import { createBrowserClient } from '@supabase/ssr'
 import type { Ticket, TicketStatus } from '../../ServicesSection/types/wizard'
 
-const supabase = createClient(
+// Uses the SSR browser client so the admin's login session cookie is
+// automatically forwarded — required when RLS is enabled on the tickets table.
+const supabase = createBrowserClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
@@ -32,8 +34,9 @@ function rowToTicket(row: Record<string, unknown>): Ticket {
       email: row.customer_email as string,
       phone: row.customer_phone as string,
     },
-    source:     (row.source as 'web' | 'mobile') ?? 'web',
+    source:     (row.source as Ticket['source']) ?? 'web',
     assignedTo: (row.assigned_to as string | null) ?? null,
+    notes:      (row.notes as string | null) ?? null,
   }
 }
 
@@ -78,6 +81,18 @@ export async function updateAssignedTo(
   const { error } = await supabase
     .from('tickets')
     .update({ assigned_to: assignedTo || null })
+    .eq('id', ticketId)
+
+  if (error) throw new Error(error.message)
+}
+
+export async function updateNotes(
+  ticketId: string,
+  notes: string | null
+): Promise<void> {
+  const { error } = await supabase
+    .from('tickets')
+    .update({ notes: notes || null })
     .eq('id', ticketId)
 
   if (error) throw new Error(error.message)

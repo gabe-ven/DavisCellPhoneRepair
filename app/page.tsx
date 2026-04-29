@@ -12,7 +12,7 @@ export default function Home() {
   return (
     <>
       <Navbar />
-      <main className="pb-20 md:pb-0">
+      <main>
         <Hero />
         <TrustBar />
         <Services />

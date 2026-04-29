@@ -1,48 +1,23 @@
-import RepairWizard from "./ServicesSection/RepairWizard";
+import RepairWizardV2 from "./ServicesSection/RepairWizardV2";
 
 export default function Services() {
   return (
-    <section
-      id="services"
-      className="py-20 px-4"
-      style={{ background: "#f9f9f9" }}
-    >
-      <div className="max-w-6xl mx-auto">
-        {/* Section heading — matches Reviews / WhyChooseUs treatment */}
-        <div className="text-center mb-10">
-          <h2
-            className="section-heading text-3xl md:text-4xl mb-3 tracking-tight"
-            style={{ fontWeight: 900, color: "#111111", letterSpacing: "-0.02em" }}
-          >
-            What We Fix
+    <section id="services" className="v2-services grain v2-section">
+      <div className="container">
+        <div className="v2-section-head">
+          <div className="mono micro muted">01 — WHAT WE FIX</div>
+          <h2 className="v2-section-title">
+            <span className="serif-it">Tell us what&apos;s broken.</span>
+            <br />
+            <span className="serif-r">We&apos;ll quote you in seconds.</span>
           </h2>
-          <p style={{ color: "#6b7280" }} className="text-lg">
-            Tell us what you have and what&apos;s wrong — get a real quote in under a minute.
+          <p className="v2-section-lede">
+            Pick your device and the issue. We&apos;ll give you an honest range up front — and a confirmed quote within the hour during shop hours.
           </p>
         </div>
-
-        {/* Wizard housing — white card, brand border, soft shadow (matches site card pattern) */}
-        <div
-          className="bg-white rounded-xl mx-auto max-w-3xl px-5 py-10 sm:px-8 sm:py-12"
-          style={{
-            border: "1.5px solid #e5e7eb",
-            boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
-          }}
-        >
-          <RepairWizard />
+        <div className="v2-wizard-stage">
+          <RepairWizardV2 />
         </div>
-
-        <p className="text-center text-sm mt-8" style={{ color: "#9ca3af" }}>
-          Don&apos;t see your device?{" "}
-          <a
-            href="tel:+15303413384"
-            className="font-semibold hover:underline"
-            style={{ color: "#8B1A1A" }}
-          >
-            Call us
-          </a>{" "}
-          — we likely fix it.
-        </p>
       </div>
     </section>
   );

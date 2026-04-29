@@ -1,9 +1,12 @@
 'use client'
 
+import { useState } from 'react'
 import { Bell, CheckCircle, Clock } from 'lucide-react'
 import StatusBadge from '../components/StatusBadge'
+import TicketDetailPanel from '../components/TicketDetailPanel'
 import { useTickets } from '../hooks/useTickets'
 import { deviceLabel } from '../utils/deviceLabel'
+import type { TicketStatus } from '../types/admin'
 
 function timeAgo(dateStr: string): string {
   const diff = Date.now() - new Date(dateStr).getTime()
@@ -39,7 +42,13 @@ interface NotificationsViewProps {
 }
 
 export default function NotificationsView({ dismissed, onDismiss, onDismissAll }: NotificationsViewProps) {
-  const { tickets, loading } = useTickets()
+  const { tickets, loading, updateStatus } = useTickets()
+  const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null)
+  const selectedTicket = tickets.find(t => t.ticketId === selectedTicketId) ?? null
+
+  async function handleStatusChange(ticketId: string, status: TicketStatus) {
+    await updateStatus(ticketId, status)
+  }
 
   const notifications = tickets
     .filter(t => !dismissed.includes(t.ticketId))
@@ -48,6 +57,14 @@ export default function NotificationsView({ dismissed, onDismiss, onDismissAll }
   const newCount = notifications.filter(t => t.status === 'received').length
 
   return (
+    <>
+    {selectedTicket && (
+      <TicketDetailPanel
+        ticket={selectedTicket}
+        onClose={() => setSelectedTicketId(null)}
+        onStatusChange={handleStatusChange}
+      />
+    )}
     <div className="flex flex-col gap-6">
       <div className="flex items-start justify-between">
         <div>
@@ -88,7 +105,8 @@ export default function NotificationsView({ dismissed, onDismiss, onDismissAll }
               return (
                 <div
                   key={t.ticketId}
-                  className={`flex items-start gap-4 px-6 py-4 hover:bg-[#f9f9f9] dark:hover:bg-[#222] transition-colors ${
+                  onClick={() => setSelectedTicketId(t.ticketId)}
+                  className={`flex items-start gap-4 px-6 py-4 hover:bg-[#f9f9f9] dark:hover:bg-[#222] transition-colors cursor-pointer ${
                     isNew ? 'bg-red-50/40 dark:bg-[#1a1010]' : ''
                   }`}
                 >
@@ -135,7 +153,7 @@ export default function NotificationsView({ dismissed, onDismiss, onDismissAll }
                       {timeAgo(t.createdAt)}
                     </span>
                     <button
-                      onClick={() => onDismiss(t.ticketId)}
+                      onClick={e => { e.stopPropagation(); onDismiss(t.ticketId) }}
                       className="text-[12px] text-[#9ca3af] hover:text-[#374151] dark:hover:text-gray-200 transition-colors"
                     >
                       Dismiss
@@ -148,5 +166,6 @@ export default function NotificationsView({ dismissed, onDismiss, onDismissAll }
         )}
       </div>
     </div>
+    </>
   )
 }

@@ -63,10 +63,12 @@ export interface WizardState {
   submittedTicketId: string | null
 }
 
+export type TicketStatus = 'received' | 'reviewing' | 'in_repair' | 'ready' | 'completed'
+
 export interface Ticket {
   ticketId: string
   createdAt: string
-  status: 'received' | 'reviewing' | 'in_repair' | 'ready' | 'completed'
+  status: TicketStatus
   device: {
     type: DeviceType
     brand: string | null
@@ -78,8 +80,9 @@ export interface Ticket {
   images: WizardImage[]
   appointment: { date: string | null; timeSlot: string | null }
   customer: { name: string; email: string; phone: string }
-  source: 'web' | 'mobile'
+  source: 'web' | 'mobile' | 'walkin'
   assignedTo?: string | null
+  notes?: string | null
 }
 
 export const initialWizardState: WizardState = {

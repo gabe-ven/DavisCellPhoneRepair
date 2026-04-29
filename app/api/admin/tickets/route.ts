@@ -62,6 +62,7 @@ export async function POST(req: NextRequest) {
     images:           [],
     source:           'walkin',
     assigned_to:      body.assignedTo || null,
+    notes:            body.notes     || null,
   })
 
   if (error) {

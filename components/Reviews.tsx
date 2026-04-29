@@ -1,102 +1,86 @@
-function StarRating() {
-  return (
-    <div className="flex items-center gap-0.5" aria-label="5 stars">
-      {Array.from({ length: 5 }).map((_, i) => (
-        <svg key={i} viewBox="0 0 20 20" fill="#f59e0b" className="w-4 h-4" aria-hidden="true">
-          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-        </svg>
-      ))}
-    </div>
-  );
-}
-
-const reviews = [
-  { name: "Sarah M.", text: "Cracked my iPhone 14 screen and it was fixed in under an hour. Way cheaper than Apple. Friendly staff — highly recommend!" },
-  { name: "Jake T.", text: "Battery replaced in 30 minutes flat. Great price, great service. Will definitely be back." },
-  { name: "Priya K.", text: "Dropped my phone in the sink. Brought it here and they saved it. Honest pricing and kept me updated the whole time." },
-  { name: "Chris L.", text: "Fixed my charging port same day. The 1-year warranty is the real deal — no one else in Davis offers that." },
-  { name: "Marcus D.", text: "Price was totally fair. They fixed my screen while I grabbed lunch and it looked brand new when I got back." },
-  { name: "Emily R.", text: "Been here twice — once for a screen, once for a battery. Both times fast, cheap, and hassle-free." },
-  { name: "Tom N.", text: "Fixed my back glass same day. Clean shop, knowledgeable staff, no upselling whatsoever." },
-  { name: "Aisha B.", text: "They diagnosed my phone for free and were upfront about the options. Only charged me for the repair. Really trustworthy." },
-  { name: "Ryan C.", text: "Walked in Saturday with a completely shattered screen. Out the door in 45 minutes with a phone that looked like new." },
-  { name: "Jasmine H.", text: "Camera was blurry and crashing. They swapped the module and it's sharper than ever. Cheaper than any other quote I got." },
-  { name: "Daniel W.", text: "Other shops said 3 days — these guys did it in 90 minutes. Quality feels OEM." },
-  { name: "Lily T.", text: "Staff explained what was wrong before touching anything. No surprise charges. Got my phone back same afternoon. 10/10." },
+const REVIEWS = [
+  { quote: "Cracked my screen the night before finals. Walked in the next morning, walked out an hour later with a brand-new screen. Saved my whole quarter.", name: "Sarah M.", tag: "UC Davis · Senior" },
+  { quote: "Quoted me $89 over the phone. Charged me $89. No upsell, no surprises. That's rare.", name: "James R.", tag: "Davis · Local" },
+  { quote: "Tried Apple first — they wanted $329 and three days. These guys did the same repair for less than half, in 45 minutes.", name: "Priya K.", tag: "Sacramento" },
+  { quote: "Battery on my old iPhone was at 67%. Got it swapped while I grabbed coffee at Mishka's. It's like new.", name: "Marcus T.", tag: "Davis · Resident" },
+  { quote: "Family-owned, knows what they're doing, treats you right. Won't take my phone anywhere else.", name: "Linda H.", tag: "Davis · Regular" },
+  { quote: "Got my MacBook keyboard fixed for half what the Apple Store quoted. Same-day. These folks are the real deal.", name: "Daniel C.", tag: "Woodland" },
 ];
 
-const doubled = [...reviews, ...reviews];
+const MARQUEE_DOUBLED = [...REVIEWS, ...REVIEWS];
 
 export default function Reviews() {
   return (
-    <section id="reviews" className="py-20 overflow-x-hidden" style={{ background: "#f9f9f9" }}>
-      {/* Rating badge */}
-      <div className="flex justify-center mb-10 px-4">
-        <div
-          className="inline-flex items-center gap-5 rounded-2xl px-8 py-5 bg-white"
-          style={{ border: "1.5px solid #e5e7eb", boxShadow: "0 2px 12px rgba(0,0,0,0.06)" }}
-        >
-          <span
-            className="text-5xl tracking-tight"
-            style={{ fontWeight: 900, color: "#111111" }}
-          >
-            4.6
-          </span>
-          <div>
-            <StarRating />
-            <div className="text-sm font-medium mt-1" style={{ color: "#6b7280" }}>
-              131 reviews · verified on Google
+    <section id="reviews" className="v2-reviews grain v2-section">
+      <div className="container">
+        {/* Header */}
+        <div className="v2-reviews-head">
+          <div className="mono micro" style={{ color: "rgba(244,239,230,0.5)" }}>03 — WHAT NEIGHBORS SAY</div>
+          <div className="v2-reviews-hero">
+            <div>
+              <div className="v2-reviews-big">4.6</div>
+              <div className="v2-stars-row">
+                ★★★★
+                <span style={{ position: "relative", display: "inline-block" }}>
+                  <span style={{ color: "rgba(245,158,11,0.25)" }}>★</span>
+                  <span style={{ position: "absolute", left: 0, top: 0, width: "60%", overflow: "hidden", display: "block", color: "#f59e0b" }}>★</span>
+                </span>
+              </div>
+              <div className="mono micro muted" style={{ marginTop: 6 }}>
+                AVERAGE OVER 131 REVIEWS
+              </div>
+            </div>
+            <h2 className="v2-section-title" style={{ flex: 1, maxWidth: 540, color: "var(--cream)" }}>
+              <span className="serif-r" style={{ color: "var(--cr-soft)" }}>A 4.6-star average. </span>
+              <span className="serif-it">131 voices.</span>
+              <span className="serif-r" style={{ color: "var(--cream)" }}> One repair shop.</span>
+            </h2>
+          </div>
+        </div>
+
+        {/* 3 feature quotes */}
+        <div className="v2-quotes-grid">
+          {REVIEWS.slice(0, 3).map((r, i) => (
+            <figure key={i} className="v2-quote-card">
+              <div className="mono micro" style={{ color: "var(--cr)" }}>★★★★★</div>
+              <blockquote className="v2-quote-text">
+                &ldquo;{r.quote}&rdquo;
+              </blockquote>
+              <figcaption className="v2-quote-cap">
+                <span className="v2-quote-name">{r.name}</span>
+                <span className="v2-quote-tag mono micro">{r.tag}</span>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+
+        {/* Marquee */}
+        <div className="v2-marquee-wrap">
+          <div className="mono micro muted v2-marquee-label">— MORE FROM THE NEIGHBORHOOD —</div>
+          <div className="v2-marquee">
+            <div className="v2-marquee-track">
+              {MARQUEE_DOUBLED.map((r, i) => (
+                <div key={i} className="v2-marquee-card">
+                  <div className="mono micro" style={{ color: "var(--cr)" }}>★★★★★</div>
+                  <p className="v2-marquee-quote">&ldquo;{r.quote}&rdquo;</p>
+                  <div className="v2-marquee-name mono micro">
+                    — {r.name.toUpperCase()}, {r.tag.toUpperCase()}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="text-center px-4 mb-10">
-        <h2
-          className="section-heading text-3xl md:text-4xl tracking-tight"
-          style={{ fontWeight: 900, color: "#111111", letterSpacing: "-0.02em" }}
-        >
-          131 Happy Customers. Here&apos;s What They Said.
-        </h2>
-      </div>
-
-      {/* Marquee */}
-      <div
-        className="marquee-container relative py-4"
-        style={{
-          maskImage: "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
-          WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)",
-        }}
-      >
-        <div
-          className="marquee-track flex gap-4"
-          style={{
-            animation: "marquee 40s linear infinite",
-            width: "max-content",
-            willChange: "transform",
-          }}
-        >
-          {doubled.map((r, i) => (
-            <div
-              key={i}
-              className={`flex-shrink-0 w-[220px] bg-white rounded-xl p-5 flex flex-col gap-3 ${i % 2 === 0 ? "review-tilt-r" : "review-tilt-l"}`}
-              style={{
-                border: "1.5px solid #e5e7eb",
-                boxShadow: "0 2px 12px rgba(0,0,0,0.05)",
-              }}
-            >
-              <StarRating />
-              <p
-                className="text-sm leading-relaxed flex-1"
-                style={{ color: "#374151" }}
-              >
-                &ldquo;{r.text}&rdquo;
-              </p>
-              <p className="text-xs font-semibold" style={{ color: "#111111" }}>
-                — {r.name}
-              </p>
-            </div>
-          ))}
+        <div className="v2-reviews-cta">
+          <a
+            href="https://www.google.com/maps?q=Davis+Cell+Phone+Repair"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-cr-out"
+          >
+            READ ALL 131 ON GOOGLE →
+          </a>
         </div>
       </div>
     </section>

@@ -2,7 +2,6 @@ import {
   Home,
   Ticket,
   Calendar,
-  ShoppingBag,
   Bell,
   ChevronLeft,
   ChevronRight,
@@ -19,11 +18,10 @@ interface SidebarProps {
 }
 
 const NAV_ITEMS: { id: ViewType; label: string; icon: React.ReactNode; hasNotif?: boolean }[] = [
-  { id: 'home',          label: 'Home',         icon: <Home        size={19} strokeWidth={1.8} /> },
-  { id: 'tickets',       label: 'Tickets',       icon: <Ticket      size={19} strokeWidth={1.8} /> },
-  { id: 'calendar',      label: 'Calendar',      icon: <Calendar    size={19} strokeWidth={1.8} /> },
-  { id: 'merch',         label: 'Merch',         icon: <ShoppingBag size={19} strokeWidth={1.8} /> },
-  { id: 'notifications', label: 'Notifications', icon: <Bell        size={19} strokeWidth={1.8} />, hasNotif: true },
+  { id: 'home',          label: 'Home',         icon: <Home     size={19} strokeWidth={1.8} /> },
+  { id: 'tickets',       label: 'Tickets',       icon: <Ticket   size={19} strokeWidth={1.8} /> },
+  { id: 'calendar',      label: 'Calendar',      icon: <Calendar size={19} strokeWidth={1.8} /> },
+  { id: 'notifications', label: 'Notifications', icon: <Bell     size={19} strokeWidth={1.8} />, hasNotif: true },
 ]
 
 export default function Sidebar({ activeView, onViewChange, collapsed, onToggleCollapse, unreadCount }: SidebarProps) {

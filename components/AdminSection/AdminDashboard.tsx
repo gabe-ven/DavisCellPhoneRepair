@@ -10,7 +10,7 @@ import TicketsView from './views/TicketsView'
 import CalendarView from './views/CalendarView'
 import NotificationsView from './views/NotificationsView'
 
-export type ViewType = 'home' | 'tickets' | 'calendar' | 'merch' | 'notifications'
+export type ViewType = 'home' | 'tickets' | 'calendar' | 'notifications'
 
 const supabase = createBrowserClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -22,11 +22,21 @@ export default function AdminDashboard() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [darkMode, setDarkMode]           = useState(true)
   const [ticketsSearch, setTicketsSearch] = useState('')
-  // Dismissed notification IDs — lifted here so they survive navigation
-  const [dismissed, setDismissed]         = useState<string[]>([])
+  // Dismissed notification IDs — persisted to localStorage so they survive refreshes
+  const [dismissed, setDismissed] = useState<string[]>(() => {
+    if (typeof window === 'undefined') return []
+    try {
+      return JSON.parse(localStorage.getItem('dcpr_dismissed_notifs') ?? '[]')
+    } catch { return [] }
+  })
   // Unread count reported back from TopBar (accounts for dismissals)
   const [unreadCount, setUnreadCount]     = useState(0)
   const router = useRouter()
+
+  // Sync dismissed list to localStorage whenever it changes
+  useEffect(() => {
+    try { localStorage.setItem('dcpr_dismissed_notifs', JSON.stringify(dismissed)) } catch { /* ignore */ }
+  }, [dismissed])
 
   useEffect(() => {
     const root = document.documentElement
@@ -93,11 +103,6 @@ export default function AdminDashboard() {
               onDismiss={handleDismiss}
               onDismissAll={handleDismissAll}
             />
-          )}
-          {activeView === 'merch' && (
-            <div className="flex items-center justify-center h-48 text-[#6b7280] text-base">
-              Merch — coming soon
-            </div>
           )}
         </main>
       </div>

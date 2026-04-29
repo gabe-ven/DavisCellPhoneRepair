@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  const ticketId = `MFC-${Date.now()}`
+  const ticketId = `DCR-${Date.now()}`
 
   const { error } = await supabase.from('tickets').insert({
     id:               ticketId,
@@ -44,6 +44,7 @@ export async function POST(req: NextRequest) {
     customer_email:   state.customer.email,
     customer_phone:   state.customer.phone,
     images:           state.images,
+    notes:            (state as { notes?: string }).notes ?? null,
   })
 
   if (error) {
@@ -59,7 +60,10 @@ export async function POST(req: NextRequest) {
       <h2>We got your repair request!</h2>
       <p>Hi ${state.customer.name},</p>
       <p>Your ticket number is <strong>${ticketId}</strong>.</p>
-      <p>We'll confirm your appointment for <strong>${state.appointment.date} at ${state.appointment.timeSlot}</strong> shortly.</p>
+      ${state.appointment.date
+        ? `<p>Your preferred drop-off: <strong>${state.appointment.date} at ${state.appointment.timeSlot}</strong>. We'll confirm shortly.</p>`
+        : `<p>You chose walk-in — come by anytime during shop hours (Mon–Sat 10AM–6PM, Sun 12PM–4PM).</p>`
+      }
       <p>Questions? Call us: <a href="tel:+15303413384">(530) 341-3384</a></p>
       <p>— Davis Cell Phone Repair</p>
     `,
