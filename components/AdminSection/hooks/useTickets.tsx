@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { getAllTickets, updateTicketStatus, supabase } from '../api/adminApi'
 import type { Ticket, TicketStatus } from '../types/admin'
 
@@ -11,36 +11,41 @@ interface UseTicketsReturn {
 }
 
 export function useTickets(): UseTicketsReturn {
-  const [tickets, setTickets] = useState<Ticket[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [tickets, setTickets]   = useState<Ticket[]>([])
+  const [loading, setLoading]   = useState(true)
+  const [error, setError]       = useState<string | null>(null)
+  const initialLoadDone         = useRef(false)
 
-  const fetchTickets = useCallback(async () => {
-    setLoading(true)
+  // `silent` = background refresh (no spinner, no table flash)
+  const fetchTickets = useCallback(async (silent = false) => {
+    if (!silent) setLoading(true)
     setError(null)
     try {
       const data = await getAllTickets()
       setTickets(data)
     } catch {
-      setError('Failed to load tickets.')
+      if (!silent) setError('Failed to load tickets.')
     } finally {
-      setLoading(false)
+      if (!silent) setLoading(false)
     }
   }, [])
 
-  // Initial fetch
+  // Initial load — show spinner once
   useEffect(() => {
-    fetchTickets()
+    if (!initialLoadDone.current) {
+      initialLoadDone.current = true
+      fetchTickets(false)
+    }
   }, [fetchTickets])
 
-  // Real-time: refetch whenever any row in tickets changes
+  // Realtime — silent background sync, never shows spinner
   useEffect(() => {
     const channel = supabase
-      .channel('tickets-realtime')
+      .channel(`tickets-realtime-${Math.random()}`)
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'tickets' },
-        () => fetchTickets()
+        () => fetchTickets(true)
       )
       .subscribe()
 
@@ -48,17 +53,14 @@ export function useTickets(): UseTicketsReturn {
   }, [fetchTickets])
 
   const updateStatus = useCallback(async (ticketId: string, status: TicketStatus) => {
-    // Optimistic update
-    setTickets(prev =>
-      prev.map(t => t.ticketId === ticketId ? { ...t, status } : t)
-    )
+    // Optimistic update — instant UI, no flicker
+    setTickets(prev => prev.map(t => t.ticketId === ticketId ? { ...t, status } : t))
     try {
       await updateTicketStatus(ticketId, status)
     } catch {
-      // Roll back on failure
-      fetchTickets()
+      fetchTickets(true) // silent rollback
     }
   }, [fetchTickets])
 
-  return { tickets, loading, error, updateStatus, refetch: fetchTickets }
+  return { tickets, loading, error, updateStatus, refetch: () => fetchTickets(false) }
 }

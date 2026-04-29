@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { Bell, Settings, LogOut, Search, Sun, Moon, Layers, X, Clock } from 'lucide-react'
+import { Bell, Settings, LogOut, Search, Sun, Moon, X, Clock } from 'lucide-react'
 import { getAllTickets, updateTicketStatus } from '../api/adminApi'
 import StatusBadge from './StatusBadge'
 import TicketDetailPanel from './TicketDetailPanel'
@@ -124,18 +124,6 @@ export default function TopBar({ darkMode, onToggleDark, onLogout, onNavigateToT
 
       <header className="h-[60px] flex-shrink-0 flex items-center gap-3 px-5 bg-white dark:bg-[#141414] border-b border-[#e5e7eb] dark:border-[#1f1f1f] z-30 relative">
 
-        {/* Brand */}
-        <div className="flex items-center gap-2 flex-shrink-0 mr-1">
-          <div className="w-7 h-7 rounded-lg bg-[#6366f1] flex items-center justify-center flex-shrink-0">
-            <Layers size={14} color="white" strokeWidth={2} />
-          </div>
-          <div className="leading-tight">
-            <p className="text-[12.5px] font-bold text-[#111] dark:text-white whitespace-nowrap tracking-tight">Davis Cell</p>
-            <p className="text-[9px] text-[#9ca3af] whitespace-nowrap uppercase tracking-widest font-medium">Admin</p>
-          </div>
-        </div>
-
-        <div className="w-px h-6 bg-[#e5e7eb] dark:bg-[#262626] flex-shrink-0" />
 
         {/* Search */}
         <div ref={searchRef} className="relative max-w-[320px] flex-1">
