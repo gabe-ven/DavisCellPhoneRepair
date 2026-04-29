@@ -6,22 +6,48 @@ interface StatCardProps {
   subtext?: ReactNode
   icon: ReactNode
   iconBg: string
+  accent?: string // optional bottom-border color
 }
 
-export default function StatCard({ label, value, subtext, icon, iconBg }: StatCardProps) {
+export default function StatCard({ label, value, subtext, icon, iconBg, accent }: StatCardProps) {
   return (
-    <div className="bg-white dark:bg-[#1a1a1a] border border-[#e5e7eb] dark:border-[#2a2a2a] rounded-xl p-5 flex flex-col gap-3">
-      <div className="flex items-center justify-between">
-        <span className="text-[11px] font-semibold text-[#6b7280] uppercase tracking-wider">{label}</span>
-        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${iconBg}`}>
+    <div className={`
+      relative overflow-hidden group
+      bg-white dark:bg-[#141414]
+      border border-[#e8e8e8] dark:border-[#1f1f1f]
+      rounded-2xl p-5 flex flex-col gap-0
+      transition-shadow hover:shadow-md dark:hover:shadow-black/30
+      ${accent ? `border-b-2` : ''}
+    `}
+    style={accent ? { borderBottomColor: accent } : undefined}
+    >
+      {/* Subtle dot-grid texture */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.025] dark:opacity-[0.05]"
+        style={{
+          backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)',
+          backgroundSize: '18px 18px',
+        }}
+      />
+
+      <div className="relative flex items-start justify-between mb-4">
+        <p className="text-[10.5px] font-bold text-[#a3a3a3] dark:text-[#525252] uppercase tracking-widest leading-none pt-0.5 pr-2">
+          {label}
+        </p>
+        <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${iconBg} transition-transform group-hover:scale-110`}>
           {icon}
         </div>
       </div>
-      <div className="text-[28px] font-bold text-[#111] dark:text-white leading-none tracking-tight">
+
+      <p
+        className="relative text-[42px] font-bold text-[#111] dark:text-[#f0f0f0] leading-none tracking-tight tabular-nums"
+        style={{ fontFamily: 'var(--font-jetbrains-mono), ui-monospace, monospace' }}
+      >
         {value}
-      </div>
+      </p>
+
       {subtext && (
-        <div className="text-[12px] text-[#6b7280]">{subtext}</div>
+        <p className="relative text-[12px] text-[#a3a3a3] dark:text-[#525252] mt-3 leading-snug">{subtext}</p>
       )}
     </div>
   )

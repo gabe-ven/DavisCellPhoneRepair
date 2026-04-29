@@ -11,15 +11,15 @@ import type { Ticket, TicketStatus } from '../../ServicesSection/types/wizard'
 const ISSUE_LABEL = Object.fromEntries(issueTypes.map(i => [i.id, i.label]))
 
 const STATUS_OPTS: { value: TicketStatus; label: string; active: string; idle: string }[] = [
-  { value: 'received',  label: 'Received',  active: 'bg-blue-500 border-blue-500 text-white',   idle: 'border-[#e5e7eb] dark:border-[#2a2a2a] text-[#374151] dark:text-[#9ca3af] hover:bg-[#f5f5f5] dark:hover:bg-[#222]' },
-  { value: 'reviewing', label: 'Reviewing', active: 'bg-yellow-400 border-yellow-400 text-white', idle: 'border-[#e5e7eb] dark:border-[#2a2a2a] text-[#374151] dark:text-[#9ca3af] hover:bg-[#f5f5f5] dark:hover:bg-[#222]' },
-  { value: 'in_repair', label: 'In Repair', active: 'bg-orange-500 border-orange-500 text-white', idle: 'border-[#e5e7eb] dark:border-[#2a2a2a] text-[#374151] dark:text-[#9ca3af] hover:bg-[#f5f5f5] dark:hover:bg-[#222]' },
-  { value: 'ready',     label: 'Ready',     active: 'bg-green-500 border-green-500 text-white',  idle: 'border-[#e5e7eb] dark:border-[#2a2a2a] text-[#374151] dark:text-[#9ca3af] hover:bg-[#f5f5f5] dark:hover:bg-[#222]' },
-  { value: 'completed', label: 'Completed', active: 'bg-gray-400 border-gray-400 text-white',    idle: 'border-[#e5e7eb] dark:border-[#2a2a2a] text-[#374151] dark:text-[#9ca3af] hover:bg-[#f5f5f5] dark:hover:bg-[#222]' },
+  { value: 'received',  label: 'Received',  active: 'bg-blue-500 border-blue-500 text-white',    idle: 'border-[#e5e7eb] dark:border-[#262626] text-[#374151] dark:text-[#9ca3af] hover:bg-[#f5f5f5] dark:hover:bg-[#222]' },
+  { value: 'reviewing', label: 'Reviewing', active: 'bg-yellow-400 border-yellow-400 text-white', idle: 'border-[#e5e7eb] dark:border-[#262626] text-[#374151] dark:text-[#9ca3af] hover:bg-[#f5f5f5] dark:hover:bg-[#222]' },
+  { value: 'in_repair', label: 'In Repair', active: 'bg-orange-500 border-orange-500 text-white', idle: 'border-[#e5e7eb] dark:border-[#262626] text-[#374151] dark:text-[#9ca3af] hover:bg-[#f5f5f5] dark:hover:bg-[#222]' },
+  { value: 'ready',     label: 'Ready',     active: 'bg-green-500 border-green-500 text-white',  idle: 'border-[#e5e7eb] dark:border-[#262626] text-[#374151] dark:text-[#9ca3af] hover:bg-[#f5f5f5] dark:hover:bg-[#222]' },
+  { value: 'completed', label: 'Completed', active: 'bg-[#737373] border-[#737373] text-white',  idle: 'border-[#e5e7eb] dark:border-[#262626] text-[#374151] dark:text-[#9ca3af] hover:bg-[#f5f5f5] dark:hover:bg-[#222]' },
 ]
 
-const SECTION = 'px-6 py-5 border-b border-[#e5e7eb] dark:border-[#2a2a2a]'
-const LABEL   = 'text-[10px] font-bold uppercase tracking-widest text-[#9ca3af] mb-2'
+const SECTION = 'px-6 py-5 border-b border-[#e5e7eb] dark:border-[#262626]'
+const LABEL   = 'text-[10px] font-bold uppercase tracking-widest text-[#9ca3af] dark:text-[#737373] mb-2'
 const VALUE   = 'text-[14px] text-[#111111] dark:text-[#f0f0f0]'
 
 interface Props {
@@ -28,7 +28,6 @@ interface Props {
   onStatusChange: (ticketId: string, status: TicketStatus) => void
 }
 
-// Inline editable assignee (reused pattern)
 function AssigneeEdit({ ticketId, value }: { ticketId: string; value: string | null | undefined }) {
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState(value ?? '')
@@ -49,13 +48,13 @@ function AssigneeEdit({ ticketId, value }: { ticketId: string; value: string | n
         onChange={e => setDraft(e.target.value)}
         onBlur={save} onKeyDown={onKey}
         placeholder="Technician name…"
-        className="w-full px-2 py-1 text-[13px] rounded-lg border border-[#8B1A1A]/50 bg-white dark:bg-[#111] text-[#111] dark:text-[#f0f0f0] focus:outline-none focus:ring-1 focus:ring-[#8B1A1A]"
+        className="w-full px-2 py-1 text-[13px] rounded-lg border border-[#6366f1]/40 bg-white dark:bg-[#111] text-[#111] dark:text-[#f0f0f0] focus:outline-none focus:ring-1 focus:ring-[#6366f1]/30"
       />
     )
   }
   return (
-    <button onClick={startEdit} className="flex items-center gap-2 text-[14px] hover:opacity-75 transition-opacity">
-      <UserRound size={15} className="text-[#8B1A1A] flex-shrink-0" />
+    <button onClick={startEdit} className="flex items-center gap-2 text-[14px] hover:opacity-75 transition-opacity cursor-pointer">
+      <UserRound size={15} className="text-[#6366f1] flex-shrink-0" />
       <span className={value ? 'text-[#111111] dark:text-[#f0f0f0]' : 'text-[#9ca3af] italic'}>
         {saving ? '…' : (value || 'Click to assign')}
       </span>
@@ -63,7 +62,6 @@ function AssigneeEdit({ ticketId, value }: { ticketId: string; value: string | n
   )
 }
 
-// Auto-save notes textarea
 function NotesEdit({ ticketId, value }: { ticketId: string; value: string | null | undefined }) {
   const [draft, setDraft] = useState(value ?? '')
   const [saving, setSaving] = useState(false)
@@ -87,10 +85,10 @@ function NotesEdit({ ticketId, value }: { ticketId: string; value: string | null
         onBlur={save}
         rows={4}
         placeholder="Add internal repair notes here… (auto-saves on blur)"
-        className="w-full px-3 py-2.5 text-[13px] rounded-xl border border-[#e5e7eb] dark:border-[#2a2a2a] bg-[#f9f9f9] dark:bg-[#111] text-[#374151] dark:text-[#d4d4d4] placeholder-[#9ca3af] focus:outline-none focus:ring-1 focus:ring-[#8B1A1A] focus:border-[#8B1A1A] resize-none leading-relaxed"
+        className="w-full px-3 py-2.5 text-[13px] rounded-xl border border-[#e5e7eb] dark:border-[#262626] bg-[#f9f9f9] dark:bg-[#111] text-[#374151] dark:text-[#d4d4d4] placeholder-[#9ca3af] dark:placeholder-[#737373] focus:outline-none focus:ring-1 focus:ring-[#6366f1]/30 focus:border-[#6366f1]/60 resize-none leading-relaxed"
       />
       <span className={`absolute bottom-2.5 right-3 text-[11px] transition-opacity ${saving || saved ? 'opacity-100' : 'opacity-0'}`}>
-        {saving ? <span className="text-[#9ca3af]">Saving…</span> : <span className="text-green-500">Saved ✓</span>}
+        {saving ? <span className="text-[#9ca3af]">Saving…</span> : <span className="text-green-500">Saved</span>}
       </span>
     </div>
   )
@@ -113,28 +111,26 @@ export default function TicketDetailPanel({ ticket, onClose, onStatusChange }: P
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
-      {/* Backdrop */}
       <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" onClick={onClose} />
 
-      {/* Panel */}
-      <div className="relative w-[420px] h-full bg-white dark:bg-[#1a1a1a] border-l border-[#e5e7eb] dark:border-[#2a2a2a] overflow-y-auto shadow-2xl flex flex-col">
+      <div className="relative w-[420px] h-full bg-white dark:bg-[#1a1a1a] border-l border-[#e5e7eb] dark:border-[#262626] overflow-y-auto shadow-2xl flex flex-col">
 
         {/* Header */}
-        <div className="sticky top-0 bg-white dark:bg-[#1a1a1a] flex items-center justify-between px-6 py-4 border-b border-[#e5e7eb] dark:border-[#2a2a2a] z-10">
+        <div className="sticky top-0 bg-white dark:bg-[#1a1a1a] flex items-center justify-between px-6 py-4 border-b border-[#e5e7eb] dark:border-[#262626] z-10">
           <div>
             <div className="flex items-center gap-2 mb-1">
               <span className="font-mono text-[13px] text-[#9ca3af]">#{ticket.ticketId}</span>
               <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${
                 ticket.source === 'walkin'
-                  ? 'bg-purple-50 border-purple-200 text-purple-600 dark:bg-purple-950/30 dark:border-purple-800 dark:text-purple-300'
+                  ? 'bg-violet-50 border-violet-200 text-violet-600 dark:bg-violet-950/30 dark:border-violet-800 dark:text-violet-300'
                   : 'bg-blue-50 border-blue-200 text-blue-600 dark:bg-blue-950/30 dark:border-blue-800 dark:text-blue-300'
               }`}>{sourceLabel}</span>
             </div>
-            <p className="text-[12px] text-[#9ca3af]">{createdDate}</p>
+            <p className="text-[12px] text-[#9ca3af] dark:text-[#737373]">{createdDate}</p>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-lg flex items-center justify-center border border-[#e5e7eb] dark:border-[#2a2a2a] text-[#9ca3af] hover:text-[#374151] dark:hover:text-white hover:bg-[#f5f5f5] dark:hover:bg-[#222] transition-colors"
+            className="w-8 h-8 rounded-lg flex items-center justify-center border border-[#e5e7eb] dark:border-[#262626] text-[#9ca3af] hover:text-[#374151] dark:hover:text-white hover:bg-[#f5f5f5] dark:hover:bg-[#222] transition-colors cursor-pointer"
           >
             <X size={15} />
           </button>
@@ -149,7 +145,7 @@ export default function TicketDetailPanel({ ticket, onClose, onStatusChange }: P
                 key={opt.value}
                 onClick={() => handleStatus(opt.value)}
                 disabled={updating}
-                className={`px-3 py-1.5 rounded-lg text-[12px] font-semibold border transition-colors disabled:opacity-60 ${
+                className={`px-3 py-1.5 rounded-lg text-[12px] font-semibold border transition-colors disabled:opacity-60 cursor-pointer disabled:cursor-not-allowed ${
                   ticket.status === opt.value ? opt.active : opt.idle
                 }`}
               >
@@ -167,7 +163,7 @@ export default function TicketDetailPanel({ ticket, onClose, onStatusChange }: P
             {ticket.customer.phone && (
               <a
                 href={`tel:${ticket.customer.phone.replace(/\D/g, '')}`}
-                className="flex items-center gap-2.5 text-[14px] font-medium text-[#8B1A1A] hover:underline"
+                className="flex items-center gap-2.5 text-[14px] font-medium text-[#111111] dark:text-white hover:underline"
               >
                 <Phone size={14} />
                 {ticket.customer.phone}
@@ -176,7 +172,7 @@ export default function TicketDetailPanel({ ticket, onClose, onStatusChange }: P
             {ticket.customer.email && (
               <a
                 href={`mailto:${ticket.customer.email}`}
-                className="flex items-center gap-2.5 text-[13px] text-[#374151] dark:text-[#9ca3af] hover:text-[#8B1A1A] transition-colors"
+                className="flex items-center gap-2.5 text-[13px] text-[#374151] dark:text-white hover:text-[#8B1A1A] dark:hover:text-white transition-colors"
               >
                 <Mail size={14} />
                 {ticket.customer.email}
@@ -189,7 +185,7 @@ export default function TicketDetailPanel({ ticket, onClose, onStatusChange }: P
         <div className={SECTION}>
           <p className={LABEL}>Device</p>
           <div className="flex items-center gap-2 mb-3">
-            <Smartphone size={16} className="text-[#9ca3af]" />
+            <Smartphone size={16} className="text-[#9ca3af] dark:text-[#737373]" />
             <span className={VALUE}>
               {deviceLabel(ticket.device.type)}
               {ticket.device.brand ? ` · ${ticket.device.brand}` : ''}
@@ -204,7 +200,7 @@ export default function TicketDetailPanel({ ticket, onClose, onStatusChange }: P
             {ticket.issues.map(id => (
               <span
                 key={id}
-                className="flex items-center gap-1 text-[12px] font-medium px-2.5 py-1 rounded-lg border border-[#e5e7eb] dark:border-[#2a2a2a] text-[#374151] dark:text-[#9ca3af] bg-[#f9f9f9] dark:bg-[#111]"
+                className="flex items-center gap-1 text-[12px] font-medium px-2.5 py-1 rounded-lg border border-[#e5e7eb] dark:border-[#262626] text-[#374151] dark:text-[#a3a3a3] bg-[#f9f9f9] dark:bg-[#111]"
               >
                 <Tag size={10} />
                 {ISSUE_LABEL[id] ?? id}
@@ -219,7 +215,7 @@ export default function TicketDetailPanel({ ticket, onClose, onStatusChange }: P
             <p className={LABEL}>Appointment</p>
             <div className="flex items-center gap-4">
               {ticket.appointment.date && (
-                <div className="flex items-center gap-2 text-[14px] text-[#374151] dark:text-[#9ca3af]">
+                <div className="flex items-center gap-2 text-[14px] text-[#374151] dark:text-[#a3a3a3]">
                   <Calendar size={14} />
                   {new Date(ticket.appointment.date + 'T12:00:00').toLocaleDateString('en-US', {
                     weekday: 'short', month: 'long', day: 'numeric',
@@ -261,7 +257,7 @@ export default function TicketDetailPanel({ ticket, onClose, onStatusChange }: P
                   key={img.id}
                   src={img.base64}
                   alt={img.name}
-                  className="w-full aspect-square object-cover rounded-lg border border-[#e5e7eb] dark:border-[#2a2a2a]"
+                  className="w-full aspect-square object-cover rounded-lg border border-[#e5e7eb] dark:border-[#262626]"
                 />
               ))}
             </div>
@@ -270,7 +266,7 @@ export default function TicketDetailPanel({ ticket, onClose, onStatusChange }: P
 
         {/* Metadata footer */}
         <div className="px-6 py-4 mt-auto">
-          <div className="flex items-center justify-between text-[11px] text-[#9ca3af]">
+          <div className="flex items-center justify-between text-[11px] text-[#9ca3af] dark:text-[#737373]">
             <span>ID: <span className="font-mono">{ticket.ticketId}</span></span>
             <StatusBadge status={ticket.status} />
           </div>

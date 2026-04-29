@@ -37,7 +37,7 @@ export default function Sidebar({ activeView, onViewChange, collapsed, onToggleC
     >
       {/* Logo */}
       <div className="flex items-center gap-3 px-3.5 pt-5 pb-6 overflow-hidden">
-        <div className="w-8 h-8 rounded-lg bg-[#8B1A1A] flex items-center justify-center flex-shrink-0">
+        <div className="w-8 h-8 rounded-lg bg-[#6366f1] flex items-center justify-center flex-shrink-0">
           <Layers size={16} color="white" strokeWidth={2} />
         </div>
         {!collapsed && (
@@ -65,11 +65,11 @@ export default function Sidebar({ activeView, onViewChange, collapsed, onToggleC
               onClick={() => onViewChange(item.id)}
               title={collapsed ? item.label : undefined}
               className={`
-                relative flex items-center rounded-lg transition-colors text-left w-full
+                relative flex items-center rounded-lg transition-colors text-left w-full cursor-pointer
                 ${collapsed ? 'px-0 py-2.5 justify-center' : 'px-3 py-2.5 gap-3'}
                 ${isActive
-                  ? 'bg-[#8B1A1A] text-white'
-                  : 'text-[#6b7280] dark:text-[#9ca3af] hover:bg-[#f5f5f5] dark:hover:bg-white/5 hover:text-[#111] dark:hover:text-white'
+                  ? 'bg-[#6366f1] text-white'
+                  : 'text-[#6b7280] dark:text-[#737373] hover:bg-[#f5f5f5] dark:hover:bg-white/5 hover:text-[#111] dark:hover:text-white'
                 }
               `}
             >
@@ -79,7 +79,7 @@ export default function Sidebar({ activeView, onViewChange, collapsed, onToggleC
               )}
               {item.hasNotif && unreadCount > 0 && (
                 <span
-                  className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${isActive ? 'bg-white/80' : 'bg-[#8B1A1A]'} ${
+                  className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${isActive ? 'bg-white/80' : 'bg-[#6366f1]'} ${
                     collapsed ? 'absolute top-2 right-2.5' : 'ml-auto'
                   }`}
                 />
@@ -96,7 +96,7 @@ export default function Sidebar({ activeView, onViewChange, collapsed, onToggleC
           onClick={onToggleCollapse}
           title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           className={`
-            flex items-center rounded-lg transition-colors w-full
+            flex items-center rounded-lg transition-colors w-full cursor-pointer
             text-[#9ca3af] hover:bg-[#f5f5f5] dark:hover:bg-white/5 hover:text-[#374151] dark:hover:text-white
             ${collapsed ? 'px-0 py-2.5 justify-center' : 'px-3 py-2.5 gap-3'}
           `}

@@ -10,13 +10,12 @@ import { updateAssignedTo } from '../api/adminApi'
 import { deviceLabel } from '../utils/deviceLabel'
 import type { TicketStatus } from '../types/admin'
 
-// ── Quick-status toggle: click the badge → 5 pill options inline ──────────
 const QUICK_OPTS: { value: TicketStatus; label: string; active: string; idle: string }[] = [
-  { value: 'received',  label: 'Rcvd',    active: 'bg-blue-500 text-white border-blue-500',   idle: 'border-[#e5e7eb] dark:border-[#2a2a2a] text-[#374151] dark:text-[#9ca3af] hover:bg-[#f5f5f5] dark:hover:bg-[#222]' },
-  { value: 'reviewing', label: 'Review',  active: 'bg-yellow-400 text-white border-yellow-400', idle: 'border-[#e5e7eb] dark:border-[#2a2a2a] text-[#374151] dark:text-[#9ca3af] hover:bg-[#f5f5f5] dark:hover:bg-[#222]' },
-  { value: 'in_repair', label: 'Repair',  active: 'bg-orange-500 text-white border-orange-500', idle: 'border-[#e5e7eb] dark:border-[#2a2a2a] text-[#374151] dark:text-[#9ca3af] hover:bg-[#f5f5f5] dark:hover:bg-[#222]' },
-  { value: 'ready',     label: 'Ready',   active: 'bg-green-500 text-white border-green-500',  idle: 'border-[#e5e7eb] dark:border-[#2a2a2a] text-[#374151] dark:text-[#9ca3af] hover:bg-[#f5f5f5] dark:hover:bg-[#222]' },
-  { value: 'completed', label: 'Done',    active: 'bg-gray-400 text-white border-gray-400',    idle: 'border-[#e5e7eb] dark:border-[#2a2a2a] text-[#374151] dark:text-[#9ca3af] hover:bg-[#f5f5f5] dark:hover:bg-[#222]' },
+  { value: 'received',  label: 'Rcvd',   active: 'bg-blue-500 text-white border-blue-500',    idle: 'border-[#e5e7eb] dark:border-[#262626] text-[#374151] dark:text-[#9ca3af] hover:bg-[#f5f5f5] dark:hover:bg-[#222]' },
+  { value: 'reviewing', label: 'Review', active: 'bg-yellow-400 text-white border-yellow-400', idle: 'border-[#e5e7eb] dark:border-[#262626] text-[#374151] dark:text-[#9ca3af] hover:bg-[#f5f5f5] dark:hover:bg-[#222]' },
+  { value: 'in_repair', label: 'Repair', active: 'bg-orange-500 text-white border-orange-500', idle: 'border-[#e5e7eb] dark:border-[#262626] text-[#374151] dark:text-[#9ca3af] hover:bg-[#f5f5f5] dark:hover:bg-[#222]' },
+  { value: 'ready',     label: 'Ready',  active: 'bg-green-500 text-white border-green-500',  idle: 'border-[#e5e7eb] dark:border-[#262626] text-[#374151] dark:text-[#9ca3af] hover:bg-[#f5f5f5] dark:hover:bg-[#222]' },
+  { value: 'completed', label: 'Done',   active: 'bg-[#737373] text-white border-[#737373]',  idle: 'border-[#e5e7eb] dark:border-[#262626] text-[#374151] dark:text-[#9ca3af] hover:bg-[#f5f5f5] dark:hover:bg-[#222]' },
 ]
 
 function StatusQuickUpdate({
@@ -29,7 +28,7 @@ function StatusQuickUpdate({
       <button
         onClick={e => { e.stopPropagation(); setOpen(true) }}
         title="Click to change status"
-        className="hover:opacity-75 transition-opacity"
+        className="hover:opacity-75 transition-opacity cursor-pointer"
       >
         <StatusBadge status={status} />
       </button>
@@ -43,21 +42,20 @@ function StatusQuickUpdate({
           key={opt.value}
           disabled={disabled}
           onClick={() => { onUpdate(ticketId, opt.value); setOpen(false) }}
-          className={`px-2 py-0.5 rounded-md text-[11px] font-semibold border transition-colors disabled:opacity-50 text-left ${
+          className={`px-2 py-0.5 rounded-md text-[11px] font-semibold border transition-colors disabled:opacity-50 text-left cursor-pointer ${
             status === opt.value ? opt.active : opt.idle
           }`}
         >
           {status === opt.value ? '✓ ' : ''}{opt.label}
         </button>
       ))}
-      <button onClick={() => setOpen(false)} className="text-[10px] text-[#9ca3af] text-center mt-0.5 hover:text-[#374151] transition-colors">
+      <button onClick={() => setOpen(false)} className="text-[10px] text-[#9ca3af] text-center mt-0.5 hover:text-[#374151] dark:hover:text-[#d4d4d4] transition-colors cursor-pointer">
         Cancel
       </button>
     </div>
   )
 }
 
-// ── Inline assignee cell ───────────────────────────────────────────────────
 function AssigneeCell({ ticketId, value }: { ticketId: string; value: string | null | undefined }) {
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState(value ?? '')
@@ -89,7 +87,7 @@ function AssigneeCell({ ticketId, value }: { ticketId: string; value: string | n
         onBlur={save} onKeyDown={onKeyDown}
         onClick={e => e.stopPropagation()}
         placeholder="Name…"
-        className="w-full px-2 py-1 text-[13px] rounded-md border border-[#8B1A1A]/50 bg-white dark:bg-[#111] text-[#111] dark:text-[#f0f0f0] focus:outline-none focus:ring-1 focus:ring-[#8B1A1A]"
+        className="w-full px-2 py-1 text-[13px] rounded-md border border-[#6366f1]/40 bg-white dark:bg-[#111] text-[#111] dark:text-[#f0f0f0] focus:outline-none focus:ring-1 focus:ring-[#6366f1]/40"
       />
     )
   }
@@ -97,9 +95,9 @@ function AssigneeCell({ ticketId, value }: { ticketId: string; value: string | n
   return (
     <button
       onClick={startEdit}
-      className={`flex items-center gap-1.5 text-[13px] rounded-md px-2 py-1 w-full text-left hover:bg-[#f5f5f5] dark:hover:bg-[#222] transition-colors ${saving ? 'opacity-50' : ''}`}
+      className={`flex items-center gap-1.5 text-[13px] rounded-md px-2 py-1 w-full text-left hover:bg-[#f5f5f5] dark:hover:bg-[#222] transition-colors cursor-pointer ${saving ? 'opacity-50' : ''}`}
     >
-      <UserRound size={13} className={value ? 'text-[#8B1A1A]' : 'text-[#9ca3af]'} />
+      <UserRound size={13} className={value ? 'text-[#6366f1]' : 'text-[#9ca3af]'} />
       <span className={value ? 'text-[#111111] dark:text-[#d4d4d4]' : 'text-[#9ca3af] italic'}>
         {saving ? '…' : (value || 'Unassigned')}
       </span>
@@ -107,7 +105,6 @@ function AssigneeCell({ ticketId, value }: { ticketId: string; value: string | n
   )
 }
 
-// ── Main ──────────────────────────────────────────────────────────────────
 const STATUS_FILTERS = ['all', 'received', 'reviewing', 'in_repair', 'ready', 'completed'] as const
 type Filter = typeof STATUS_FILTERS[number]
 
@@ -157,6 +154,10 @@ export default function TicketsView({ initialSearch = '' }: TicketsViewProps) {
         <CreateTicketModal
           onClose={() => setShowCreateModal(false)}
           onCreated={handleCreated}
+          takenSlots={tickets.map(t => ({
+            date: t.appointment.date,
+            timeSlot: t.appointment.timeSlot,
+          }))}
         />
       )}
 
@@ -174,14 +175,13 @@ export default function TicketsView({ initialSearch = '' }: TicketsViewProps) {
             <h1 className="text-[32px] font-bold text-[#111111] dark:text-[#f5f5f5] leading-tight tracking-tight">
               Tickets
             </h1>
-            <p className="text-[15px] text-[#9ca3af] dark:text-[#6b7280] mt-1">
+            <p className="text-[15px] text-[#9ca3af] dark:text-[#737373] mt-1">
               Click any row to see full details. Click the status badge to update quickly.
             </p>
           </div>
           <button
             onClick={() => setShowCreateModal(true)}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[14px] font-semibold text-white hover:opacity-90 active:scale-95 mt-1"
-            style={{ background: '#8B1A1A' }}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[14px] font-semibold text-white bg-[#6366f1] hover:bg-[#4f46e5] active:scale-95 mt-1 transition-colors cursor-pointer"
           >
             <Plus size={16} />
             New Ticket
@@ -205,17 +205,17 @@ export default function TicketsView({ initialSearch = '' }: TicketsViewProps) {
               <button
                 key={s}
                 onClick={() => setFilter(s)}
-                className={`px-3.5 py-1.5 rounded-lg text-[13px] font-medium transition-colors ${
+                className={`px-3.5 py-1.5 rounded-lg text-[13px] font-medium transition-colors cursor-pointer ${
                   filter === s
-                    ? 'bg-[#8B1A1A] text-white'
-                    : 'bg-white dark:bg-[#1a1a1a] border border-[#e5e7eb] dark:border-[#2a2a2a] text-[#374151] dark:text-[#6b7280] hover:bg-[#f9f9f9] dark:hover:bg-[#222]'
+                    ? 'bg-[#6366f1] text-white'
+                    : 'bg-white dark:bg-[#1a1a1a] border border-[#e5e7eb] dark:border-[#262626] text-[#374151] dark:text-[#737373] hover:bg-[#f9f9f9] dark:hover:bg-[#222]'
                 }`}
               >
                 {s === 'all' ? 'All' : s === 'in_repair' ? 'In Repair' : s.charAt(0).toUpperCase() + s.slice(1)}
               </button>
             ))}
           </div>
-          <div className="flex items-center gap-2 h-9 px-3 rounded-xl border border-[#e5e7eb] dark:border-[#2a2a2a] bg-white dark:bg-[#1a1a1a] max-w-[280px] flex-1">
+          <div className="flex items-center gap-2 h-9 px-3 rounded-xl border border-[#e5e7eb] dark:border-[#262626] bg-white dark:bg-[#1a1a1a] max-w-[280px] flex-1">
             <Search size={14} className="text-[#9ca3af] flex-shrink-0" />
             <input
               value={search}
@@ -227,19 +227,19 @@ export default function TicketsView({ initialSearch = '' }: TicketsViewProps) {
         </div>
 
         {/* Table */}
-        <div className="bg-white dark:bg-[#1a1a1a] border border-[#e5e7eb] dark:border-[#2a2a2a] rounded-2xl overflow-hidden">
+        <div className="bg-white dark:bg-[#1a1a1a] border border-[#e5e7eb] dark:border-[#262626] rounded-2xl overflow-hidden">
           {loading ? (
-            <div className="flex items-center justify-center h-48 text-[#9ca3af]">Loading tickets…</div>
+            <div className="flex items-center justify-center h-48 text-[#9ca3af] dark:text-[#737373]">Loading tickets…</div>
           ) : error ? (
             <div className="p-6 text-red-500 text-sm">{error}</div>
           ) : filtered.length === 0 ? (
-            <div className="flex items-center justify-center h-48 text-[#9ca3af] text-sm">No tickets found.</div>
+            <div className="flex items-center justify-center h-48 text-[#9ca3af] dark:text-[#737373] text-sm">No tickets found.</div>
           ) : (
             <table className="w-full border-collapse">
               <thead>
                 <tr>
                   {['Ticket ID', 'Customer', 'Device', 'Issues', 'Appointment', 'Assigned To', 'Status'].map(h => (
-                    <th key={h} className="text-left px-5 py-3 text-[11px] font-semibold text-[#9ca3af] uppercase tracking-wider border-b border-[#e5e7eb] dark:border-[#2a2a2a]">
+                    <th key={h} className="text-left px-5 py-3 text-[11px] font-semibold text-[#9ca3af] uppercase tracking-wider border-b border-[#e5e7eb] dark:border-[#262626]">
                       {h}
                     </th>
                   ))}
@@ -250,25 +250,25 @@ export default function TicketsView({ initialSearch = '' }: TicketsViewProps) {
                   <tr
                     key={ticket.ticketId}
                     onClick={() => setSelectedTicketId(ticket.ticketId)}
-                    className="hover:bg-[#f9f9f9] dark:hover:bg-[#222] transition-colors cursor-pointer"
+                    className="hover:bg-[#f9f9f9] dark:hover:bg-[#1f1f1f] transition-colors cursor-pointer"
                   >
-                    <td className="px-5 py-4 border-b border-[#e5e7eb]/60 dark:border-[#2a2a2a]/50">
+                    <td className="px-5 py-4 border-b border-[#e5e7eb]/60 dark:border-[#262626]/50">
                       <span className="font-mono text-[12px] text-[#9ca3af]">#{ticket.ticketId}</span>
                     </td>
-                    <td className="px-5 py-4 border-b border-[#e5e7eb]/60 dark:border-[#2a2a2a]/50">
+                    <td className="px-5 py-4 border-b border-[#e5e7eb]/60 dark:border-[#262626]/50">
                       <p className="text-[14px] font-semibold text-[#111111] dark:text-[#f0f0f0]">
                         {ticket.customer.name}
                       </p>
                       <a
                         href={`tel:${ticket.customer.phone.replace(/\D/g, '')}`}
                         onClick={e => e.stopPropagation()}
-                        className="flex items-center gap-1 text-[12px] text-[#8B1A1A] hover:underline w-fit"
+                        className="flex items-center gap-1 text-[12px] text-[#111111] dark:text-white hover:underline w-fit"
                       >
                         <Phone size={10} />
                         {ticket.customer.phone}
                       </a>
                     </td>
-                    <td className="px-5 py-4 border-b border-[#e5e7eb]/60 dark:border-[#2a2a2a]/50">
+                    <td className="px-5 py-4 border-b border-[#e5e7eb]/60 dark:border-[#262626]/50">
                       <p className="text-[13px] text-[#374151] dark:text-[#a3a3a3]">
                         {deviceLabel(ticket.device.type)}
                       </p>
@@ -277,12 +277,12 @@ export default function TicketsView({ initialSearch = '' }: TicketsViewProps) {
                           .filter(Boolean).join(' ')}
                       </p>
                     </td>
-                    <td className="px-5 py-4 border-b border-[#e5e7eb]/60 dark:border-[#2a2a2a]/50 max-w-[150px]">
+                    <td className="px-5 py-4 border-b border-[#e5e7eb]/60 dark:border-[#262626]/50 max-w-[150px]">
                       <p className="text-[13px] text-[#374151] dark:text-[#a3a3a3] truncate">
                         {ticket.issues.join(', ')}
                       </p>
                     </td>
-                    <td className="px-5 py-4 border-b border-[#e5e7eb]/60 dark:border-[#2a2a2a]/50">
+                    <td className="px-5 py-4 border-b border-[#e5e7eb]/60 dark:border-[#262626]/50">
                       {ticket.appointment.date ? (
                         <>
                           <p className="text-[13px] text-[#374151] dark:text-[#a3a3a3]">
@@ -294,11 +294,11 @@ export default function TicketsView({ initialSearch = '' }: TicketsViewProps) {
                         <span className="text-[12px] text-[#9ca3af]">—</span>
                       )}
                     </td>
-                    <td className="px-5 py-4 border-b border-[#e5e7eb]/60 dark:border-[#2a2a2a]/50 min-w-[120px]"
+                    <td className="px-5 py-4 border-b border-[#e5e7eb]/60 dark:border-[#262626]/50 min-w-[120px]"
                       onClick={e => e.stopPropagation()}>
                       <AssigneeCell ticketId={ticket.ticketId} value={ticket.assignedTo} />
                     </td>
-                    <td className="px-5 py-4 border-b border-[#e5e7eb]/60 dark:border-[#2a2a2a]/50 min-w-[90px]"
+                    <td className="px-5 py-4 border-b border-[#e5e7eb]/60 dark:border-[#262626]/50 min-w-[90px]"
                       onClick={e => e.stopPropagation()}>
                       <StatusQuickUpdate
                         ticketId={ticket.ticketId}

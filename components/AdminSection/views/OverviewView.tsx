@@ -11,7 +11,7 @@ const STATUS_BAR_COLORS: Record<string, string> = {
   reviewing: 'bg-yellow-400',
   in_repair: 'bg-orange-500',
   ready:     'bg-green-500',
-  completed: 'bg-gray-400',
+  completed: 'bg-[#d4d4d4] dark:bg-[#404040]',
 }
 
 function parseTimeSlot(slot: string | null | undefined): number {
@@ -31,7 +31,6 @@ function getGreeting() {
   return 'Good evening'
 }
 
-
 export default function OverviewView() {
   const { tickets, loading, error } = useTickets()
 
@@ -49,12 +48,10 @@ export default function OverviewView() {
     completed:  tickets.filter(t => t.status === 'completed').length,
   }
 
-  // Today's queue — appointments today, sorted by time
   const todayQueue = [...tickets]
     .filter(t => t.appointment.date === todayStr)
     .sort((a, b) => parseTimeSlot(a.appointment.timeSlot) - parseTimeSlot(b.appointment.timeSlot))
 
-  // Technician workload — open tickets per assignee
   const techWorkload = tickets
     .filter(t => t.assignedTo && t.status !== 'completed')
     .reduce<Record<string, number>>((acc, t) => {
@@ -67,7 +64,7 @@ export default function OverviewView() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-48 text-[#9ca3af] dark:text-[#6b7280] text-base">
+      <div className="flex items-center justify-center h-48 text-[#9ca3af] dark:text-[#737373] text-base">
         Loading…
       </div>
     )
@@ -80,14 +77,14 @@ export default function OverviewView() {
 
       {/* Welcome */}
       <div className="mb-2">
-        <p className="text-[15px] text-[#9ca3af] dark:text-[#6b7280] font-normal mb-1">
-          {getGreeting()}, welcome back 👋
+        <p className="text-[15px] text-[#9ca3af] dark:text-[#737373] font-normal mb-1">
+          {getGreeting()}, welcome back
         </p>
         <h1 className="text-[32px] font-bold text-[#111111] dark:text-[#f5f5f5] leading-tight tracking-tight">
           Davis Cell Phone Repair
         </h1>
-        <p className="text-[15px] text-[#9ca3af] dark:text-[#6b7280] mt-1">
-          Here's what's happening at Davis Cell Phone Repair today.
+        <p className="text-[15px] text-[#9ca3af] dark:text-[#737373] mt-1">
+          Here&apos;s what&apos;s happening today.
         </p>
       </div>
 
@@ -96,49 +93,49 @@ export default function OverviewView() {
         <StatCard
           label="Total Tickets"
           value={stats.total}
-          subtext={<span><b className="text-[#8B1A1A]">+{stats.thisWeek}</b> this week</span>}
-          icon={<Ticket size={18} strokeWidth={2} className="text-[#8B1A1A]" />}
-          iconBg="bg-red-50 dark:bg-red-950/60"
+          subtext={<span><b className="text-[#6366f1] dark:text-[#818cf8]">+{stats.thisWeek}</b> this week</span>}
+          icon={<Ticket size={18} strokeWidth={2} className="text-[#6366f1] dark:text-[#818cf8]" />}
+          iconBg="bg-indigo-50 dark:bg-indigo-950/40"
         />
         <StatCard
           label="In Repair"
           value={stats.in_repair}
           subtext="Active repairs"
           icon={<Wrench size={18} strokeWidth={2} className="text-orange-500" />}
-          iconBg="bg-orange-50 dark:bg-orange-950/60"
+          iconBg="bg-orange-50 dark:bg-orange-950/40"
         />
         <StatCard
           label="Ready for Pickup"
           value={stats.ready}
           subtext="Awaiting pickup"
           icon={<CheckCircle size={18} strokeWidth={2} className="text-green-500" />}
-          iconBg="bg-green-50 dark:bg-green-950/60"
+          iconBg="bg-green-50 dark:bg-green-950/40"
         />
         <StatCard
           label="Appointments Today"
           value={stats.todayAppts}
           subtext="Today's bookings"
           icon={<Calendar size={18} strokeWidth={2} className="text-blue-500" />}
-          iconBg="bg-blue-50 dark:bg-blue-950/60"
+          iconBg="bg-blue-50 dark:bg-blue-950/40"
         />
       </div>
 
       {/* Today's Queue */}
-      <div className="bg-white dark:bg-[#1a1a1a] border border-[#e5e7eb] dark:border-[#2a2a2a] rounded-2xl overflow-hidden">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[#e5e7eb] dark:border-[#2a2a2a]">
+      <div className="bg-white dark:bg-[#1a1a1a] border border-[#e5e7eb] dark:border-[#262626] rounded-2xl overflow-hidden">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#e5e7eb] dark:border-[#262626]">
           <div>
-            <span className="text-[16px] font-semibold text-[#111111] dark:text-[#f0f0f0]">Today's Queue</span>
+            <span className="text-[16px] font-semibold text-[#111111] dark:text-[#f0f0f0]">Today&apos;s Queue</span>
             <span className="ml-2 text-[12px] text-[#9ca3af]">
               {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
             </span>
           </div>
-          <span className="text-[13px] font-semibold text-[#8B1A1A]">
+          <span className="text-[13px] font-semibold text-[#6366f1] dark:text-[#818cf8]">
             {todayQueue.length} appointment{todayQueue.length !== 1 ? 's' : ''}
           </span>
         </div>
 
         {todayQueue.length === 0 ? (
-          <div className="flex flex-col items-center justify-center gap-2 py-12 text-[#9ca3af]">
+          <div className="flex flex-col items-center justify-center gap-2 py-12 text-[#9ca3af] dark:text-[#737373]">
             <Calendar size={28} strokeWidth={1.5} />
             <p className="text-[14px]">No appointments scheduled for today.</p>
           </div>
@@ -147,7 +144,7 @@ export default function OverviewView() {
             <thead>
               <tr>
                 {['Time', 'Customer', 'Device', 'Issues', 'Assigned To', 'Status'].map(h => (
-                  <th key={h} className="text-left px-6 py-3 text-[11px] font-semibold text-[#9ca3af] uppercase tracking-wider border-b border-[#e5e7eb] dark:border-[#2a2a2a]">
+                  <th key={h} className="text-left px-6 py-3 text-[11px] font-semibold text-[#9ca3af] uppercase tracking-wider border-b border-[#e5e7eb] dark:border-[#262626]">
                     {h}
                   </th>
                 ))}
@@ -155,37 +152,37 @@ export default function OverviewView() {
             </thead>
             <tbody>
               {todayQueue.map(ticket => (
-                <tr key={ticket.ticketId} className="hover:bg-[#f9f9f9] dark:hover:bg-[#222] transition-colors">
-                  <td className="px-6 py-3.5 border-b border-[#e5e7eb]/60 dark:border-[#2a2a2a]/50">
+                <tr key={ticket.ticketId} className="hover:bg-[#f9f9f9] dark:hover:bg-[#1f1f1f] transition-colors">
+                  <td className="px-6 py-3.5 border-b border-[#e5e7eb]/60 dark:border-[#262626]/50">
                     <span className="text-[13px] font-bold text-[#111111] dark:text-[#f0f0f0]">
                       {ticket.appointment.timeSlot ?? '—'}
                     </span>
                   </td>
-                  <td className="px-6 py-3.5 border-b border-[#e5e7eb]/60 dark:border-[#2a2a2a]/50">
+                  <td className="px-6 py-3.5 border-b border-[#e5e7eb]/60 dark:border-[#262626]/50">
                     <p className="text-[14px] font-semibold text-[#111111] dark:text-[#f0f0f0]">{ticket.customer.name}</p>
                     <a
                       href={`tel:${ticket.customer.phone.replace(/\D/g, '')}`}
-                      className="text-[12px] text-[#8B1A1A] hover:underline"
+                      className="text-[12px] text-[#111111] dark:text-white hover:underline"
                     >
                       {ticket.customer.phone}
                     </a>
                   </td>
-                  <td className="px-6 py-3.5 border-b border-[#e5e7eb]/60 dark:border-[#2a2a2a]/50">
+                  <td className="px-6 py-3.5 border-b border-[#e5e7eb]/60 dark:border-[#262626]/50">
                     <p className="text-[13px] text-[#374151] dark:text-[#a3a3a3]">{deviceLabel(ticket.device.type)}</p>
                     <p className="text-[12px] text-[#9ca3af]">
                       {[ticket.device.brand, ticket.device.modelCustom ?? ticket.device.modelTrim]
                         .filter(Boolean).join(' ')}
                     </p>
                   </td>
-                  <td className="px-6 py-3.5 border-b border-[#e5e7eb]/60 dark:border-[#2a2a2a]/50 max-w-[160px]">
+                  <td className="px-6 py-3.5 border-b border-[#e5e7eb]/60 dark:border-[#262626]/50 max-w-[160px]">
                     <p className="text-[13px] text-[#374151] dark:text-[#a3a3a3] truncate">{ticket.issues.join(', ')}</p>
                   </td>
-                  <td className="px-6 py-3.5 border-b border-[#e5e7eb]/60 dark:border-[#2a2a2a]/50">
+                  <td className="px-6 py-3.5 border-b border-[#e5e7eb]/60 dark:border-[#262626]/50">
                     <span className="text-[13px] text-[#374151] dark:text-[#9ca3af]">
                       {ticket.assignedTo ?? <span className="text-[#9ca3af] italic">Unassigned</span>}
                     </span>
                   </td>
-                  <td className="px-6 py-3.5 border-b border-[#e5e7eb]/60 dark:border-[#2a2a2a]/50">
+                  <td className="px-6 py-3.5 border-b border-[#e5e7eb]/60 dark:border-[#262626]/50">
                     <StatusBadge status={ticket.status} />
                   </td>
                 </tr>
@@ -199,8 +196,8 @@ export default function OverviewView() {
       <div className="grid grid-cols-2 gap-4">
 
         {/* Status Breakdown */}
-        <div className="bg-white dark:bg-[#1a1a1a] border border-[#e5e7eb] dark:border-[#2a2a2a] rounded-2xl overflow-hidden">
-          <div className="px-6 py-4 border-b border-[#e5e7eb] dark:border-[#2a2a2a]">
+        <div className="bg-white dark:bg-[#1a1a1a] border border-[#e5e7eb] dark:border-[#262626] rounded-2xl overflow-hidden">
+          <div className="px-6 py-4 border-b border-[#e5e7eb] dark:border-[#262626]">
             <span className="text-[16px] font-semibold text-[#111111] dark:text-[#f0f0f0]">Status Breakdown</span>
           </div>
           <div className="flex flex-col gap-3 px-6 py-4">
@@ -212,7 +209,7 @@ export default function OverviewView() {
                   <div className="w-[90px] flex-shrink-0">
                     <StatusBadge status={s} />
                   </div>
-                  <div className="flex-1 h-2 rounded-full bg-[#f5f5f5] dark:bg-[#2a2a3e] overflow-hidden">
+                  <div className="flex-1 h-2 rounded-full bg-[#f5f5f5] dark:bg-[#262626] overflow-hidden">
                     <div
                       className={`h-full rounded-full ${STATUS_BAR_COLORS[s]} transition-all duration-500`}
                       style={{ width: `${pct}%` }}
@@ -226,31 +223,31 @@ export default function OverviewView() {
         </div>
 
         {/* Technician Workload */}
-        <div className="bg-white dark:bg-[#1a1a1a] border border-[#e5e7eb] dark:border-[#2a2a2a] rounded-2xl overflow-hidden">
-          <div className="px-6 py-4 border-b border-[#e5e7eb] dark:border-[#2a2a2a]">
+        <div className="bg-white dark:bg-[#1a1a1a] border border-[#e5e7eb] dark:border-[#262626] rounded-2xl overflow-hidden">
+          <div className="px-6 py-4 border-b border-[#e5e7eb] dark:border-[#262626]">
             <span className="text-[16px] font-semibold text-[#111111] dark:text-[#f0f0f0]">Technician Workload</span>
             <span className="ml-2 text-[12px] text-[#9ca3af]">open tickets</span>
           </div>
 
           {techEntries.length === 0 ? (
-            <div className="flex items-center justify-center py-10 text-[#9ca3af] text-[13px] italic">
+            <div className="flex items-center justify-center py-10 text-[#9ca3af] dark:text-[#737373] text-[13px] italic">
               No technicians assigned yet.
             </div>
           ) : (
             <div className="flex flex-col gap-3 px-6 py-4">
               {techEntries.map(([tech, count]) => (
                 <div key={tech} className="flex items-center gap-3">
-                  <div className="w-6 h-6 rounded-full bg-[#8B1A1A]/10 text-[#8B1A1A] flex items-center justify-center text-[11px] font-bold flex-shrink-0">
+                  <div className="w-6 h-6 rounded-full bg-[#6366f1]/10 text-[#6366f1] dark:text-[#818cf8] flex items-center justify-center text-[11px] font-bold flex-shrink-0">
                     {tech.charAt(0).toUpperCase()}
                   </div>
                   <span className="text-[13px] font-medium text-[#374151] dark:text-[#d4d4d4] flex-1 truncate">{tech}</span>
-                  <div className="flex-1 h-2 rounded-full bg-[#f5f5f5] dark:bg-[#2a2a3e] overflow-hidden max-w-[80px]">
+                  <div className="flex-1 h-2 rounded-full bg-[#f5f5f5] dark:bg-[#262626] overflow-hidden max-w-[80px]">
                     <div
-                      className="h-full rounded-full bg-[#8B1A1A] transition-all duration-500"
+                      className="h-full rounded-full bg-[#6366f1] transition-all duration-500"
                       style={{ width: `${(count / maxLoad) * 100}%` }}
                     />
                   </div>
-                  <span className="text-[13px] font-semibold text-[#8B1A1A] min-w-[20px] text-right">{count}</span>
+                  <span className="text-[13px] font-semibold text-[#6366f1] dark:text-[#818cf8] min-w-[20px] text-right">{count}</span>
                 </div>
               ))}
             </div>

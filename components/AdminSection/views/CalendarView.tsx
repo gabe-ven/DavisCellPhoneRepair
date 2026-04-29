@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 import StatusBadge from '../components/StatusBadge'
 import { useTickets } from '../hooks/useTickets'
 import type { Ticket } from '../types/admin'
+import { deviceLabel } from '../utils/deviceLabel'
 
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
@@ -23,7 +24,6 @@ export default function CalendarView() {
   const firstDayOfWeek = new Date(year, month, 1).getDay()
   const todayStr = toDateStr(today.getFullYear(), today.getMonth(), today.getDate())
 
-  // Group tickets by appointment date
   const ticketsByDate = tickets.reduce<Record<string, Ticket[]>>((acc, t) => {
     if (t.appointment.date) {
       acc[t.appointment.date] = [...(acc[t.appointment.date] ?? []), t]
@@ -43,7 +43,6 @@ export default function CalendarView() {
   const monthLabel = new Date(year, month, 1).toLocaleString('en-US', { month: 'long', year: 'numeric' })
   const selectedTickets = selectedDate ? (ticketsByDate[selectedDate] ?? []) : []
 
-  // Build calendar cells
   const cells: (number | null)[] = [
     ...Array.from({ length: firstDayOfWeek }, () => null),
     ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
@@ -55,7 +54,7 @@ export default function CalendarView() {
         <h1 className="text-[32px] font-bold text-[#111111] dark:text-[#f5f5f5] leading-tight tracking-tight">
           Calendar
         </h1>
-        <p className="text-[15px] text-[#9ca3af] dark:text-[#6b7280] mt-1">
+        <p className="text-[15px] text-[#9ca3af] dark:text-[#737373] mt-1">
           View and manage appointments by date.
         </p>
       </div>
@@ -63,31 +62,31 @@ export default function CalendarView() {
       <div className="grid grid-cols-[1fr_300px] gap-5 items-start">
 
         {/* Calendar grid */}
-        <div className="bg-white dark:bg-[#1a1a1a] border border-[#e5e7eb] dark:border-[#2a2a2a] rounded-2xl overflow-hidden">
+        <div className="bg-white dark:bg-[#1a1a1a] border border-[#e5e7eb] dark:border-[#262626] rounded-2xl overflow-hidden">
 
           {/* Month nav */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-[#e5e7eb] dark:border-[#2a2a2a]">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-[#e5e7eb] dark:border-[#262626]">
             <button
               onClick={prevMonth}
-              className="p-1.5 rounded-lg hover:bg-[#f5f5f5] dark:hover:bg-[#2a2a3e] transition-colors text-[#6b7280] dark:text-[#6b7280]"
+              className="p-1.5 rounded-lg hover:bg-[#f5f5f5] dark:hover:bg-[#222] transition-colors text-[#6b7280] dark:text-[#737373] hover:text-[#111] dark:hover:text-white cursor-pointer"
             >
               <ChevronLeft size={18} />
             </button>
             <span className="text-[15px] font-semibold text-[#111111] dark:text-[#f0f0f0]">{monthLabel}</span>
             <button
               onClick={nextMonth}
-              className="p-1.5 rounded-lg hover:bg-[#f5f5f5] dark:hover:bg-[#2a2a3e] transition-colors text-[#6b7280] dark:text-[#6b7280]"
+              className="p-1.5 rounded-lg hover:bg-[#f5f5f5] dark:hover:bg-[#222] transition-colors text-[#6b7280] dark:text-[#737373] hover:text-[#111] dark:hover:text-white cursor-pointer"
             >
               <ChevronRight size={18} />
             </button>
           </div>
 
           {/* Day headers */}
-          <div className="grid grid-cols-7 border-b border-[#e5e7eb] dark:border-[#2a2a2a]">
+          <div className="grid grid-cols-7 border-b border-[#e5e7eb] dark:border-[#262626]">
             {DAYS.map(d => (
               <div
                 key={d}
-                className="text-center py-2.5 text-[11px] font-semibold text-[#9ca3af] dark:text-[#6b7280] uppercase tracking-wide"
+                className="text-center py-2.5 text-[11px] font-semibold text-[#9ca3af] dark:text-[#737373] uppercase tracking-wide"
               >
                 {d}
               </div>
@@ -101,7 +100,7 @@ export default function CalendarView() {
                 return (
                   <div
                     key={`empty-${i}`}
-                    className="h-[88px] border-b border-r border-[#e5e7eb]/60 dark:border-[#2a2a2a]/40 bg-[#f9f9f9]/50 dark:bg-[#222]/30"
+                    className="h-[88px] border-b border-r border-[#e5e7eb]/60 dark:border-[#262626]/40 bg-[#f9f9f9]/50 dark:bg-[#111]/30"
                   />
                 )
               }
@@ -115,14 +114,14 @@ export default function CalendarView() {
                 <button
                   key={day}
                   onClick={() => setSelectedDate(isSelected ? null : dateStr)}
-                  className={`h-[88px] p-2 text-left border-b border-r border-[#e5e7eb]/60 dark:border-[#2a2a2a]/40 transition-colors hover:bg-[#f9f9f9] dark:hover:bg-[#222] ${
-                    isSelected ? 'bg-red-50 dark:bg-[#1f1010]' : ''
+                  className={`h-[88px] p-2 text-left border-b border-r border-[#e5e7eb]/60 dark:border-[#262626]/40 transition-colors hover:bg-[#f9f9f9] dark:hover:bg-[#1f1f1f] cursor-pointer ${
+                    isSelected ? 'bg-indigo-50/40 dark:bg-[#13131f]' : ''
                   }`}
                 >
                   <span
                     className={`text-[13px] font-semibold w-6 h-6 flex items-center justify-center rounded-full mb-1 ${
                       isToday
-                        ? 'bg-[#8B1A1A] text-white'
+                        ? 'bg-[#6366f1] text-white'
                         : 'text-[#374151] dark:text-[#a3a3a3]'
                     }`}
                   >
@@ -132,13 +131,13 @@ export default function CalendarView() {
                     {dayTickets.slice(0, 2).map(t => (
                       <span
                         key={t.ticketId}
-                        className="text-[10px] truncate rounded px-1 py-0.5 bg-[#8B1A1A]/10 text-[#8B1A1A] dark:text-red-300 font-medium leading-tight"
+                        className="text-[10px] truncate rounded px-1 py-0.5 bg-[#6366f1]/10 text-[#6366f1] dark:text-[#818cf8] font-medium leading-tight"
                       >
                         {t.customer.name.split(' ')[0]} · {t.appointment.timeSlot}
                       </span>
                     ))}
                     {dayTickets.length > 2 && (
-                      <span className="text-[10px] text-[#9ca3af] dark:text-[#6b7280]">
+                      <span className="text-[10px] text-[#9ca3af] dark:text-[#737373]">
                         +{dayTickets.length - 2} more
                       </span>
                     )}
@@ -150,8 +149,8 @@ export default function CalendarView() {
         </div>
 
         {/* Day detail panel */}
-        <div className="bg-white dark:bg-[#1a1a1a] border border-[#e5e7eb] dark:border-[#2a2a2a] rounded-2xl overflow-hidden">
-          <div className="px-5 py-4 border-b border-[#e5e7eb] dark:border-[#2a2a2a]">
+        <div className="bg-white dark:bg-[#1a1a1a] border border-[#e5e7eb] dark:border-[#262626] rounded-2xl overflow-hidden">
+          <div className="px-5 py-4 border-b border-[#e5e7eb] dark:border-[#262626]">
             <p className="text-[15px] font-semibold text-[#111111] dark:text-[#f0f0f0]">
               {selectedDate
                 ? new Date(selectedDate + 'T12:00:00').toLocaleDateString('en-US', {
@@ -160,26 +159,26 @@ export default function CalendarView() {
                 : 'Select a date'}
             </p>
             {selectedDate && (
-              <p className="text-[12px] text-[#9ca3af] dark:text-[#6b7280] mt-0.5">
+              <p className="text-[12px] text-[#9ca3af] dark:text-[#737373] mt-0.5">
                 {selectedTickets.length} appointment{selectedTickets.length !== 1 ? 's' : ''}
               </p>
             )}
           </div>
 
           {loading ? (
-            <div className="flex items-center justify-center h-40 text-[#9ca3af] dark:text-[#6b7280] text-sm">
+            <div className="flex items-center justify-center h-40 text-[#9ca3af] dark:text-[#737373] text-sm">
               Loading…
             </div>
           ) : !selectedDate ? (
-            <div className="flex items-center justify-center h-40 text-[#9ca3af] dark:text-[#6b7280] text-sm">
+            <div className="flex items-center justify-center h-40 text-[#9ca3af] dark:text-[#737373] text-sm">
               Click a day to see appointments
             </div>
           ) : selectedTickets.length === 0 ? (
-            <div className="flex items-center justify-center h-40 text-[#9ca3af] dark:text-[#6b7280] text-sm">
+            <div className="flex items-center justify-center h-40 text-[#9ca3af] dark:text-[#737373] text-sm">
               No appointments this day
             </div>
           ) : (
-            <div className="divide-y divide-[#e5e7eb] dark:divide-[#2a2a2a]/70">
+            <div className="divide-y divide-[#e5e7eb] dark:divide-[#262626]/70">
               {selectedTickets
                 .sort((a, b) => (a.appointment.timeSlot ?? '').localeCompare(b.appointment.timeSlot ?? ''))
                 .map(t => (
@@ -188,16 +187,16 @@ export default function CalendarView() {
                       <span className="text-[14px] font-semibold text-[#111111] dark:text-[#f0f0f0]">
                         {t.customer.name}
                       </span>
-                      <span className="text-[12px] font-medium text-[#8B1A1A] dark:text-red-300">
+                      <span className="text-[12px] font-medium text-[#6366f1] dark:text-[#818cf8]">
                         {t.appointment.timeSlot}
                       </span>
                     </div>
-                    <p className="text-[12px] text-[#6b7280] dark:text-[#6b7280] mb-2 capitalize">
-                      {t.device.type} · {t.issues.join(', ')}
+                    <p className="text-[12px] text-[#6b7280] dark:text-[#737373] mb-2">
+                      {deviceLabel(t.device.type)} · {t.issues.join(', ')}
                     </p>
                     <div className="flex items-center justify-between">
                       <StatusBadge status={t.status} />
-                      <span className="font-mono text-[11px] text-[#9ca3af] dark:text-[#6b7280]">
+                      <span className="font-mono text-[11px] text-[#9ca3af] dark:text-[#737373]">
                         #{t.ticketId}
                       </span>
                     </div>

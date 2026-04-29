@@ -20,11 +20,11 @@ function timeAgo(dateStr: string): string {
 }
 
 const STATUS_DOT: Record<string, string> = {
-  received:  'bg-[#8B1A1A]',
+  received:  'bg-[#6366f1]',
   reviewing: 'bg-yellow-400',
   in_repair: 'bg-orange-500',
   ready:     'bg-green-500',
-  completed: 'bg-gray-400',
+  completed: 'bg-[#d4d4d4] dark:bg-[#404040]',
 }
 
 const STATUS_MSG: Record<string, string> = {
@@ -71,7 +71,7 @@ export default function NotificationsView({ dismissed, onDismiss, onDismissAll }
           <h1 className="text-[32px] font-bold text-[#111111] dark:text-[#f5f5f5] leading-tight tracking-tight">
             Notifications
           </h1>
-          <p className="text-[15px] text-[#9ca3af] dark:text-[#6b7280] mt-1">
+          <p className="text-[15px] text-[#9ca3af] dark:text-[#737373] mt-1">
             {newCount > 0
               ? `${newCount} new request${newCount > 1 ? 's' : ''} waiting for review.`
               : 'All requests are being handled.'}
@@ -80,7 +80,7 @@ export default function NotificationsView({ dismissed, onDismiss, onDismissAll }
         {notifications.length > 0 && (
           <button
             onClick={() => onDismissAll(notifications.map(t => t.ticketId))}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl border border-[#e5e7eb] dark:border-[#2a2a2a] text-[13px] font-medium text-[#374151] dark:text-[#6b7280] hover:bg-[#f9f9f9] dark:hover:bg-[#222] transition-colors bg-white dark:bg-[#1a1a1a]"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl border border-[#e5e7eb] dark:border-[#262626] text-[13px] font-medium text-[#374151] dark:text-[#d4d4d4] hover:bg-[#f9f9f9] dark:hover:bg-[#1f1f1f] transition-colors bg-white dark:bg-[#1a1a1a] cursor-pointer"
           >
             <CheckCircle size={14} />
             Dismiss all
@@ -88,26 +88,26 @@ export default function NotificationsView({ dismissed, onDismiss, onDismissAll }
         )}
       </div>
 
-      <div className="bg-white dark:bg-[#1a1a1a] border border-[#e5e7eb] dark:border-[#2a2a2a] rounded-2xl overflow-hidden">
+      <div className="bg-white dark:bg-[#1a1a1a] border border-[#e5e7eb] dark:border-[#262626] rounded-2xl overflow-hidden">
         {loading ? (
-          <div className="flex items-center justify-center h-48 text-[#9ca3af] dark:text-[#6b7280]">
+          <div className="flex items-center justify-center h-48 text-[#9ca3af] dark:text-[#737373]">
             Loading…
           </div>
         ) : notifications.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-48 gap-3 text-[#9ca3af] dark:text-[#6b7280]">
+          <div className="flex flex-col items-center justify-center h-48 gap-3 text-[#9ca3af] dark:text-[#737373]">
             <Bell size={32} strokeWidth={1.5} />
             <p className="text-sm">All caught up — no notifications.</p>
           </div>
         ) : (
-          <div className="divide-y divide-[#e5e7eb] dark:divide-[#2a2a2a]/70">
+          <div className="divide-y divide-[#e5e7eb] dark:divide-[#262626]/70">
             {notifications.map(t => {
               const isNew = t.status === 'received'
               return (
                 <div
                   key={t.ticketId}
                   onClick={() => setSelectedTicketId(t.ticketId)}
-                  className={`flex items-start gap-4 px-6 py-4 hover:bg-[#f9f9f9] dark:hover:bg-[#222] transition-colors cursor-pointer ${
-                    isNew ? 'bg-red-50/40 dark:bg-[#1a1010]' : ''
+                  className={`flex items-start gap-4 px-6 py-4 hover:bg-[#f9f9f9] dark:hover:bg-[#1f1f1f] transition-colors cursor-pointer ${
+                    isNew ? 'bg-indigo-50/30 dark:bg-[#13131f]' : ''
                   }`}
                 >
                   {/* Status dot */}
@@ -121,12 +121,12 @@ export default function NotificationsView({ dismissed, onDismiss, onDismissAll }
                       <span className="text-[14px] font-semibold text-[#111111] dark:text-[#f0f0f0]">
                         {t.customer.name}
                       </span>
-                      <span className="font-mono text-[11px] text-[#9ca3af] dark:text-[#6b7280]">
+                      <span className="font-mono text-[11px] text-[#9ca3af] dark:text-[#737373]">
                         #{t.ticketId}
                       </span>
                       <StatusBadge status={t.status} />
                       {isNew && (
-                        <span className="text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full bg-[#8B1A1A] text-white">
+                        <span className="text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full bg-[#6366f1] text-white">
                           New
                         </span>
                       )}
@@ -134,7 +134,7 @@ export default function NotificationsView({ dismissed, onDismiss, onDismissAll }
                     <p className="text-[13px] text-[#374151] dark:text-[#a3a3a3] font-medium mb-0.5">
                       {STATUS_MSG[t.status]}
                     </p>
-                    <p className="text-[12px] text-[#9ca3af] dark:text-[#6b7280] leading-snug">
+                    <p className="text-[12px] text-[#9ca3af] dark:text-[#737373] leading-snug">
                       {deviceLabel(t.device.type)}
                       {t.device.brand ? ` · ${t.device.brand}` : ''}
                       {(t.device.modelCustom ?? t.device.modelTrim ?? t.device.modelNumber)
@@ -148,13 +148,13 @@ export default function NotificationsView({ dismissed, onDismiss, onDismissAll }
 
                   {/* Time + dismiss */}
                   <div className="flex flex-col items-end gap-2 flex-shrink-0">
-                    <span className="flex items-center gap-1 text-[12px] text-[#9ca3af] dark:text-[#6b7280]">
+                    <span className="flex items-center gap-1 text-[12px] text-[#9ca3af] dark:text-[#737373]">
                       <Clock size={11} />
                       {timeAgo(t.createdAt)}
                     </span>
                     <button
                       onClick={e => { e.stopPropagation(); onDismiss(t.ticketId) }}
-                      className="text-[12px] text-[#9ca3af] hover:text-[#374151] dark:hover:text-gray-200 transition-colors"
+                      className="text-[12px] text-[#9ca3af] hover:text-[#374151] dark:hover:text-[#d4d4d4] transition-colors cursor-pointer"
                     >
                       Dismiss
                     </button>

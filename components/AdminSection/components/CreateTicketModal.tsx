@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
-import { X, Plus } from 'lucide-react'
+import { useState, useMemo } from 'react'
+import { X, Plus, Clock, AlertCircle } from 'lucide-react'
 import type { DeviceType } from '../../ServicesSection/types/wizard'
 import type { AdminCreateTicketPayload } from '../../../app/api/admin/tickets/route'
+import { getSlotsForDate } from '../../ServicesSection/data/timeSlots'
 
 const ISSUE_OPTIONS = [
   { id: 'screen',         label: 'Screen' },
@@ -44,22 +45,28 @@ const STATUS_OPTIONS = [
 
 const TODAY = new Date().toISOString().split('T')[0]
 
+interface TakenSlot {
+  date: string | null
+  timeSlot: string | null
+}
+
 interface CreateTicketModalProps {
   onClose: () => void
   onCreated: (ticketId: string) => void
+  takenSlots?: TakenSlot[]
 }
 
 const INPUT_CLS = `
-  w-full px-3 py-2 rounded-lg border border-[#e5e7eb] dark:border-[#2a2a2a]
+  w-full px-3 py-2 rounded-lg border border-[#e5e7eb] dark:border-[#262626]
   bg-white dark:bg-[#111] text-[14px] text-[#111111] dark:text-[#f0f0f0]
-  placeholder-gray-400 dark:placeholder-gray-500
-  focus:outline-none focus:ring-2 focus:ring-[#8B1A1A]/30 focus:border-[#8B1A1A]
+  placeholder-[#9ca3af] dark:placeholder-[#737373]
+  focus:outline-none focus:ring-2 focus:ring-[#6366f1]/25 focus:border-[#6366f1]
   transition-colors
 `
 
-const LABEL_CLS = 'block text-[12px] font-semibold text-[#6b7280] dark:text-[#6b7280] uppercase tracking-wide mb-1'
+const LABEL_CLS = 'block text-[12px] font-semibold text-[#6b7280] dark:text-[#737373] uppercase tracking-wide mb-1'
 
-export default function CreateTicketModal({ onClose, onCreated }: CreateTicketModalProps) {
+export default function CreateTicketModal({ onClose, onCreated, takenSlots = [] }: CreateTicketModalProps) {
   const [form, setForm] = useState({
     customerName:    '',
     customerPhone:   '',
@@ -75,7 +82,19 @@ export default function CreateTicketModal({ onClose, onCreated }: CreateTicketMo
     notes:           '',
   })
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError]   = useState<string | null>(null)
+
+  // Build slot availability for the selected date
+  const slotsForDate = useMemo(() => {
+    if (!form.appointmentDate) return []
+    const base = getSlotsForDate(form.appointmentDate)
+    const takenOnDate = new Set(
+      takenSlots
+        .filter(s => s.date === form.appointmentDate && s.timeSlot)
+        .map(s => s.timeSlot!)
+    )
+    return base.map(s => ({ label: s.label, taken: takenOnDate.has(s.label) }))
+  }, [form.appointmentDate, takenSlots])
 
   function set(key: keyof typeof form, value: string) {
     setForm(prev => ({ ...prev, [key]: value }))
@@ -131,24 +150,23 @@ export default function CreateTicketModal({ onClose, onCreated }: CreateTicketMo
   }
 
   return (
-    // Backdrop
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
       onClick={e => { if (e.target === e.currentTarget) onClose() }}
     >
-      <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white dark:bg-[#1a1a1a] rounded-2xl border border-[#e5e7eb] dark:border-[#2a2a2a] shadow-2xl">
+      <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white dark:bg-[#1a1a1a] rounded-2xl border border-[#e5e7eb] dark:border-[#262626] shadow-2xl">
 
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-[#e5e7eb] dark:border-[#2a2a2a] sticky top-0 bg-white dark:bg-[#1a1a1a] z-10">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-[#e5e7eb] dark:border-[#262626] sticky top-0 bg-white dark:bg-[#1a1a1a] z-10">
           <div>
             <h2 className="text-[18px] font-bold text-[#111111] dark:text-[#f5f5f5]">New Walk-In Ticket</h2>
-            <p className="text-[13px] text-[#9ca3af] dark:text-[#6b7280] mt-0.5">
+            <p className="text-[13px] text-[#9ca3af] dark:text-[#737373] mt-0.5">
               Create a ticket for a customer at the counter.
             </p>
           </div>
           <button
             onClick={onClose}
-            className="w-9 h-9 flex items-center justify-center rounded-xl border border-[#e5e7eb] dark:border-[#2a2a2a] text-[#9ca3af] hover:text-[#374151] dark:hover:text-gray-200 hover:bg-[#f9f9f9] dark:hover:bg-[#222] transition-colors"
+            className="w-9 h-9 flex items-center justify-center rounded-xl border border-[#e5e7eb] dark:border-[#262626] text-[#9ca3af] hover:text-[#374151] dark:hover:text-white hover:bg-[#f9f9f9] dark:hover:bg-[#222] transition-colors cursor-pointer"
           >
             <X size={17} />
           </button>
@@ -163,7 +181,7 @@ export default function CreateTicketModal({ onClose, onCreated }: CreateTicketMo
             </h3>
             <div className="grid grid-cols-2 gap-3">
               <div className="col-span-2 sm:col-span-1">
-                <label className={LABEL_CLS}>Name <span className="text-[#8B1A1A]">*</span></label>
+                <label className={LABEL_CLS}>Name <span className="text-[#6366f1]">*</span></label>
                 <input
                   value={form.customerName}
                   onChange={e => set('customerName', e.target.value)}
@@ -173,7 +191,7 @@ export default function CreateTicketModal({ onClose, onCreated }: CreateTicketMo
                 />
               </div>
               <div className="col-span-2 sm:col-span-1">
-                <label className={LABEL_CLS}>Phone <span className="text-[#8B1A1A]">*</span></label>
+                <label className={LABEL_CLS}>Phone <span className="text-[#6366f1]">*</span></label>
                 <input
                   value={form.customerPhone}
                   onChange={e => set('customerPhone', e.target.value)}
@@ -195,7 +213,7 @@ export default function CreateTicketModal({ onClose, onCreated }: CreateTicketMo
             </div>
           </section>
 
-          <div className="h-px bg-[#f5f5f5] dark:bg-[#2a2a3e]" />
+          <div className="h-px bg-[#f5f5f5] dark:bg-[#262626]" />
 
           {/* Device Info */}
           <section>
@@ -236,12 +254,12 @@ export default function CreateTicketModal({ onClose, onCreated }: CreateTicketMo
             </div>
           </section>
 
-          <div className="h-px bg-[#f5f5f5] dark:bg-[#2a2a3e]" />
+          <div className="h-px bg-[#f5f5f5] dark:bg-[#262626]" />
 
           {/* Issues */}
           <section>
             <h3 className="text-[13px] font-bold text-[#111111] dark:text-[#f0f0f0] uppercase tracking-widest mb-3">
-              Issues <span className="text-[#8B1A1A]">*</span>
+              Issues <span className="text-[#6366f1]">*</span>
             </h3>
             <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
               {ISSUE_OPTIONS.map(issue => {
@@ -251,10 +269,10 @@ export default function CreateTicketModal({ onClose, onCreated }: CreateTicketMo
                     key={issue.id}
                     type="button"
                     onClick={() => toggleIssue(issue.id)}
-                    className={`px-3 py-2 rounded-lg border text-[13px] font-medium text-left transition-colors ${
+                    className={`px-3 py-2 rounded-lg border text-[13px] font-medium text-left transition-colors cursor-pointer ${
                       selected
-                        ? 'border-[#8B1A1A] bg-[#8B1A1A]/10 text-[#8B1A1A] dark:text-red-300'
-                        : 'border-[#e5e7eb] dark:border-[#2a2a2a] text-[#374151] dark:text-[#6b7280] hover:bg-[#f9f9f9] dark:hover:bg-[#222]'
+                        ? 'border-[#6366f1] bg-[#6366f1]/10 text-[#6366f1] dark:text-[#818cf8]'
+                        : 'border-[#e5e7eb] dark:border-[#262626] text-[#374151] dark:text-[#737373] hover:bg-[#f9f9f9] dark:hover:bg-[#222]'
                     }`}
                   >
                     {issue.label}
@@ -264,29 +282,20 @@ export default function CreateTicketModal({ onClose, onCreated }: CreateTicketMo
             </div>
           </section>
 
-          <div className="h-px bg-[#f5f5f5] dark:bg-[#2a2a3e]" />
+          <div className="h-px bg-[#f5f5f5] dark:bg-[#262626]" />
 
           {/* Appointment + Status */}
           <section>
             <h3 className="text-[13px] font-bold text-[#111111] dark:text-[#f0f0f0] uppercase tracking-widest mb-3">
               Appointment &amp; Status
             </h3>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-2 gap-3 mb-3">
               <div>
                 <label className={LABEL_CLS}>Date</label>
                 <input
                   type="date"
                   value={form.appointmentDate}
-                  onChange={e => set('appointmentDate', e.target.value)}
-                  className={INPUT_CLS}
-                />
-              </div>
-              <div>
-                <label className={LABEL_CLS}>Time</label>
-                <input
-                  value={form.appointmentTime}
-                  onChange={e => set('appointmentTime', e.target.value)}
-                  placeholder="e.g. 2:30 PM"
+                  onChange={e => { set('appointmentDate', e.target.value); set('appointmentTime', '') }}
                   className={INPUT_CLS}
                 />
               </div>
@@ -302,19 +311,75 @@ export default function CreateTicketModal({ onClose, onCreated }: CreateTicketMo
                   ))}
                 </select>
               </div>
-              <div className="col-span-3">
-                <label className={LABEL_CLS}>Assign to Technician <span className="text-[#9ca3af] font-normal normal-case tracking-normal">(optional)</span></label>
-                <input
-                  value={form.assignedTo}
-                  onChange={e => set('assignedTo', e.target.value)}
-                  placeholder="e.g. Cesar, Marcus"
-                  className={INPUT_CLS}
-                />
+            </div>
+
+            {/* Visual time slot picker */}
+            {form.appointmentDate && (
+              <div className="mb-3">
+                <label className={`${LABEL_CLS} flex items-center gap-1.5`}>
+                  <Clock size={10} />
+                  Time Slot
+                  {form.appointmentTime && (
+                    <span className="ml-1 normal-case tracking-normal font-semibold text-[#8B1A1A] dark:text-[#fca5a5]">
+                      — {form.appointmentTime} selected
+                    </span>
+                  )}
+                </label>
+                <div className="grid grid-cols-3 sm:grid-cols-5 gap-1.5">
+                  {slotsForDate.map(slot => {
+                    const isSelected = form.appointmentTime === slot.label
+                    const isTaken    = slot.taken
+                    return (
+                      <button
+                        key={slot.label}
+                        type="button"
+                        disabled={isTaken}
+                        onClick={() => set('appointmentTime', isSelected ? '' : slot.label)}
+                        title={isTaken ? 'Already booked' : slot.label}
+                        className={`
+                          relative px-2 py-2 rounded-lg text-[12px] font-medium border transition-all
+                          ${isTaken
+                            ? 'border-[#f5f5f5] dark:border-[#1f1f1f] bg-[#f5f5f5] dark:bg-[#181818] text-[#c9c9c9] dark:text-[#3a3a3a] cursor-not-allowed line-through'
+                            : isSelected
+                              ? 'border-[#8B1A1A] bg-[#8B1A1A] text-white shadow-sm'
+                              : 'border-[#e5e7eb] dark:border-[#262626] text-[#374151] dark:text-[#a3a3a3] hover:border-[#8B1A1A]/50 hover:bg-[#8B1A1A]/5 dark:hover:bg-[#8B1A1A]/10'
+                          }
+                        `}
+                      >
+                        {slot.label}
+                        {isTaken && (
+                          <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full flex items-center justify-center">
+                            <AlertCircle size={8} className="text-white" strokeWidth={3} />
+                          </span>
+                        )}
+                      </button>
+                    )
+                  })}
+                </div>
+                {slotsForDate.every(s => s.taken) && (
+                  <p className="text-[12px] text-amber-600 dark:text-amber-400 mt-2 flex items-center gap-1">
+                    <AlertCircle size={12} />
+                    All slots are booked for this date. Try a different day.
+                  </p>
+                )}
+                {slotsForDate.length === 0 && (
+                  <p className="text-[12px] text-[#9ca3af] mt-2">Select a date to see available slots.</p>
+                )}
               </div>
+            )}
+
+            <div>
+              <label className={LABEL_CLS}>Assign to Technician <span className="text-[#9ca3af] font-normal normal-case tracking-normal">(optional)</span></label>
+              <input
+                value={form.assignedTo}
+                onChange={e => set('assignedTo', e.target.value)}
+                placeholder="Technician name"
+                className={INPUT_CLS}
+              />
             </div>
           </section>
 
-          <div className="h-px bg-[#f5f5f5] dark:bg-[#2a2a3e]" />
+          <div className="h-px bg-[#f5f5f5] dark:bg-[#262626]" />
 
           {/* Notes */}
           <section>
@@ -330,10 +395,7 @@ export default function CreateTicketModal({ onClose, onCreated }: CreateTicketMo
 
           {/* Error */}
           {error && (
-            <p
-              className="text-[13px] rounded-lg px-4 py-3 text-center"
-              style={{ background: 'rgba(139,26,26,0.06)', border: '1px solid rgba(139,26,26,0.18)', color: '#8B1A1A' }}
-            >
+            <p className="text-[13px] rounded-lg px-4 py-3 text-center bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/40 text-red-600 dark:text-red-400">
               {error}
             </p>
           )}
@@ -343,15 +405,14 @@ export default function CreateTicketModal({ onClose, onCreated }: CreateTicketMo
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2.5 rounded-xl border border-[#e5e7eb] dark:border-[#2a2a2a] text-[14px] font-medium text-[#374151] dark:text-[#6b7280] hover:bg-[#f9f9f9] dark:hover:bg-[#222] transition-colors"
+              className="flex-1 py-2.5 rounded-xl border border-[#e5e7eb] dark:border-[#262626] text-[14px] font-medium text-[#374151] dark:text-[#d4d4d4] hover:bg-[#f9f9f9] dark:hover:bg-[#222] transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={!isValid || loading}
-              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[14px] font-semibold text-white transition-all disabled:opacity-40"
-              style={{ background: '#8B1A1A' }}
+              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-[14px] font-semibold text-white bg-[#6366f1] hover:bg-[#4f46e5] transition-colors disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
             >
               {loading ? (
                 <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
