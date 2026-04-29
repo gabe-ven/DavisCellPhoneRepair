@@ -3,7 +3,7 @@
 
 @theme inline {
   --font-sans: var(--font-inter);
-  --color-brand: #8B1A1A;
+  --color-brand: #8b1a1a;
   --color-brand-hover: #a81f1f;
 }
 
@@ -11,7 +11,10 @@ body {
   font-family: var(--font-sans), system-ui, sans-serif;
 }
 
-button, [role="button"], select, label[for] {
+button,
+[role="button"],
+select,
+label[for] {
   cursor: pointer;
 }
 
@@ -22,57 +25,78 @@ button, [role="button"], select, label[for] {
 
 /* Brand button utilities */
 .btn-crimson {
-  background: #8B1A1A;
+  background: #8b1a1a;
   transition: background 0.15s ease;
 }
-.btn-crimson:hover { background: #a81f1f; }
+.btn-crimson:hover {
+  background: #a81f1f;
+}
 
 .btn-crimson-outline {
-  color: #8B1A1A;
-  border: 2px solid #8B1A1A;
+  color: #8b1a1a;
+  border: 2px solid #8b1a1a;
   background: white;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
 }
-.btn-crimson-outline:hover { background: #fdf5f5; }
+.btn-crimson-outline:hover {
+  background: #fdf5f5;
+}
 
 .nav-link {
   position: relative;
-  color: rgba(255,255,255,0.9);
+  color: rgba(255, 255, 255, 0.9);
   transition: color 0.15s ease;
 }
-.nav-link:hover { color: #ffffff; }
+.nav-link:hover {
+  color: #ffffff;
+}
 .nav-link::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -3px;
   left: 0;
   right: 0;
   height: 1.5px;
-  background: rgba(255,255,255,0.85);
+  background: rgba(255, 255, 255, 0.85);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.22s ease;
 }
-.nav-link:hover::after { transform: scaleX(1); }
+.nav-link:hover::after {
+  transform: scaleX(1);
+}
 
 .card-lift {
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
 }
 .card-lift:hover {
-  box-shadow: 0 8px 24px rgba(0,0,0,0.1) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1) !important;
   transform: translateY(-2px);
 }
 
 /* Service card: crimson inset top bar appears on hover */
 .service-card:hover {
-  box-shadow: 0 10px 28px rgba(0,0,0,0.1), inset 0 3px 0 #8B1A1A !important;
+  box-shadow:
+    0 10px 28px rgba(0, 0, 0, 0.1),
+    inset 0 3px 0 #8b1a1a !important;
   transform: translateY(-3px);
 }
 
 /* Hero CTA pulse on page load */
 @keyframes ctaPulse {
-  0%, 100% { box-shadow: 0 4px 20px rgba(139,26,26,0.3); }
-  50%       { box-shadow: 0 6px 36px rgba(139,26,26,0.55), 0 0 0 5px rgba(139,26,26,0.1); }
+  0%,
+  100% {
+    box-shadow: 0 4px 20px rgba(139, 26, 26, 0.3);
+  }
+  50% {
+    box-shadow:
+      0 6px 36px rgba(139, 26, 26, 0.55),
+      0 0 0 5px rgba(139, 26, 26, 0.1);
+  }
 }
 .btn-cta-pulse {
   animation: ctaPulse 1.4s ease-in-out 0.8s 3;
@@ -81,29 +105,38 @@ button, [role="button"], select, label[for] {
 /* Review card alternating tilt */
 .review-tilt-r {
   transform: rotate(1.5deg);
-  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease;
 }
 .review-tilt-l {
   transform: rotate(-1.5deg);
-  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease;
 }
 .review-tilt-r:hover,
 .review-tilt-l:hover {
   transform: rotate(0deg) !important;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.1) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1) !important;
 }
 
 /* Section heading left bookmark accent */
 .section-heading {
   display: inline-block;
-  border-left: 3px solid #8B1A1A;
+  border-left: 3px solid #8b1a1a;
   padding-left: 0.75rem;
 }
 
 /* 3D phone mockup */
 @keyframes phoneBob {
-  0%, 100% { transform: translateY(0px);    }
-  50%       { transform: translateY(-14px); }
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
 }
 .phone-bob {
   animation: phoneBob 3s ease-in-out infinite;
@@ -116,8 +149,12 @@ button, [role="button"], select, label[for] {
 
 /* Reviews marquee */
 @keyframes marquee {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 .marquee-container:hover .marquee-track {
