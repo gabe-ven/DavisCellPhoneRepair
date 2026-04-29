@@ -27,10 +27,10 @@ export default function Navbar() {
             <a href="#contact">Visit</a>
           </nav>
           <button className="btn-track" onClick={() => setTrackOpen(true)}>
-            <span className="v2-dot" style={{ width: 6, height: 6 }} /> Track Repair
+            Track Repair
           </button>
           <a href="tel:+15303413384" className="btn-cr v2-nav-cta">
-            <span className="v2-dot" /> CALL — (530) 341-3384
+            CALL — (530) 341-3384
           </a>
           <button
             className="v2-hamburger"
@@ -51,7 +51,7 @@ export default function Navbar() {
               style={{ marginTop: 8, width: "100%", justifyContent: "center" }}
               onClick={() => { setOpen(false); setTrackOpen(true); }}
             >
-              <span className="v2-dot" style={{ width: 6, height: 6 }} /> Track Repair
+              Track Repair
             </button>
             <a
               href="tel:+15303413384"

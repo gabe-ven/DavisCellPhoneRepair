@@ -6,7 +6,7 @@ import {
   Smartphone, Layers, Battery, Camera, CameraOff, Plug, Volume2,
   Mic, Droplets, Wifi, Bluetooth, PowerOff, Flame, HardDrive,
   KeyRound, Fingerprint, Scan, Loader2, Hash, MapPin, Clock,
-  CalendarClock, MessageSquare, RefreshCw,
+  RefreshCw,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { TicketStatus } from "./ServicesSection/types/wizard";
@@ -98,60 +98,6 @@ function getLiveMessage(t: TrackTicket, deviceLabel: string): string {
 
 // ── Sub-components ───────────────────────────────────────────────────
 
-function StepDot({ status, index, currentIndex }: { status: TicketStatus; index: number; currentIndex: number }) {
-  const { Icon } = STATUS_META[status];
-  const past    = index < currentIndex;
-  const current = index === currentIndex;
-  const future  = index > currentIndex;
-
-  if (past) {
-    return (
-      <div className="tr-step-dot tr-step-done">
-        <Check size={14} strokeWidth={3} />
-      </div>
-    );
-  }
-  if (current) {
-    const animClass =
-      status === "in_repair"  ? "tr-icon-spin"   :
-      status === "reviewing"  ? "tr-icon-pulse"  :
-      status === "received"   ? "tr-icon-blink"  : "";
-    return (
-      <div className="tr-step-dot tr-step-active">
-        <span className="tr-step-ring" />
-        <Icon size={16} strokeWidth={2} className={animClass} />
-      </div>
-    );
-  }
-  if (future) {
-    return (
-      <div className="tr-step-dot tr-step-future">
-        <Icon size={14} strokeWidth={1.5} />
-      </div>
-    );
-  }
-  return null;
-}
-
-function StatusStepper({ status }: { status: TicketStatus }) {
-  const currentIndex = STATUS_ORDER.indexOf(status);
-  return (
-    <div className="tr-stepper">
-      {STATUS_ORDER.map((s, i) => (
-        <div key={s} className="tr-step">
-          <StepDot status={s} index={i} currentIndex={currentIndex} />
-          <span className={`tr-step-label ${i === currentIndex ? "tr-step-label-active" : i < currentIndex ? "tr-step-label-done" : ""}`}>
-            {STATUS_META[s].label}
-          </span>
-          {i < STATUS_ORDER.length - 1 && (
-            <div className={`tr-step-line ${i < currentIndex ? "tr-step-line-done" : ""}`} />
-          )}
-        </div>
-      ))}
-    </div>
-  );
-}
-
 function IssueChip({ issueId, status }: { issueId: string; status: TicketStatus }) {
   const meta = ISSUE_META[issueId] ?? { label: issueId, Icon: Wrench };
   const { Icon } = meta;
@@ -171,59 +117,6 @@ function IssueChip({ issueId, status }: { issueId: string; status: TicketStatus 
   );
 }
 
-// ── Action request buttons ───────────────────────────────────────────
-
-type RequestType = "estimate" | "update";
-type RequestState = "idle" | "sending" | "sent";
-
-function ActionButtons({ ticket }: { ticket: TrackTicket }) {
-  const [estimateState, setEstimateState] = useState<RequestState>("idle");
-  const [updateState,   setUpdateState]   = useState<RequestState>("idle");
-
-  async function handleRequest(type: RequestType) {
-    const setState = type === "estimate" ? setEstimateState : setUpdateState;
-    setState("sending");
-    await new Promise(r => setTimeout(r, 900));
-    setState("sent");
-    setTimeout(() => setState("idle"), 4000);
-  }
-
-  const done = ticket.status === "ready" || ticket.status === "completed";
-
-  return (
-    <div className="tr-actions">
-      <button
-        className="tr-action-btn"
-        disabled={estimateState !== "idle" || done}
-        onClick={() => handleRequest("estimate")}
-      >
-        {estimateState === "sending" ? (
-          <Loader2 size={15} className="tr-icon-spin" />
-        ) : estimateState === "sent" ? (
-          <Check size={15} />
-        ) : (
-          <CalendarClock size={15} />
-        )}
-        {estimateState === "sent" ? "Estimate Requested!" : "Request Pickup Estimate"}
-      </button>
-      <button
-        className="tr-action-btn"
-        disabled={updateState !== "idle"}
-        onClick={() => handleRequest("update")}
-      >
-        {updateState === "sending" ? (
-          <Loader2 size={15} className="tr-icon-spin" />
-        ) : updateState === "sent" ? (
-          <Check size={15} />
-        ) : (
-          <MessageSquare size={15} />
-        )}
-        {updateState === "sent" ? "Request Sent!" : "Request Latest Update"}
-      </button>
-    </div>
-  );
-}
-
 // ── Status view (main found state) ──────────────────────────────────
 
 function StatusView({ ticket, onReset }: { ticket: TrackTicket; onReset: () => void }) {
@@ -234,16 +127,11 @@ function StatusView({ ticket, onReset }: { ticket: TrackTicket; onReset: () => v
 
   return (
     <div className="tr-status-view">
-      <div className="tr-status-header">
-        <div className="tr-live-badge">
-          <span className="v2-dot" style={{ width: 6, height: 6 }} />
-          LIVE
-        </div>
-        <p className="tr-ticket-num">
-          <Hash size={13} style={{ opacity: 0.45 }} />
-          {ticket.id}
-        </p>
-      </div>
+      <p className="tr-ticket-num">
+        <Hash size={12} style={{ opacity: 0.4 }} />
+        {ticket.id}
+        {isActive && <span className="tr-active-dot" />}
+      </p>
 
       <h2 className="tr-device-name">{deviceLabel}</h2>
 
@@ -259,8 +147,6 @@ function StatusView({ ticket, onReset }: { ticket: TrackTicket; onReset: () => v
           {STATUS_META[ticket.status].label}
         </div>
       </div>
-
-      <StatusStepper status={ticket.status} />
 
       <div className={`tr-live-message ${isActive ? "tr-live-message-glow" : ""}`}>
         <p>{liveMsg}</p>
@@ -291,12 +177,7 @@ function StatusView({ ticket, onReset }: { ticket: TrackTicket; onReset: () => v
         <span className="tr-info-chip">
           <MapPin size={13} /> 140 B St Suite 4, Davis
         </span>
-        <a href="tel:+15303413384" className="tr-info-chip tr-info-chip-link">
-          Call us: (530) 341-3384
-        </a>
       </div>
-
-      <ActionButtons ticket={ticket} />
 
       <button className="tr-back-btn" onClick={onReset}>
         <RefreshCw size={13} /> Look up a different ticket
@@ -310,13 +191,13 @@ function StatusView({ ticket, onReset }: { ticket: TrackTicket; onReset: () => v
 type Phase = "lookup" | "loading" | "found" | "not_found";
 
 function LookupForm({ onSubmit }: { onSubmit: (ticketId: string, contact: string) => void }) {
-  const [ticketId, setTicketId] = useState("");
-  const [contact,  setContact]  = useState("");
+  const [ticketNum, setTicketNum] = useState("");
+  const [contact,   setContact]   = useState("");
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    if (ticketId.trim() && contact.trim()) {
-      onSubmit(ticketId.trim(), contact.trim());
+    if (ticketNum.trim() && contact.trim()) {
+      onSubmit(`DCR-${ticketNum.trim()}`, contact.trim());
     }
   }
 
@@ -333,15 +214,16 @@ function LookupForm({ onSubmit }: { onSubmit: (ticketId: string, contact: string
       <label className="tr-label">
         Ticket Number
         <div className="tr-input-wrap">
-          <Hash size={16} className="tr-input-icon" />
+          <span className="tr-input-prefix">DCR-</span>
           <input
-            className="tr-input"
+            className="tr-input tr-input-prefixed"
             type="text"
-            placeholder="DCR-1234567890"
-            value={ticketId}
-            onChange={e => setTicketId(e.target.value.toUpperCase())}
+            placeholder="1234567890"
+            value={ticketNum}
+            onChange={e => setTicketNum(e.target.value.replace(/\D/g, ''))}
             autoComplete="off"
             spellCheck={false}
+            inputMode="numeric"
             required
           />
         </div>

@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
 
   const body: AdminCreateTicketPayload = await req.json()
 
-  const ticketId = `MFC-${Date.now()}`
+  const ticketId = `DCR-${Date.now()}`
 
   const { error } = await supabase.from('tickets').insert({
     id:               ticketId,
@@ -69,21 +69,22 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
-  // Send confirmation email only if customer provided one
   if (body.customerEmail) {
-    await resend.emails.send({
-      from:    'Davis Cell Phone Repair <onboarding@resend.dev>',
-      to:      body.customerEmail,
-      subject: `Your repair ticket ${ticketId}`,
-      html: `
-        <h2>Your device is in good hands!</h2>
-        <p>Hi ${body.customerName},</p>
-        <p>We've created a repair ticket for your visit — your ticket number is <strong>${ticketId}</strong>.</p>
-        ${body.appointmentDate ? `<p>Appointment: <strong>${body.appointmentDate} at ${body.appointmentTime}</strong></p>` : ''}
-        <p>Questions? Call us: <a href="tel:+15303413384">(530) 341-3384</a></p>
-        <p>— Davis Cell Phone Repair</p>
-      `,
-    })
+    try {
+      await resend.emails.send({
+        from:    process.env.EMAIL_FROM ?? 'Davis Cell Phone Repair <onboarding@resend.dev>',
+        to:      body.customerEmail,
+        subject: `Your repair ticket ${ticketId}`,
+        html: `
+          <h2>Your device is in good hands!</h2>
+          <p>Hi ${body.customerName},</p>
+          <p>We've created a repair ticket for your visit — your ticket number is <strong>${ticketId}</strong>.</p>
+          ${body.appointmentDate ? `<p>Appointment: <strong>${body.appointmentDate} at ${body.appointmentTime}</strong></p>` : ''}
+          <p>Questions? Call us: <a href="tel:+15303413384">(530) 341-3384</a></p>
+          <p>— Davis Cell Phone Repair</p>
+        `,
+      })
+    } catch { /* email failure doesn't block ticket creation */ }
   }
 
   return NextResponse.json({ ticketId })

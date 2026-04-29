@@ -30,7 +30,7 @@ const dancing = Dancing_Script({
 export const metadata: Metadata = {
   title: "Davis Cell Phone Repair — Repaired right. Right here in Davis.",
   description:
-    "Davis' #1 rated phone repair shop. 4.6 ★ · 131 Google Reviews. iPhone & Android screen, battery, charging port, water damage and more. Walk-ins welcome. Family-owned on B Street since 2014.",
+    "Davis' #1 rated phone repair shop. 4.6 ★ · 131 Google Reviews. iPhone & Android screen, battery, charging port, water damage and more. Walk-ins welcome. Family-owned on B Street since 2017.",
 };
 
 export default function RootLayout({
