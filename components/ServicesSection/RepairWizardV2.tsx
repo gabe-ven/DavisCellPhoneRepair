@@ -286,10 +286,8 @@ export default function RepairWizardV2() {
   const [serverTicketId, setServerTicketId] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const [ticketNo, setTicketNo] = useState("----");
   const [today, setToday] = useState("---");
   useEffect(() => {
-    setTicketNo(String(Math.floor(Math.random() * 9000 + 1000)));
     setToday(new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }).toUpperCase());
   }, []);
 
@@ -369,7 +367,7 @@ export default function RepairWizardV2() {
       <div className="v2-ticket-head">
         <div>
           <div className="mono micro muted">REPAIR TICKET</div>
-          <div className="v2-ticket-no">№ DCR-{ticketNo}</div>
+          <div className="mono micro" style={{ marginTop: 4, letterSpacing: "0.08em" }}>140 B ST · DAVIS, CA</div>
         </div>
         <div style={{ textAlign: "right" }}>
           <div className="mono micro muted">{today}</div>
