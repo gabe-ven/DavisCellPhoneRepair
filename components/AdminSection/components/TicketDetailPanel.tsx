@@ -163,7 +163,7 @@ export default function TicketDetailPanel({ ticket, onClose, onStatusChange }: P
             {ticket.customer.phone && (
               <a
                 href={`tel:${ticket.customer.phone.replace(/\D/g, '')}`}
-                className="flex items-center gap-2.5 text-[14px] font-medium text-[#111111] dark:text-white hover:underline"
+                className="flex items-center gap-2.5 text-[14px] font-medium text-[#6366f1] dark:text-[#818cf8] hover:underline"
               >
                 <Phone size={14} />
                 {ticket.customer.phone}
@@ -172,7 +172,7 @@ export default function TicketDetailPanel({ ticket, onClose, onStatusChange }: P
             {ticket.customer.email && (
               <a
                 href={`mailto:${ticket.customer.email}`}
-                className="flex items-center gap-2.5 text-[13px] text-[#374151] dark:text-white hover:text-[#8B1A1A] dark:hover:text-white transition-colors"
+                className="flex items-center gap-2.5 text-[13px] text-[#6366f1] dark:text-[#818cf8] hover:opacity-75 transition-opacity"
               >
                 <Mail size={14} />
                 {ticket.customer.email}

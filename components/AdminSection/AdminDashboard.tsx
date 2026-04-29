@@ -73,7 +73,7 @@ export default function AdminDashboard() {
   }, [])
 
   return (
-    <div className="flex flex-col h-screen w-full overflow-hidden bg-[#f5f5f5] dark:bg-[#0d0d0d]">
+    <div className="flex flex-col h-screen w-full overflow-hidden bg-[#f4f4f4] dark:bg-[#0d0d0d]">
       <TopBar
         darkMode={darkMode}
         onToggleDark={handleToggleDark}
@@ -93,7 +93,7 @@ export default function AdminDashboard() {
           onToggleCollapse={() => setSidebarCollapsed(prev => !prev)}
           unreadCount={unreadCount}
         />
-        <main className="flex-1 overflow-y-auto p-8 bg-[#f5f5f5] dark:bg-[#0d0d0d]">
+        <main className="flex-1 overflow-y-auto p-8 bg-[#f4f4f4] dark:bg-[#0d0d0d]">
           {activeView === 'home'          && <OverviewView />}
           {activeView === 'tickets'       && <TicketsView key={ticketsSearch} initialSearch={ticketsSearch} />}
           {activeView === 'calendar'      && <CalendarView />}

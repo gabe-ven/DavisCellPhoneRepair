@@ -1,11 +1,12 @@
+'use client'
+
 import {
-  Home,
+  LayoutDashboard,
   Ticket,
-  Calendar,
+  CalendarDays,
   Bell,
   ChevronLeft,
   ChevronRight,
-  Layers,
 } from 'lucide-react'
 import type { ViewType } from '../AdminDashboard'
 
@@ -17,71 +18,87 @@ interface SidebarProps {
   unreadCount: number
 }
 
-const NAV_ITEMS: { id: ViewType; label: string; icon: React.ReactNode; hasNotif?: boolean }[] = [
-  { id: 'home',          label: 'Home',         icon: <Home     size={19} strokeWidth={1.8} /> },
-  { id: 'tickets',       label: 'Tickets',       icon: <Ticket   size={19} strokeWidth={1.8} /> },
-  { id: 'calendar',      label: 'Calendar',      icon: <Calendar size={19} strokeWidth={1.8} /> },
-  { id: 'notifications', label: 'Notifications', icon: <Bell     size={19} strokeWidth={1.8} />, hasNotif: true },
+const NAV = [
+  { id: 'home'          as ViewType, label: 'Overview',      Icon: LayoutDashboard },
+  { id: 'tickets'       as ViewType, label: 'Tickets',       Icon: Ticket          },
+  { id: 'calendar'      as ViewType, label: 'Calendar',      Icon: CalendarDays    },
+  { id: 'notifications' as ViewType, label: 'Notifications', Icon: Bell, hasNotif: true },
 ]
 
 export default function Sidebar({ activeView, onViewChange, collapsed, onToggleCollapse, unreadCount }: SidebarProps) {
   return (
     <aside
       className={`
-        flex flex-col flex-shrink-0 overflow-hidden
-        bg-white dark:bg-[#0d0d0d]
-        border-r border-[#e5e7eb] dark:border-[#1f1f1f]
-        ${collapsed ? 'w-[64px]' : 'w-[230px]'}
+        relative flex flex-col flex-shrink-0 overflow-hidden
+        bg-white dark:bg-[#0b0b0b]
+        border-r border-[#ebebeb] dark:border-[#1a1a1a]
+        ${collapsed ? 'w-[56px]' : 'w-[224px]'}
       `}
-      style={{ transition: 'width 0.2s ease' }}
+      style={{ transition: 'width 0.18s cubic-bezier(0.4,0,0.2,1)' }}
     >
       {/* Logo */}
-      <div className="flex items-center gap-3 px-3.5 pt-5 pb-6 overflow-hidden">
-        <div className="w-8 h-8 rounded-lg bg-[#6366f1] flex items-center justify-center flex-shrink-0">
-          <Layers size={16} color="white" strokeWidth={2} />
+      <div className={`flex items-center gap-2.5 py-5 overflow-hidden ${collapsed ? 'justify-center px-0' : 'px-4'}`}>
+        <div
+          className="w-7 h-7 rounded-[7px] bg-[#6366f1] flex items-center justify-center flex-shrink-0 shadow-sm"
+          style={{ boxShadow: '0 0 0 1px rgba(99,102,241,0.3), 0 2px 8px rgba(99,102,241,0.25)' }}
+        >
+          <span style={{ fontFamily: 'var(--font-jetbrains-mono)', fontSize: '10px', fontWeight: 700, color: 'white', letterSpacing: '-0.03em' }}>Dc</span>
         </div>
         {!collapsed && (
           <div className="overflow-hidden">
-            <p className="text-[13px] font-bold text-[#111] dark:text-white leading-tight whitespace-nowrap tracking-tight">
+            <p className="text-[13px] font-semibold text-[#111] dark:text-[#f0f0f0] whitespace-nowrap leading-tight" style={{ letterSpacing: '-0.015em' }}>
               Davis Cell
             </p>
-            <p className="text-[10px] text-[#9ca3af] whitespace-nowrap uppercase tracking-widest font-medium">
-              Repair Admin
+            <p className="text-[9.5px] font-semibold text-[#c4c4c4] dark:text-[#363636] uppercase tracking-widest whitespace-nowrap mt-px">
+              Admin
             </p>
           </div>
         )}
       </div>
 
-      {/* Divider */}
-      <div className="h-px bg-[#e5e7eb] dark:bg-[#1f1f1f] mx-3 mb-2" />
+      <div className="h-px bg-[#f0f0f0] dark:bg-[#171717] mx-3 mb-3" />
 
       {/* Nav */}
-      <nav className="flex flex-col gap-0.5 px-2 flex-1 pt-1">
-        {NAV_ITEMS.map(item => {
-          const isActive = activeView === item.id
+      <nav className="flex flex-col gap-px px-2 flex-1">
+        {!collapsed && (
+          <p className="text-[9.5px] font-bold text-[#c8c8c8] dark:text-[#2e2e2e] uppercase tracking-widest px-2 mb-2">
+            Workspace
+          </p>
+        )}
+
+        {NAV.map(({ id, label, Icon, hasNotif }) => {
+          const active = activeView === id
           return (
             <button
-              key={item.id}
-              onClick={() => onViewChange(item.id)}
-              title={collapsed ? item.label : undefined}
+              key={id}
+              onClick={() => onViewChange(id)}
+              title={collapsed ? label : undefined}
               className={`
-                relative flex items-center rounded-lg transition-colors text-left w-full cursor-pointer
-                ${collapsed ? 'px-0 py-2.5 justify-center' : 'px-3 py-2.5 gap-3'}
-                ${isActive
-                  ? 'bg-[#6366f1] text-white'
-                  : 'text-[#6b7280] dark:text-[#737373] hover:bg-[#f5f5f5] dark:hover:bg-white/5 hover:text-[#111] dark:hover:text-white'
+                relative flex items-center rounded-[8px] w-full transition-colors duration-100 text-left
+                ${collapsed ? 'justify-center py-2.5 px-0' : 'py-[7px] px-3 gap-2.5'}
+                ${active
+                  ? 'bg-[#6366f1]/[0.09] dark:bg-[#6366f1]/[0.15] text-[#4f51c8] dark:text-[#a5b4fc]'
+                  : 'text-[#888] dark:text-[#484848] hover:bg-[#f6f6f6] dark:hover:bg-[#141414] hover:text-[#111] dark:hover:text-[#d4d4d4]'
                 }
               `}
             >
-              <span className="flex-shrink-0">{item.icon}</span>
-              {!collapsed && (
-                <span className="text-[13.5px] font-medium whitespace-nowrap">{item.label}</span>
+              {/* Left border accent when active */}
+              {active && !collapsed && (
+                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[18px] bg-[#6366f1] rounded-r-full" />
               )}
-              {item.hasNotif && unreadCount > 0 && (
+
+              <Icon size={16} strokeWidth={active ? 2 : 1.6} className="flex-shrink-0" />
+
+              {!collapsed && (
+                <span className="text-[13.5px] font-medium whitespace-nowrap flex-1">{label}</span>
+              )}
+
+              {hasNotif && unreadCount > 0 && (
                 <span
-                  className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${isActive ? 'bg-white/80' : 'bg-[#6366f1]'} ${
-                    collapsed ? 'absolute top-2 right-2.5' : 'ml-auto'
-                  }`}
+                  className={`
+                    w-[6px] h-[6px] rounded-full bg-[#6366f1] flex-shrink-0
+                    ${collapsed ? 'absolute top-[6px] right-[6px]' : ''}
+                  `}
                 />
               )}
             </button>
@@ -89,23 +106,26 @@ export default function Sidebar({ activeView, onViewChange, collapsed, onToggleC
         })}
       </nav>
 
-      {/* Bottom divider + collapse */}
-      <div className="h-px bg-[#e5e7eb] dark:bg-[#1f1f1f] mx-3 mt-2 mb-2" />
+      <div className="h-px bg-[#f0f0f0] dark:bg-[#171717] mx-3 mt-3 mb-2" />
+
+      {/* Collapse toggle */}
       <div className="px-2 pb-4">
         <button
           onClick={onToggleCollapse}
           title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           className={`
-            flex items-center rounded-lg transition-colors w-full cursor-pointer
-            text-[#9ca3af] hover:bg-[#f5f5f5] dark:hover:bg-white/5 hover:text-[#374151] dark:hover:text-white
-            ${collapsed ? 'px-0 py-2.5 justify-center' : 'px-3 py-2.5 gap-3'}
+            flex items-center rounded-[8px] w-full transition-colors
+            text-[#b8b8b8] dark:text-[#333]
+            hover:bg-[#f6f6f6] dark:hover:bg-[#141414]
+            hover:text-[#374151] dark:hover:text-[#d4d4d4]
+            ${collapsed ? 'justify-center py-2.5 px-0' : 'py-[7px] px-3 gap-2.5'}
           `}
         >
           {collapsed
-            ? <ChevronRight size={17} strokeWidth={1.8} />
+            ? <ChevronRight size={15} strokeWidth={1.7} />
             : (
               <>
-                <ChevronLeft size={17} strokeWidth={1.8} />
+                <ChevronLeft size={15} strokeWidth={1.7} />
                 <span className="text-[13px] font-medium whitespace-nowrap">Collapse</span>
               </>
             )

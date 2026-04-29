@@ -37,6 +37,8 @@ body {
 img { max-width: 100%; display: block; }
 @layer base {
   a { color: inherit; text-decoration: none; }
+  button, [role="button"] { cursor: pointer; }
+  button:disabled { cursor: not-allowed; }
 }
 
 /* Used by AdminDashboard to suppress all transitions during dark/light switch */
